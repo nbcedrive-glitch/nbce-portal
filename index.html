@@ -305,6 +305,30 @@
                 </div>
               </div>
 
+              <!-- 04. Franchise Section -->
+              <div class="rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+                <button type="button" onclick="toggleAdminAccordion('acc-franchise')" class="w-full flex items-center justify-between px-3.5 py-3 text-left font-bold text-white hover:bg-white/10 transition cursor-pointer">
+                  <span class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-handshake text-emerald-400 w-4 text-center"></i>
+                    <span>04. Franchise</span>
+                  </span>
+                  <i id="icon-acc-franchise" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
+                </button>
+                <div id="acc-franchise" class="hidden px-2 pb-2.5 pt-1 space-y-1 text-xs border-t border-white/10">
+                  <button type="button" onclick="openAdminWorkspace('franchise-application', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-file-signature w-3.5"></i> Franchise Application</span>
+                    <span id="sideCntFranchiseApp" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
+                  </button>
+                  <button type="button" onclick="openAdminWorkspace('franchise-enquiry', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-comments w-3.5"></i> Franchise Enquery</span>
+                    <span id="sideCntFranchiseEnq" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
+                  </button>
+                  <button type="button" onclick="openAdminWorkspace('franchise-discount-code', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-ticket-simple w-3.5"></i> Discount Code
+                  </button>
+                </div>
+              </div>
+
             </nav>
           </aside>
 
@@ -500,6 +524,88 @@
               <div class="p-4 rounded-xl border border-slate-200 bg-slate-50"><p class="font-bold text-brand-950">Diploma Courses</p><p class="text-xs text-slate-500 mt-1">1-Year Vocational Diplomas</p></div>
               <div class="p-4 rounded-xl border border-slate-200 bg-slate-50"><p class="font-bold text-brand-950">Certificate Courses</p><p class="text-xs text-slate-500 mt-1">3 to 6 Months Skill Programs</p></div>
               <div class="p-4 rounded-xl border border-slate-200 bg-slate-50"><p class="font-bold text-brand-950">Practical Lab Modules</p><p class="text-xs text-slate-500 mt-1">Hands-on Centre Evaluation</p></div>
+            </div>
+
+            <!-- WORKSPACE 4A: Franchise Application -->
+            <div id="ws-franchise-application" class="admin-ws-panel hidden space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <p class="text-xs text-slate-500 font-semibold">Total Applications</p>
+                  <p id="faTotalCount" class="text-2xl font-bold text-brand-950 mt-1">0</p>
+                </div>
+                <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                  <p class="text-xs text-emerald-700 font-semibold">Approved Franchises</p>
+                  <p id="faApprovedCount" class="text-2xl font-bold text-emerald-800 mt-1">0</p>
+                </div>
+                <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+                  <p class="text-xs text-amber-800 font-semibold">Pending Applications</p>
+                  <p id="faPendingCount" class="text-2xl font-bold text-amber-800 mt-1">0</p>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200 text-slate-500 text-xs uppercase">
+                      <th class="py-2.5 px-3">Institute Name</th>
+                      <th class="py-2.5 px-3">Applicant &amp; City</th>
+                      <th class="py-2.5 px-3">Mobile</th>
+                      <th class="py-2.5 px-3">Status</th>
+                      <th class="py-2.5 px-3 no-print">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="franchiseApplicationTable" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- WORKSPACE 4B: Franchise Enquery -->
+            <div id="ws-franchise-enquiry" class="admin-ws-panel hidden space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p class="text-xs text-slate-500">All incoming franchise enquiries from the public website form (Supabase <code class="bg-slate-100 px-1 py-0.5 rounded">franchises</code>).</p>
+                <input id="franchiseEnqSearch" type="text" onkeyup="renderFranchiseEnquiryList()" placeholder="Filter by institute, city or mobile..." class="px-3.5 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500 w-full sm:w-64">
+              </div>
+              <div id="franchiseEnquiryList" class="space-y-3 text-sm"></div>
+            </div>
+
+            <!-- WORKSPACE 4C: Discount Code -->
+            <div id="ws-franchise-discount-code" class="admin-ws-panel hidden space-y-5 text-sm">
+              <form onsubmit="addDiscountCode(event)" class="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Coupon / Discount Code</label>
+                  <input id="dcCodeInput" type="text" required placeholder="e.g. NBCE2026" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs uppercase font-mono outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Discount Value</label>
+                  <input id="dcValueInput" type="text" required placeholder="e.g. 20% or ₹1,000" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Applicable For</label>
+                  <select id="dcTargetInput" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                    <option value="Franchise Affiliation">Franchise Affiliation</option>
+                    <option value="Student Admission">Student Admission</option>
+                    <option value="Course Registration">Course Registration</option>
+                  </select>
+                </div>
+                <button type="submit" class="bg-brand-900 hover:bg-brand-800 text-white py-2 px-4 rounded-lg text-xs font-bold transition cursor-pointer">
+                  <i class="fa-solid fa-plus mr-1"></i> Create Code
+                </button>
+              </form>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200 text-slate-500 text-xs uppercase">
+                      <th class="py-2.5 px-3">Code</th>
+                      <th class="py-2.5 px-3">Discount</th>
+                      <th class="py-2.5 px-3">Applicable For</th>
+                      <th class="py-2.5 px-3">Status</th>
+                      <th class="py-2.5 px-3 no-print">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="discountCodeTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
             </div>
 
           </div>
@@ -1150,7 +1256,10 @@
       'course-fees': ['03. Course Section', 'Fees'],
       'course-category': ['03. Course Section', 'Category'],
       'course-subject': ['03. Course Section', 'Subject'],
-      'course-types': ['03. Course Section', 'Types']
+      'course-types': ['03. Course Section', 'Types'],
+      'franchise-application': ['04. Franchise', 'Franchise Application'],
+      'franchise-enquiry': ['04. Franchise', 'Franchise Enquery'],
+      'franchise-discount-code': ['04. Franchise', 'Discount Code']
     };
 
     function toggleAdminAccordion(accId) {
@@ -1284,6 +1393,96 @@
       URL.revokeObjectURL(url);
     }
 
+    let cachedFranchises = [];
+    let discountCodes = [
+      { id: 1, code: 'NBCEFR10', value: '10% Off', target: 'Franchise Affiliation', active: true },
+      { id: 2, code: 'SKILL500', value: '₹500 Off', target: 'Student Admission', active: true }
+    ];
+
+    function renderFranchiseApplicationTable() {
+      const tbody = document.getElementById('franchiseApplicationTable');
+      if (!tbody) return;
+      tbody.innerHTML = cachedFranchises.length ? cachedFranchises.map(f => `
+        <tr>
+          <td class="py-2.5 px-3 font-semibold text-brand-950">${f.institute_name}</td>
+          <td class="py-2.5 px-3 text-slate-700">${f.applicant_info}</td>
+          <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
+          <td class="py-2.5 px-3">
+            ${f.status === 'Approved'
+              ? '<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Approved</span>'
+              : '<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Pending</span>'}
+          </td>
+          <td class="py-2.5 px-3 no-print">
+            ${f.status === 'Approved'
+              ? '<span class="text-xs text-slate-400">Authorized</span>'
+              : `<button type="button" onclick="approveFranchise(${f.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1 rounded font-semibold cursor-pointer">Approve</button>`}
+          </td>
+        </tr>
+      `).join('') : '<tr><td colspan="5" class="py-4 px-3 text-slate-500 text-xs">No franchise applications found.</td></tr>';
+    }
+
+    function renderFranchiseEnquiryList() {
+      const box = document.getElementById('franchiseEnquiryList');
+      if (!box) return;
+      const q = (document.getElementById('franchiseEnqSearch')?.value || '').toLowerCase();
+      const rows = cachedFranchises.filter(f =>
+        `${f.institute_name} ${f.applicant_info} ${f.mobile}`.toLowerCase().includes(q)
+      );
+      box.innerHTML = rows.length ? rows.map(f => `
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <p class="font-bold text-brand-950">${f.institute_name}</p>
+            <p class="text-xs text-slate-600 mt-0.5"><i class="fa-solid fa-user mr-1 text-slate-400"></i>${f.applicant_info} &nbsp;•&nbsp; <i class="fa-solid fa-phone mr-1 text-slate-400"></i>${f.mobile}</p>
+          </div>
+          <span class="text-xs font-bold px-3 py-1 rounded-full w-fit ${f.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}">${f.status || 'Pending'}</span>
+        </div>
+      `).join('') : '<p class="text-xs text-slate-500">No matching franchise enquiries.</p>';
+    }
+
+    function renderDiscountCodeTable() {
+      const tbody = document.getElementById('discountCodeTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = discountCodes.map(d => `
+        <tr>
+          <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-950">${d.code}</td>
+          <td class="py-2.5 px-3 font-semibold text-emerald-700">${d.value}</td>
+          <td class="py-2.5 px-3 text-slate-700">${d.target}</td>
+          <td class="py-2.5 px-3">
+            ${d.active
+              ? '<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Active</span>'
+              : '<span class="bg-slate-200 text-slate-600 text-xs font-bold px-2.5 py-0.5 rounded-full">Inactive</span>'}
+          </td>
+          <td class="py-2.5 px-3 no-print space-x-1.5">
+            <button type="button" onclick="toggleDiscountCode(${d.id})" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">${d.active ? 'Disable' : 'Enable'}</button>
+            <button type="button" onclick="deleteDiscountCode(${d.id})" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addDiscountCode(e) {
+      e.preventDefault();
+      const codeVal = document.getElementById('dcCodeInput').value.trim().toUpperCase();
+      const valueVal = document.getElementById('dcValueInput').value.trim();
+      const targetVal = document.getElementById('dcTargetInput').value;
+      if (!codeVal || !valueVal) return;
+      discountCodes.unshift({ id: Date.now(), code: codeVal, value: valueVal, target: targetVal, active: true });
+      e.target.reset();
+      renderDiscountCodeTable();
+    }
+
+    function toggleDiscountCode(id) {
+      discountCodes = discountCodes.map(d => d.id === id ? { ...d, active: !d.active } : d);
+      renderDiscountCodeTable();
+    }
+
+    function deleteDiscountCode(id) {
+      discountCodes = discountCodes.filter(d => d.id !== id);
+      renderDiscountCodeTable();
+    }
+
+    renderDiscountCodeTable();
+
     async function refreshDashboardData() {
       const { data: students } = await db.from('students').select('*').order('id', { ascending: false });
       const { data: notices } = await db.from('notices').select('*').order('id', { ascending: false });
@@ -1333,12 +1532,22 @@
       }
 
       if (franchises) {
+        cachedFranchises = franchises;
         const pendingF = franchises.filter(f => f.status !== 'Approved').length;
         const approvedF = franchises.filter(f => f.status === 'Approved').length;
         if (document.getElementById('statFranchiseTotal')) {
           document.getElementById('statFranchiseTotal').textContent = franchises.length;
           document.getElementById('statFranchiseApproved').textContent = approvedF;
           document.getElementById('statFranchisePending').textContent = pendingF;
+        }
+        if (document.getElementById('faTotalCount')) {
+          document.getElementById('faTotalCount').textContent = franchises.length;
+          document.getElementById('faApprovedCount').textContent = approvedF;
+          document.getElementById('faPendingCount').textContent = pendingF;
+        }
+        if (document.getElementById('sideCntFranchiseApp')) {
+          document.getElementById('sideCntFranchiseApp').textContent = franchises.length;
+          document.getElementById('sideCntFranchiseEnq').textContent = franchises.length;
         }
         if (document.getElementById('franchiseQueue')) {
           document.getElementById('franchiseQueue').innerHTML = franchises.length ? franchises.map(f => `
@@ -1353,6 +1562,8 @@
             </div>
           `).join('') : '<p class="text-slate-500 text-xs">No franchise inquiries in database yet.</p>';
         }
+        renderFranchiseApplicationTable();
+        renderFranchiseEnquiryList();
       }
     }
 
