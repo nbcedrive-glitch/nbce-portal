@@ -636,14 +636,18 @@
 
             <!-- WORKSPACE 4C: Discount Code -->
             <div id="ws-franchise-discount-code" class="admin-ws-panel hidden space-y-5 text-sm">
-              <form onsubmit="addDiscountCode(event)" class="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+              <form onsubmit="addDiscountCode(event)" class="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-5 gap-3 items-end">
                 <div>
                   <label class="block text-xs font-bold text-slate-700 mb-1">Coupon / Discount Code</label>
                   <input id="dcCodeInput" type="text" required placeholder="e.g. NBCE2026" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs uppercase font-mono outline-none focus:ring-2 focus:ring-brand-500">
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-700 mb-1">Discount Value</label>
-                  <input id="dcValueInput" type="text" required placeholder="e.g. 20% or ₹1,000" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Franchise Fees (₹)</label>
+                  <input id="dcFranchiseFeeInput" type="number" min="0" step="1" required placeholder="e.g. 25000" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Discount Value (Amt / %)</label>
+                  <input id="dcValueInput" type="text" required placeholder="e.g. 20% or 5000" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-slate-700 mb-1">Applicable For</label>
@@ -663,8 +667,10 @@
                   <thead>
                     <tr class="border-b border-slate-200 text-slate-500 text-xs uppercase">
                       <th class="py-2.5 px-3">Code</th>
+                      <th class="py-2.5 px-3">Franchise Fees</th>
                       <th class="py-2.5 px-3">Discount</th>
                       <th class="py-2.5 px-3">Applicable For</th>
+                      <th class="py-2.5 px-3">Usage</th>
                       <th class="py-2.5 px-3">Status</th>
                       <th class="py-2.5 px-3 no-print">Action</th>
                     </tr>
@@ -1905,37 +1911,73 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     </div>
   </div>
 
-  <!-- POST-SUBMIT APPLICATION RECEIPT & WHATSAPP MODAL -->
-  <div id="appReceiptModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
+  <!-- POST-SUBMIT APPLICATION RECEIPT, DISCOUNT & PAYABLE BILLING MODAL -->
+  <div id="appReceiptModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs overflow-y-auto flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4 my-4">
       <div class="flex items-center gap-3 text-emerald-700">
-        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-2xl shrink-0">
+        <div class="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center text-xl shrink-0">
           <i class="fa-solid fa-circle-check"></i>
         </div>
         <div>
-          <h3 class="font-display font-extrabold text-lg text-brand-950">Application Submitted Successfully!</h3>
-          <p class="text-xs text-slate-500">Your form PDF has been downloaded automatically.</p>
+          <h3 class="font-display font-extrabold text-lg text-brand-950">Application Submitted!</h3>
+          <p class="text-xs text-slate-500">Form PDF downloaded. Apply discount code (if any) &amp; submit payable summary.</p>
         </div>
       </div>
 
-      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs">
+      <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs">
         <div class="flex justify-between"><span class="text-slate-500">Application Number:</span><strong id="rcptAppNo" class="font-mono text-sm text-brand-950">NBCE-APP-0000</strong></div>
         <div class="flex justify-between"><span class="text-slate-500">Institute Name:</span><strong id="rcptInstName" class="text-slate-900">-</strong></div>
         <div class="flex justify-between"><span class="text-slate-500">Registered Mobile:</span><strong id="rcptMobile" class="font-mono text-slate-900">-</strong></div>
-        <div class="flex justify-between"><span class="text-slate-500">Current Status:</span><span class="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full">Pending</span></div>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
-        <a id="rcptWhatsappBtn" href="#" target="_blank" rel="noopener" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs text-center flex items-center justify-center gap-2 transition">
-          <i class="fa-brands fa-whatsapp text-base"></i> Send App No &amp; PDF on WhatsApp
-        </a>
-        <button type="button" id="rcptRedownloadPdfBtn" class="bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold py-2.5 px-4 rounded-xl text-xs cursor-pointer">
-          <i class="fa-solid fa-file-pdf mr-1"></i> PDF Again
+      <!-- Apply for Discount Box -->
+      <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-300 space-y-3 text-xs">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2.5">
+          <div class="flex-1">
+            <label for="rcptDiscountCodeInput" class="block font-extrabold text-brand-950 uppercase tracking-wider mb-1">
+              Apply for Discount
+            </label>
+            <input id="rcptDiscountCodeInput" type="text" placeholder="Enter Promo / Discount Code (one-time use)" class="w-full px-3.5 py-2 bg-white border border-amber-400 rounded-lg text-xs uppercase font-mono outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <button type="button" onclick="applyReceiptDiscountCode()" class="bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold px-4 py-2 rounded-lg text-xs cursor-pointer shrink-0">
+            Apply Code
+          </button>
+        </div>
+        <p id="rcptDiscountMsg" class="font-semibold text-slate-700"></p>
+
+        <!-- Fee Breakdown: Total Franchise Fees, Discount, GST, Total Amount Payable -->
+        <div class="pt-2 border-t border-amber-200 space-y-1.5 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-700 font-semibold">Total Franchise Fees:</span>
+            <strong id="rcptBaseFeesText" class="font-mono text-brand-950">₹25,000.00</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-700 font-semibold">Discount Amount:</span>
+            <strong id="rcptDiscountAmtText" class="font-mono text-emerald-700">- ₹0.00</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-700 font-semibold">GST (18%):</span>
+            <strong id="rcptGstAmtText" class="font-mono text-slate-900">₹4,500.00</strong>
+          </div>
+          <div class="flex justify-between pt-1.5 border-t border-amber-300 text-sm">
+            <span class="font-extrabold text-brand-950">Total Amount Payable:</span>
+            <strong id="rcptTotalPayableText" class="font-mono font-extrabold text-brand-950">₹29,500.00</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2.5 pt-1">
+        <div class="flex items-center gap-2">
+          <a id="rcptWhatsappBtn" href="#" target="_blank" rel="noopener" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3.5 rounded-xl text-xs flex items-center gap-1.5 transition">
+            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+          </a>
+          <button type="button" id="rcptRedownloadPdfBtn" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-3.5 rounded-xl text-xs cursor-pointer">
+            <i class="fa-solid fa-file-pdf mr-1"></i> PDF
+          </button>
+        </div>
+        <button type="button" onclick="finalizeReceiptBillingSubmit()" class="bg-brand-900 hover:bg-brand-800 text-brand-gold font-display font-extrabold py-2.5 px-6 rounded-xl text-xs uppercase tracking-wider shadow-md cursor-pointer">
+          Submit
         </button>
-      </div>
-
-      <div class="text-right pt-1">
-        <button type="button" onclick="closeAppReceiptModal()" class="text-xs font-semibold text-slate-500 hover:text-slate-800 cursor-pointer">Close &amp; Track Status</button>
       </div>
     </div>
   </div>
@@ -2134,6 +2176,22 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       if (icon) icon.classList.toggle('rotate-180');
     }
 
+    function updateFranchiseNotificationBadges(totalCount) {
+      const seenCount = parseInt(localStorage.getItem('nbce_seen_franchise_count') || '0', 10);
+      const unread = Math.max(0, totalCount - seenCount);
+      if (document.getElementById('sideCntFranchiseApp')) {
+        document.getElementById('sideCntFranchiseApp').textContent = String(unread);
+      }
+      if (document.getElementById('sideCntFranchiseEnq')) {
+        document.getElementById('sideCntFranchiseEnq').textContent = String(unread);
+      }
+    }
+
+    function markFranchiseNotificationsRead() {
+      localStorage.setItem('nbce_seen_franchise_count', String(cachedFranchises.length));
+      updateFranchiseNotificationBadges(cachedFranchises.length);
+    }
+
     function openAdminWorkspace(key, btnEl) {
       document.querySelectorAll('.admin-side-link').forEach(b => {
         b.classList.remove('bg-brand-gold', 'text-brand-950', 'font-bold');
@@ -2144,6 +2202,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         btnEl.classList.add('bg-brand-gold', 'text-brand-950', 'font-bold');
       }
 
+      if (key === 'franchise-application' || key === 'franchise-enquiry') {
+        markFranchiseNotificationsRead();
+      }
       const meta = workspaceMeta[key] || ['Admin Panel', key];
       document.getElementById('adminWorkspaceBreadcrumb').textContent = meta[0];
       document.getElementById('adminWorkspaceHeading').textContent = meta[1];
@@ -2260,410 +2321,181 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     let cachedFranchises = [];
     let pendingConfirmCallback = null;
     let discountCodes = [
-      { id: 1, code: 'NBCEFR10', value: '10% Off', target: 'Franchise Affiliation', active: true },
-      { id: 2, code: 'SKILL500', value: '₹500 Off', target: 'Student Admission', active: true }
+      { id: 1, code: 'NBCEFR10', franchiseFee: 25000, value: '10%', target: 'Franchise Affiliation', active: true, used: false },
+      { id: 2, code: 'SKILL500', franchiseFee: 20000, value: '500', target: 'Student Admission', active: true, used: false }
     ];
 
-    function askAdminConfirm(messageText, onYesCallback) {
-      document.getElementById('adminConfirmMessage').textContent = messageText;
-      pendingConfirmCallback = onYesCallback;
-      document.getElementById('adminConfirmModal').classList.remove('hidden');
+    let activeReceiptState = {
+      appNo: '',
+      instituteName: '',
+      mobile: '',
+      baseFees: 25000,
+      discountAmount: 0,
+      gstAmount: 0,
+      totalPayable: 0,
+      appliedCodeId: null,
+      appliedCodeStr: ''
+    };
+
+    function formatINR(num) {
+      return '₹' + Number(num || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    function resolveAdminConfirm(confirmed) {
-      document.getElementById('adminConfirmModal').classList.add('hidden');
-      const cb = pendingConfirmCallback;
-      pendingConfirmCallback = null;
-      if (confirmed && typeof cb === 'function') {
-        cb();
+    function parseDiscountAmount(rawValue, baseFees) {
+      const cleaned = String(rawValue || '').trim();
+      if (!cleaned) return 0;
+      if (cleaned.includes('%')) {
+        const pct = parseFloat(cleaned.replace(/[^0-9.]/g, '')) || 0;
+        return Math.min(baseFees, (baseFees * pct) / 100);
       }
+      const amt = parseFloat(cleaned.replace(/[^0-9.]/g, '')) || 0;
+      return Math.min(baseFees, amt);
     }
 
-    // Parse packed JSON metadata from applicant_info if available, with fallback for legacy rows
-    function parseFranchiseRecord(row) {
-      const fallback = {
-        appNo: `NBCEAPP${String(row.id || 1).padStart(4, '0')}`,
-        headName: row.applicant_info || '-',
-        designation: 'Director',
-        appliedFor: 'Authorized Study Centre',
-        state: 'West Bengal',
-        district: 'Nadia',
-        city: '-',
-        pin: '-',
-        email: '-',
-        phone: row.mobile || '-',
-        whatsapp: row.mobile || '-',
-        centreCode: '',
-        centreState: 'Active', // Active | Inactive | Cancel
-        rawText: row.applicant_info || ''
-      };
-      if (!row.applicant_info) return fallback;
-      const marker = '::META::';
-      const idx = row.applicant_info.indexOf(marker);
-      if (idx !== -1) {
-        try {
-          const parsed = JSON.parse(row.applicant_info.slice(idx + marker.length));
-          return { ...fallback, ...parsed, rawText: row.applicant_info.slice(0, idx).trim() };
-        } catch (err) {
-          return fallback;
-        }
-      }
-      return fallback;
-    }
+    function recalculateReceiptBilling(baseFeesOverride, discountAmtOverride) {
+      const baseFees = typeof baseFeesOverride === 'number' ? baseFeesOverride : activeReceiptState.baseFees;
+      const discAmt = typeof discountAmtOverride === 'number' ? discountAmtOverride : activeReceiptState.discountAmount;
+      const taxableAmount = Math.max(0, baseFees - discAmt);
+      const gstAmt = taxableAmount * 0.18;
+      const payable = taxableAmount + gstAmt;
 
-    function buildApplicantInfoWithMeta(summaryText, metaObj) {
-      return `${summaryText} ::META::${JSON.stringify(metaObj)}`;
-    }
+      activeReceiptState.baseFees = baseFees;
+      activeReceiptState.discountAmount = discAmt;
+      activeReceiptState.gstAmount = gstAmt;
+      activeReceiptState.totalPayable = payable;
 
-    function getNextCentreCode() {
-      let maxNum = 0;
-      cachedFranchises.forEach(r => {
-        const m = parseFranchiseRecord(r);
-        if (m.centreCode && /^NBCE\d+$/i.test(m.centreCode)) {
-          const num = parseInt(m.centreCode.replace(/[^0-9]/g, ''), 10);
-          if (num > maxNum) maxNum = num;
-        }
-      });
-      return 'NBCE' + String(maxNum + 1).padStart(4, '0');
-    }
-
-    function generateAffiliationPDF(appData) {
-      if (!window.jspdf || !window.jspdf.jsPDF) return;
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      doc.setFillColor(11, 29, 58);
-      doc.rect(0, 0, 210, 34, 'F');
-      doc.setTextColor(234, 179, 8);
-      doc.setFontSize(15);
-      doc.setFont('helvetica', 'bold');
-      doc.text('NATIONAL BOARD OF COMPUTER EDUCATION', 105, 13, { align: 'center' });
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(8.5);
-      doc.setFont('helvetica', 'normal');
-      doc.text('NBCE Skill Development (CIN : U80903WB2017PTC223024) | Regd. Under MCA, Govt. of India', 105, 19, { align: 'center' });
-      doc.text('Regd. Office : 28 RabindraSarani, P.O. + P.S. - Ranaghat, Dist - Nadia, Pin - 741201 (W.B.)', 105, 25, { align: 'center' });
-
-      doc.setTextColor(11, 29, 58);
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
-      doc.text('APPLICATION FORM FOR AFFILIATION (STUDY CENTRE)', 105, 43, { align: 'center' });
-
-      doc.setFontSize(10);
-      doc.text(`Application No: ${appData.appNo}`, 14, 52);
-      doc.text(`Status: ${appData.status || 'Pending'}`, 160, 52);
-      doc.line(14, 55, 196, 55);
-
-      let y = 63;
-      const addLine = (label, val) => {
-        if (y > 275) { doc.addPage(); y = 20; }
-        doc.setFont('helvetica', 'bold');
-        doc.text(`${label}:`, 14, y);
-        doc.setFont('helvetica', 'normal');
-        doc.text(String(val || '-'), 75, y);
-        y += 7;
-      };
-
-      addLine('Institute Name', appData.instituteName);
-      addLine('Applied For', appData.appliedFor);
-      addLine('Year of Establishment', appData.estYear);
-      addLine('Institution Status', appData.instStatus);
-      addLine('Location', `${appData.city}, Dist: ${appData.district}, ${appData.state} - ${appData.pin}`);
-      addLine('PO / PS', `${appData.instPO || '-'} / ${appData.instPS || '-'}`);
-      addLine('Institute Address', appData.instAddress);
-      addLine('Contact / WhatsApp', `${appData.phone} / ${appData.whatsapp}`);
-      addLine('Institute Email', appData.email);
-      y += 2;
-      addLine('Centre Head Name', appData.headName);
-      addLine('Designation', appData.designation);
-      addLine('Head Mobile / Email', `${appData.headMobile || appData.phone} / ${appData.headEmail || appData.email}`);
-      addLine('DOB / Gender / Marital', `${appData.headDOB || '-'} | ${appData.headGender || '-'} | ${appData.headMarital || '-'}`);
-      addLine('Nationality / Religion', `${appData.headNationality || '-'} / ${appData.headReligion || '-'}`);
-      addLine('Qualification / Exp.', `${appData.headQual || '-'} / ${appData.headExp || '-'}`);
-      addLine('PAN / ID / GSTIN', `${appData.panNo || '-'} | ${appData.aadharNo || '-'} | ${appData.gstNo || 'N/A'}`);
-      y += 2;
-      addLine('Infrastructure', appData.infraSummary || '-');
-      addLine('Facilities', appData.facilitySummary || '-');
-      addLine('Faculty Count', `${(appData.faculties || []).length} Listed`);
-
-      y += 4;
-      doc.setFontSize(8);
-      doc.setTextColor(80, 80, 80);
-      doc.text('Declaration Accepted: Subject to Ranaghat Jurisdiction only.', 14, y);
-
-      doc.save(`${appData.appNo}_NBCE_Affiliation_Form.pdf`);
-    }
-
-    function openViewApplicationModal(id) {
-      const row = cachedFranchises.find(f => f.id === id);
-      if (!row) return;
-      const meta = parseFranchiseRecord(row);
-      document.getElementById('viewAppModalTitle').textContent = `${meta.appNo} — ${row.institute_name}`;
-      const pdfBtn = document.getElementById('viewAppDownloadPdfBtn');
-      pdfBtn.onclick = () => generateAffiliationPDF({
-        ...meta,
-        instituteName: row.institute_name,
-        status: row.status || 'Pending'
-      });
-
-      const facHtml = (meta.faculties && meta.faculties.length)
-        ? meta.faculties.map((fc, i) => `<li>${i + 1}. <strong>${fc.name}</strong> — ${fc.qual || '-'} (${fc.exp || '-'}, ${fc.status || '-'})</li>`).join('')
-        : '<li>No faculty entries recorded.</li>';
-
-      document.getElementById('viewAppModalBody').innerHTML = `
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-          <div><span class="text-slate-500 block">Application Number</span><strong class="font-mono text-sm text-brand-950">${meta.appNo}</strong></div>
-          <div><span class="text-slate-500 block">Application Status</span><strong class="text-sm ${row.status === 'Approved' ? 'text-emerald-700' : row.status === 'Rejected' ? 'text-red-700' : 'text-amber-700'}">${row.status || 'Pending'}</strong></div>
-          ${meta.centreCode ? `<div><span class="text-slate-500 block">Generated Centre Code</span><strong class="font-mono text-sm text-emerald-800">${meta.centreCode} (${meta.centreState || 'Active'})</strong></div>` : ''}
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
-            <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Institute Details</p>
-            <p><strong>Name:</strong> ${row.institute_name}</p>
-            <p><strong>Applied For:</strong> ${meta.appliedFor}</p>
-            <p><strong>Est. Year / Status:</strong> ${meta.estYear || '-'} / ${meta.instStatus || '-'}</p>
-            <p><strong>Location:</strong> ${meta.city}, Dist: ${meta.district}, ${meta.state} - ${meta.pin}</p>
-            <p><strong>PO / PS:</strong> ${meta.instPO || '-'} / ${meta.instPS || '-'}</p>
-            <p><strong>Address:</strong> ${meta.instAddress || '-'}</p>
-            <p><strong>Phone / WhatsApp:</strong> ${meta.phone} / ${meta.whatsapp}</p>
-            <p><strong>Email:</strong> ${meta.email}</p>
-          </div>
-          <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
-            <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Centre Head Details</p>
-            <p><strong>Head Name:</strong> ${meta.headName}</p>
-            <p><strong>Designation:</strong> ${meta.designation}</p>
-            <p><strong>Mobile:</strong> ${meta.headMobile || row.mobile}</p>
-            <p><strong>Email:</strong> ${meta.headEmail || meta.email}</p>
-            <p><strong>DOB / Gender:</strong> ${meta.headDOB || '-'} / ${meta.headGender || '-'}</p>
-            <p><strong>Qualification / Exp.:</strong> ${meta.headQual || '-'} / ${meta.headExp || '-'}</p>
-            <p><strong>PAN / ID / GSTIN:</strong> ${meta.panNo || '-'} / ${meta.aadharNo || '-'} / ${meta.gstNo || 'N/A'}</p>
-          </div>
-        </div>
-        <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
-          <p class="font-bold text-brand-900 uppercase text-[11px]">Infrastructure &amp; Facilities</p>
-          <p><strong>Infrastructure:</strong> ${meta.infraSummary || '-'}</p>
-          <p><strong>Facilities:</strong> ${meta.facilitySummary || '-'}</p>
-        </div>
-        <div class="p-3.5 rounded-xl border border-slate-200">
-          <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Faculty List</p>
-          <ul class="space-y-1">${facHtml}</ul>
-        </div>
-      `;
-      document.getElementById('viewApplicationModal').classList.remove('hidden');
-    }
-
-    function closeViewApplicationModal() {
-      document.getElementById('viewApplicationModal').classList.add('hidden');
-    }
-
-    function closeAppReceiptModal() {
-      document.getElementById('appReceiptModal').classList.add('hidden');
-      switchHomeFranchiseTab('track');
-      const sec = document.getElementById('franchise');
-      if (sec) sec.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Admin Action on Franchise Application: Approved / Pending / Reject with Yes/No warning
-    function confirmApplicationStatusChange(id, newStatus) {
-      const actionWord = newStatus === 'Approved' ? 'approve' : newStatus === 'Rejected' ? 'reject' : 'mark as pending';
-      askAdminConfirm(`Are you sure you want to ${actionWord} this franchise application?`, async () => {
-        const row = cachedFranchises.find(f => f.id === id);
-        if (!row) return;
-        const meta = parseFranchiseRecord(row);
-        if (newStatus === 'Approved') {
-          if (!meta.centreCode) {
-            meta.centreCode = getNextCentreCode();
-          }
-          if (!meta.centreState) {
-            meta.centreState = 'Active';
-          }
-        }
-        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
-        const { error } = await db
-          .from('franchises')
-          .update({ status: newStatus, applicant_info: updatedInfo })
-          .eq('id', id);
-        if (error) return alert('Error updating application status: ' + error.message);
-        await refreshDashboardData();
-      });
-    }
-
-    // Admin Action on Our Franchise: Active / Inactive (orange) / Cancel (red) with Yes/No warning
-    function confirmCentreOperationalState(id, nextState) {
-      const label = nextState === 'Active' ? 'activate' : nextState === 'Inactive' ? 'deactivate (Inactive)' : 'cancel';
-      askAdminConfirm(`Are you sure you want to ${label} this study centre?`, async () => {
-        const row = cachedFranchises.find(f => f.id === id);
-        if (!row) return;
-        const meta = parseFranchiseRecord(row);
-        meta.centreState = nextState;
-        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
-        const { error } = await db
-          .from('franchises')
-          .update({ applicant_info: updatedInfo })
-          .eq('id', id);
-        if (error) return alert('Error updating centre status: ' + error.message);
-        await refreshDashboardData();
-      });
-    }
-
-    // Render 01. Study Centre -> Our Franchise (Approved centres with NBCE0001+ and Active/Inactive/Cancel)
-    function renderOurFranchiseTable() {
-      const tbody = document.getElementById('ourFranchiseTableBody');
-      if (!tbody) return;
-      const approvedRows = cachedFranchises.filter(f => f.status === 'Approved');
-
-      let activeCnt = 0, inactiveCnt = 0, cancelCnt = 0;
-      approvedRows.forEach(f => {
-        const st = parseFranchiseRecord(f).centreState || 'Active';
-        if (st === 'Inactive') inactiveCnt++;
-        else if (st === 'Cancel') cancelCnt++;
-        else activeCnt++;
-      });
-
-      if (document.getElementById('statFranchiseTotal')) {
-        document.getElementById('statFranchiseTotal').textContent = approvedRows.length;
-        document.getElementById('statFranchiseApproved').textContent = activeCnt;
-        document.getElementById('statFranchiseInactive').textContent = inactiveCnt;
-        document.getElementById('statFranchiseCancelled').textContent = cancelCnt;
-      }
-
-      tbody.innerHTML = approvedRows.length ? approvedRows.map((f, idx) => {
-        const meta = parseFranchiseRecord(f);
-        const code = meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'));
-        const cState = meta.centreState || 'Active';
-
-        let rowBg = '';
-        let badgeHtml = '<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Active</span>';
-        if (cState === 'Inactive') {
-          rowBg = 'bg-orange-50';
-          badgeHtml = '<span class="bg-orange-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Inactive</span>';
-        } else if (cState === 'Cancel') {
-          rowBg = 'bg-red-50';
-          badgeHtml = '<span class="bg-red-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Cancelled</span>';
-        }
-
-        return `
-          <tr class="${rowBg} transition">
-            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-950">${code}</td>
-            <td class="py-2.5 px-3 font-semibold text-slate-900">${f.institute_name}</td>
-            <td class="py-2.5 px-3 text-slate-700">${meta.headName}</td>
-            <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
-            <td class="py-2.5 px-3 text-xs">${meta.state}</td>
-            <td class="py-2.5 px-3 text-xs">${meta.district}</td>
-            <td class="py-2.5 px-3 text-xs">${meta.city}</td>
-            <td class="py-2.5 px-3">${badgeHtml}</td>
-            <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
-              <button type="button" onclick="confirmCentreOperationalState(${f.id}, 'Active')" class="px-2 py-1 rounded text-[11px] font-bold cursor-pointer ${cState === 'Active' ? 'bg-emerald-600 text-white' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}">Active</button>
-              <button type="button" onclick="confirmCentreOperationalState(${f.id}, 'Inactive')" class="px-2 py-1 rounded text-[11px] font-bold cursor-pointer ${cState === 'Inactive' ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-800 hover:bg-orange-200'}">Inactive</button>
-              <button type="button" onclick="confirmCentreOperationalState(${f.id}, 'Cancel')" class="px-2 py-1 rounded text-[11px] font-bold cursor-pointer ${cState === 'Cancel' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-800 hover:bg-red-200'}">Cancel</button>
-            </td>
-          </tr>
-        `;
-      }).join('') : '<tr><td colspan="9" class="py-5 px-3 text-slate-500 text-xs text-center">No approved centres yet. Approve a Franchise Application to generate Centre Code (NBCE0001).</td></tr>';
-    }
-
-    // Render 04. Franchise -> Franchise Application (Approved / Pending / Reject + View icon)
-    function renderFranchiseApplicationTable() {
-      const tbody = document.getElementById('franchiseApplicationTable');
-      if (!tbody) return;
-      tbody.innerHTML = cachedFranchises.length ? cachedFranchises.map(f => {
-        const meta = parseFranchiseRecord(f);
-        const st = f.status || 'Pending';
-        let statusBadge = '<span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Pending</span>';
-        if (st === 'Approved') {
-          statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Approved (${meta.centreCode || 'NBCE0001'})</span>`;
-        } else if (st === 'Rejected') {
-          statusBadge = '<span class="bg-red-100 text-red-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Rejected</span>';
-        }
-
-        return `
-          <tr>
-            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-900">${meta.appNo}</td>
-            <td class="py-2.5 px-3 font-semibold text-brand-950">${f.institute_name}</td>
-            <td class="py-2.5 px-3 text-xs text-slate-700">${meta.headName} • ${meta.city}, ${meta.district}</td>
-            <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
-            <td class="py-2.5 px-3">${statusBadge}</td>
-            <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
-              <button type="button" onclick="openViewApplicationModal(${f.id})" title="View Full Application" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">
-                <i class="fa-solid fa-eye mr-1"></i>View
-              </button>
-              <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Approved</button>
-              <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Pending')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Pending</button>
-              <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Reject</button>
-            </td>
-          </tr>
-        `;
-      }).join('') : '<tr><td colspan="6" class="py-4 px-3 text-slate-500 text-xs">No franchise applications found.</td></tr>';
-    }
-
-    function renderFranchiseEnquiryList() {
-      const box = document.getElementById('franchiseEnquiryList');
-      if (!box) return;
-      const q = (document.getElementById('franchiseEnqSearch')?.value || '').toLowerCase();
-      const rows = cachedFranchises.filter(f => {
-        const meta = parseFranchiseRecord(f);
-        return `${meta.appNo} ${f.institute_name} ${meta.headName} ${meta.city} ${f.mobile}`.toLowerCase().includes(q);
-      });
-      box.innerHTML = rows.length ? rows.map(f => {
-        const meta = parseFranchiseRecord(f);
-        return `
-        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-mono text-[11px] font-bold bg-brand-900 text-brand-gold px-2 py-0.5 rounded">${meta.appNo}</span>
-              <p class="font-bold text-brand-950">${f.institute_name}</p>
-            </div>
-            <p class="text-xs text-slate-600 mt-1"><i class="fa-solid fa-user mr-1 text-slate-400"></i>${meta.headName} (${meta.city}, ${meta.district}) &nbsp;•&nbsp; <i class="fa-solid fa-phone mr-1 text-slate-400"></i>${f.mobile}</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="openViewApplicationModal(${f.id})" class="bg-slate-800 text-white text-xs px-2.5 py-1 rounded-lg font-semibold cursor-pointer"><i class="fa-solid fa-eye mr-1"></i>View</button>
-            <span class="text-xs font-bold px-3 py-1 rounded-full w-fit ${f.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : f.status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-900'}">${f.status || 'Pending'}</span>
-          </div>
-        </div>
-      `;
-      }).join('') : '<p class="text-xs text-slate-500">No matching franchise enquiries.</p>';
+      document.getElementById('rcptBaseFeesText').textContent = formatINR(baseFees);
+      document.getElementById('rcptDiscountAmtText').textContent = `- ${formatINR(discAmt)}`;
+      document.getElementById('rcptGstAmtText').textContent = formatINR(gstAmt);
+      document.getElementById('rcptTotalPayableText').textContent = formatINR(payable);
     }
 
     function renderDiscountCodeTable() {
       const tbody = document.getElementById('discountCodeTableBody');
       if (!tbody) return;
-      tbody.innerHTML = discountCodes.map(d => `
-        <tr>
-          <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-950">${d.code}</td>
-          <td class="py-2.5 px-3 font-semibold text-emerald-700">${d.value}</td>
-          <td class="py-2.5 px-3 text-slate-700">${d.target}</td>
-          <td class="py-2.5 px-3">
-            ${d.active
-              ? '<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Active</span>'
-              : '<span class="bg-slate-200 text-slate-600 text-xs font-bold px-2.5 py-0.5 rounded-full">Inactive</span>'}
-          </td>
-          <td class="py-2.5 px-3 no-print space-x-1.5">
-            <button type="button" onclick="toggleDiscountCode(${d.id})" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">${d.active ? 'Disable' : 'Enable'}</button>
-            <button type="button" onclick="deleteDiscountCode(${d.id})" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Delete</button>
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = discountCodes.map(d => {
+        const isDisabledOrUsed = !d.active || d.used;
+        const usageText = d.used
+          ? '<span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-2 py-0.5 rounded-full">Used (1/1)</span>'
+          : '<span class="bg-blue-50 text-blue-800 text-[11px] font-bold px-2 py-0.5 rounded-full">One-Time (0/1)</span>';
+        const statusBadge = isDisabledOrUsed
+          ? '<span class="bg-slate-200 text-slate-600 text-xs font-bold px-2.5 py-0.5 rounded-full">Disabled</span>'
+          : '<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Active</span>';
+
+        return `
+          <tr>
+            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-950">${d.code}</td>
+            <td class="py-2.5 px-3 font-mono font-semibold text-slate-800">${formatINR(d.franchiseFee)}</td>
+            <td class="py-2.5 px-3 font-semibold text-emerald-700">${d.value}</td>
+            <td class="py-2.5 px-3 text-slate-700">${d.target}</td>
+            <td class="py-2.5 px-3">${usageText}</td>
+            <td class="py-2.5 px-3">${statusBadge}</td>
+            <td class="py-2.5 px-3 no-print space-x-1.5">
+              <button type="button" ${d.used ? 'disabled' : ''} onclick="toggleDiscountCode(${d.id})" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-2.5 py-1 rounded font-semibold ${d.used ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}">${d.active && !d.used ? 'Disable' : 'Enable'}</button>
+              <button type="button" onclick="deleteDiscountCode(${d.id})" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function addDiscountCode(e) {
       e.preventDefault();
       const codeVal = document.getElementById('dcCodeInput').value.trim().toUpperCase();
+      const franchiseFee = parseFloat(document.getElementById('dcFranchiseFeeInput').value) || 0;
       const valueVal = document.getElementById('dcValueInput').value.trim();
       const targetVal = document.getElementById('dcTargetInput').value;
       if (!codeVal || !valueVal) return;
-      discountCodes.unshift({ id: Date.now(), code: codeVal, value: valueVal, target: targetVal, active: true });
+      discountCodes.unshift({
+        id: Date.now(),
+        code: codeVal,
+        franchiseFee,
+        value: valueVal,
+        target: targetVal,
+        active: true,
+        used: false
+      });
       e.target.reset();
       renderDiscountCodeTable();
     }
 
     function toggleDiscountCode(id) {
-      discountCodes = discountCodes.map(d => d.id === id ? { ...d, active: !d.active } : d);
+      discountCodes = discountCodes.map(d => (d.id === id && !d.used) ? { ...d, active: !d.active } : d);
       renderDiscountCodeTable();
     }
 
     function deleteDiscountCode(id) {
       discountCodes = discountCodes.filter(d => d.id !== id);
       renderDiscountCodeTable();
+    }
+
+    function applyReceiptDiscountCode() {
+      const inputEl = document.getElementById('rcptDiscountCodeInput');
+      const msgEl = document.getElementById('rcptDiscountMsg');
+      const enteredCode = (inputEl.value || '').trim().toUpperCase();
+      if (!enteredCode) {
+        msgEl.className = 'font-semibold text-red-600';
+        msgEl.textContent = 'Please enter a discount / promo code.';
+        return;
+      }
+
+      const found = discountCodes.find(d => d.code.toUpperCase() === enteredCode);
+      if (!found) {
+        msgEl.className = 'font-semibold text-red-600';
+        msgEl.textContent = `Invalid discount code "${enteredCode}".`;
+        return;
+      }
+      if (found.used || !found.active) {
+        msgEl.className = 'font-semibold text-red-600';
+        msgEl.textContent = `Discount code "${enteredCode}" is already used or disabled.`;
+        return;
+      }
+
+      const codeBaseFee = found.franchiseFee > 0 ? found.franchiseFee : activeReceiptState.baseFees;
+      const discAmt = parseDiscountAmount(found.value, codeBaseFee);
+      activeReceiptState.appliedCodeId = found.id;
+      activeReceiptState.appliedCodeStr = found.code;
+
+      recalculateReceiptBilling(codeBaseFee, discAmt);
+      msgEl.className = 'font-semibold text-emerald-700';
+      msgEl.textContent = `Code "${found.code}" applied (${found.value})! Valid for one-time use.`;
+    }
+
+    async function finalizeReceiptBillingSubmit() {
+      if (activeReceiptState.appliedCodeId) {
+        discountCodes = discountCodes.map(d =>
+          d.id === activeReceiptState.appliedCodeId ? { ...d, used: true, active: false } : d
+        );
+        renderDiscountCodeTable();
+      }
+
+      // Update Supabase record with payable billing metadata if found
+      const matchRow = cachedFranchises.find(f => (f.applicant_info || '').includes(activeReceiptState.appNo));
+      if (matchRow) {
+        const meta = parseFranchiseRecord(matchRow);
+        meta.billing = {
+          promoCode: activeReceiptState.appliedCodeStr || 'None',
+          totalFranchiseFees: activeReceiptState.baseFees,
+          discountAmount: activeReceiptState.discountAmount,
+          gstAmount: activeReceiptState.gstAmount,
+          totalAmountPayable: activeReceiptState.totalPayable
+        };
+        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+        await db.from('franchises').update({ applicant_info: updatedInfo }).eq('id', matchRow.id);
+      }
+
+      alert(
+        `Billing Submitted for ${activeReceiptState.appNo}!
+` +
+        `Total Franchise Fees: ${formatINR(activeReceiptState.baseFees)}
+` +
+        `Discount: -${formatINR(activeReceiptState.discountAmount)}
+` +
+        `GST (18%): ${formatINR(activeReceiptState.gstAmount)}
+` +
+        `Total Amount Payable: ${formatINR(activeReceiptState.totalPayable)}`
+      );
+      closeAppReceiptModal();
     }
 
     renderDiscountCodeTable();
@@ -2730,10 +2562,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
             document.getElementById('faRejectedCount').textContent = rejectedF;
           }
         }
-        if (document.getElementById('sideCntFranchiseApp')) {
-          document.getElementById('sideCntFranchiseApp').textContent = franchises.length;
-          document.getElementById('sideCntFranchiseEnq').textContent = franchises.length;
-        }
+        updateFranchiseNotificationBadges(franchises.length);
         renderOurFranchiseTable();
         renderFranchiseApplicationTable();
         renderFranchiseEnquiryList();
@@ -2979,10 +2808,8 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         return;
       }
 
-      // 1. Auto-download PDF of the submitted application form
       generateAffiliationPDF(appData);
 
-      // 2. Prepare WhatsApp message to registered mobile number with Application Number & PDF info
       const cleanPhone = headMobile.replace(/[^0-9]/g, '');
       const waNumber = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
       const waText = encodeURIComponent(
@@ -3007,7 +2834,21 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       e.target.reset();
       closeAffiliationFormModal();
 
-      // Show receipt modal with WhatsApp trigger & Track Application prefill
+      activeReceiptState = {
+        appNo,
+        instituteName,
+        mobile: headMobile,
+        baseFees: 25000,
+        discountAmount: 0,
+        gstAmount: 0,
+        totalPayable: 0,
+        appliedCodeId: null,
+        appliedCodeStr: ''
+      };
+      document.getElementById('rcptDiscountCodeInput').value = '';
+      document.getElementById('rcptDiscountMsg').textContent = '';
+      recalculateReceiptBilling(25000, 0);
+
       document.getElementById('rcptAppNo').textContent = appNo;
       document.getElementById('rcptInstName').textContent = instituteName;
       document.getElementById('rcptMobile').textContent = headMobile;
