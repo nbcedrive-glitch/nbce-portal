@@ -42,7 +42,33 @@
         url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
     }
     @media print {
-      .no-print { display: none !important; }
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+      body * {
+        visibility: hidden;
+      }
+      #printOnlyApplicationSheet,
+      #printOnlyApplicationSheet * {
+        visibility: visible;
+      }
+      #printOnlyApplicationSheet {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+        border: none !important;
+        font-size: 9.5px !important;
+        line-height: 1.28 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -2299,7 +2325,8 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1.5">Date of Birth <span class="text-red-500">*</span></label>
-              <input id="stDOB" type="date" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+              <input id="stDOB" type="date" required onchange="updateLiveStudentAge()" oninput="updateLiveStudentAge()" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+              <p id="stCurrentAgeText" class="mt-1.5 text-xs font-bold text-emerald-700">Current Age: -</p>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1.5">Religion <span class="text-red-500">*</span></label>
@@ -2350,8 +2377,8 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
               <input id="stMobile" type="tel" required placeholder="Enter 10-digit mobile no." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Whatsapp No.</label>
-              <input id="stWhatsapp" type="tel" placeholder="Enter whatsapp no. (optional)" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Whatsapp No. <span class="text-red-500">*</span></label>
+              <input id="stWhatsapp" type="tel" required placeholder="Enter 10-digit whatsapp no." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
             </div>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -2400,9 +2427,12 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         <!-- Photo -->
         <div class="space-y-3">
           <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Photo</h4>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">Student Photo (optional)</label>
-            <input id="stPhotoFile" type="file" accept="image/*" class="block w-full max-w-md text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-lg file:border file:border-slate-300 file:text-xs file:font-semibold file:bg-slate-50 file:text-slate-800 hover:file:bg-slate-100">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="flex-1">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Student Photo (Supabase Storage)</label>
+              <input id="stPhotoFile" type="file" accept="image/*" onchange="previewStudentPhotoFile(this)" class="block w-full max-w-md text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-lg file:border file:border-slate-300 file:text-xs file:font-semibold file:bg-slate-50 file:text-slate-800 hover:file:bg-slate-100">
+            </div>
+            <img id="stPhotoPreviewImg" src="" alt="Student Photo Preview" class="hidden w-20 h-24 object-cover rounded-lg border border-slate-300 bg-slate-50 shrink-0">
           </div>
         </div>
 
@@ -2419,24 +2449,31 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     </div>
   </div>
 
-  <!-- STUDENT APPLICATION VIEW / PRINT MODAL -->
-  <div id="studentViewModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs overflow-y-auto p-4 no-print">
-    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-6">
-      <div class="bg-brand-950 text-white px-5 py-3.5 flex justify-between items-center">
+  <!-- STUDENT APPLICATION VIEW / PRINT MODAL (Single-Page Auto-Arranged, Print + PDF Download) -->
+  <div id="studentViewModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs overflow-y-auto p-3 sm:p-5">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-3">
+      <div class="bg-brand-950 text-white px-5 py-3 flex flex-wrap justify-between items-center gap-2 no-print">
         <div>
-          <span class="text-[10px] uppercase tracking-wider text-brand-gold font-bold">NBCE Student Application</span>
-          <h3 id="stViewModalTitle" class="font-display font-bold text-base">Student Details</h3>
+          <span class="text-[10px] uppercase tracking-wider text-brand-gold font-bold">NBCE Student Application Sheet</span>
+          <h3 id="stViewModalTitle" class="font-display font-bold text-sm sm:text-base">Application Preview</h3>
         </div>
         <div class="flex items-center gap-2">
-          <button type="button" onclick="window.print()" class="bg-brand-gold text-brand-950 text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
-            <i class="fa-solid fa-print mr-1"></i> Print
+          <button type="button" onclick="window.print()" class="bg-brand-gold hover:bg-amber-400 text-brand-950 text-xs font-extrabold px-3.5 py-1.5 rounded-lg cursor-pointer flex items-center gap-1.5">
+            <i class="fa-solid fa-print"></i> Print
+          </button>
+          <button type="button" id="stDownloadPdfBtn" onclick="downloadCurrentStudentApplicationPDF()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-lg cursor-pointer flex items-center gap-1.5">
+            <i class="fa-solid fa-file-pdf"></i> PDF
           </button>
           <button type="button" onclick="document.getElementById('studentViewModal').classList.add('hidden')" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
             Close
           </button>
         </div>
       </div>
-      <div id="stViewModalBody" class="p-6 space-y-2.5 text-xs text-slate-800"></div>
+
+      <!-- Single-Page Auto-Arranged Form Sheet (Only this prints when printing) -->
+      <div id="printOnlyApplicationSheet" class="p-5 bg-white text-slate-900">
+        <div id="stViewModalBody" class="space-y-3 text-xs"></div>
+      </div>
     </div>
   </div>
 
@@ -3184,26 +3221,177 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       return Array.from(byAppNo.values()).filter(s => (s.status || '').toLowerCase() !== 'rejected');
     }
 
+    let currentPreviewStudentRecord = null;
+    let currentPickedPhotoDataUrl = '';
+
+    function calculateAgeFromDOB(dobStr) {
+      if (!dobStr) return '-';
+      const birth = new Date(dobStr);
+      if (isNaN(birth.getTime())) return '-';
+      const today = new Date();
+      let years = today.getFullYear() - birth.getFullYear();
+      let months = today.getMonth() - birth.getMonth();
+      let days = today.getDate() - birth.getDate();
+
+      if (days < 0) {
+        const prevMonthDays = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+        days += prevMonthDays;
+        months -= 1;
+      }
+      if (months < 0) {
+        months += 12;
+        years -= 1;
+      }
+      if (years < 0) return 'Invalid DOB';
+      return `${years} Years, ${months} Months, ${days} Days`;
+    }
+
+    function updateLiveStudentAge() {
+      const dobVal = document.getElementById('stDOB')?.value || '';
+      const ageLabel = document.getElementById('stCurrentAgeText');
+      if (ageLabel) {
+        ageLabel.textContent = `Current Age: ${calculateAgeFromDOB(dobVal)}`;
+      }
+    }
+
+    function previewStudentPhotoFile(inputEl) {
+      const file = inputEl?.files?.[0];
+      const imgEl = document.getElementById('stPhotoPreviewImg');
+      if (!file) {
+        currentPickedPhotoDataUrl = '';
+        if (imgEl) { imgEl.src = ''; imgEl.classList.add('hidden'); }
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        currentPickedPhotoDataUrl = String(reader.result || '');
+        if (imgEl) {
+          imgEl.src = currentPickedPhotoDataUrl;
+          imgEl.classList.remove('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function uploadStudentPhotoToSupabase(appNo, fileObj) {
+      if (!fileObj) return currentPickedPhotoDataUrl || '';
+      try {
+        const ext = (fileObj.name.split('.').pop() || 'jpg').toLowerCase();
+        const filePath = `students/${appNo}_${Date.now()}.${ext}`;
+        const { error: upErr } = await db.storage.from('student-photos').upload(filePath, fileObj, { upsert: true });
+        if (!upErr) {
+          const { data: pubData } = db.storage.from('student-photos').getPublicUrl(filePath);
+          if (pubData && pubData.publicUrl) {
+            return pubData.publicUrl;
+          }
+        }
+      } catch (storageErr) {
+        console.warn('Supabase storage upload fallback to image preview:', storageErr);
+      }
+      return currentPickedPhotoDataUrl || '';
+    }
+
     function openStudentViewModal(appNo, mode) {
       const st = cachedStudents.find(s => String(s.app_no || s.reg_no) === String(appNo));
       if (!st) return;
+      currentPreviewStudentRecord = st;
+      const computedAge = st.age || calculateAgeFromDOB(st.dob);
+      const photoSrc = st.photo_url || '';
+
       document.getElementById('stViewModalTitle').textContent = `Application #${st.app_no || st.reg_no} — ${st.name}`;
       document.getElementById('stViewModalBody').innerHTML = `
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
-          <div><span class="text-slate-500 block">Application No (6-Digit)</span><strong class="font-mono text-sm text-brand-950">${st.app_no || st.reg_no}</strong></div>
-          <div><span class="text-slate-500 block">Status</span><strong class="text-sm text-emerald-700">${st.status || 'Applied'}</strong></div>
-          <div><span class="text-slate-500 block">Student Name</span><strong>${st.name}</strong></div>
-          <div><span class="text-slate-500 block">Course</span><strong>${st.course}</strong></div>
-          <div><span class="text-slate-500 block">Mobile No.</span><strong class="font-mono">${st.mobile || '-'}</strong></div>
-          <div><span class="text-slate-500 block">Centre Code</span><strong class="font-mono">${st.centre_code || 'NBCE0001'}</strong></div>
-          <div><span class="text-slate-500 block">Father's / Mother's Name</span><strong>${st.father_name || '-'} / ${st.mother_name || '-'}</strong></div>
-          <div><span class="text-slate-500 block">Address</span><strong>${st.address || '-'} (${st.pin_code || '-'})</strong></div>
+        <div class="border border-slate-800 rounded-lg p-3.5 bg-white space-y-2.5">
+          <div class="flex items-start justify-between gap-3 pb-2 border-b border-slate-300">
+            <div>
+              <p class="font-display font-extrabold text-sm text-brand-950 uppercase">NATIONAL BOARD OF COMPUTER EDUCATION</p>
+              <p class="text-[11px] font-bold text-slate-700">STUDENT APPLICATION FORM • APP NO: <span class="font-mono">${st.app_no || st.reg_no}</span></p>
+              <p class="text-[11px] text-slate-600">Centre: ${st.centre_code || 'NBCE0001'} &nbsp;|&nbsp; Status: <strong>${st.status || 'Applied'}</strong></p>
+            </div>
+            <div class="w-20 h-24 border border-slate-400 rounded flex items-center justify-center overflow-hidden bg-slate-50 shrink-0">
+              ${photoSrc
+                ? `<img src="${photoSrc}" alt="${st.name}" class="w-full h-full object-cover">`
+                : `<span class="text-[10px] text-slate-400 text-center px-1">No Photo</span>`}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5 text-[11px]">
+            <div><span class="text-slate-500">Course Category:</span> <strong>${st.course_category || '1 Year Course'}</strong></div>
+            <div><span class="text-slate-500">Course:</span> <strong>${st.course}</strong></div>
+            <div><span class="text-slate-500">Study Mode:</span> <strong>${st.study_mode || 'Offline'}</strong></div>
+            <div><span class="text-slate-500">Student Name:</span> <strong>${st.name}</strong></div>
+            <div><span class="text-slate-500">Father's Name:</span> <strong>${st.father_name || '-'}</strong></div>
+            <div><span class="text-slate-500">Mother's Name:</span> <strong>${st.mother_name || '-'}</strong></div>
+            <div><span class="text-slate-500">Date of Birth:</span> <strong>${st.dob || '-'}</strong></div>
+            <div><span class="text-slate-500">Current Age:</span> <strong>${computedAge}</strong></div>
+            <div><span class="text-slate-500">Gender / Religion:</span> <strong>${st.gender || '-'} / ${st.religion || '-'}</strong></div>
+            <div><span class="text-slate-500">Marital / Category:</span> <strong>${st.marital_status || '-'} / ${st.category || '-'}</strong></div>
+            <div><span class="text-slate-500">Mobile No.:</span> <strong class="font-mono">${st.mobile || '-'}</strong></div>
+            <div><span class="text-slate-500">WhatsApp No.:</span> <strong class="font-mono">${st.whatsapp || '-'}</strong></div>
+            <div><span class="text-slate-500">ID Type &amp; No.:</span> <strong>${st.id_card_type || '-'} (${st.id_card_number || '-'})</strong></div>
+            <div class="col-span-2"><span class="text-slate-500">Postal Address:</span> <strong>${st.address || '-'} — ${st.pin_code || ''}</strong></div>
+          </div>
         </div>
       `;
       document.getElementById('studentViewModal').classList.remove('hidden');
       if (mode === 'print') {
         setTimeout(() => window.print(), 150);
       }
+    }
+
+    function downloadCurrentStudentApplicationPDF() {
+      const st = currentPreviewStudentRecord;
+      if (!st || !window.jspdf || !window.jspdf.jsPDF) return;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const appNo = st.app_no || st.reg_no;
+      const ageStr = st.age || calculateAgeFromDOB(st.dob);
+
+      doc.setFillColor(11, 29, 58);
+      doc.rect(0, 0, 210, 26, 'F');
+      doc.setTextColor(234, 179, 8);
+      doc.setFontSize(13);
+      doc.setFont('helvetica', 'bold');
+      doc.text('NATIONAL BOARD OF COMPUTER EDUCATION', 105, 11, { align: 'center' });
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`STUDENT APPLICATION FORM | APPLICATION NO: ${appNo} | CENTRE: ${st.centre_code || 'NBCE0001'}`, 105, 19, { align: 'center' });
+
+      if (st.photo_url) {
+        try {
+          const fmt = st.photo_url.includes('image/png') ? 'PNG' : 'JPEG';
+          doc.addImage(st.photo_url, fmt, 162, 32, 32, 38);
+        } catch (imgErr) {
+          console.warn('PDF image add skipped:', imgErr);
+        }
+      }
+
+      let y = 36;
+      const line = (k, v) => {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text(`${k}:`, 14, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(String(v || '-'), 62, y);
+        y += 6.5;
+      };
+
+      line('Application No', appNo);
+      line('Student Name', st.name);
+      line('Course', `${st.course} (${st.course_category || '1 Year Course'}, ${st.study_mode || 'Offline'})`);
+      line("Father's Name", st.father_name);
+      line("Mother's Name", st.mother_name);
+      line('Date of Birth', st.dob);
+      line('Current Age', ageStr);
+      line('Mobile No.', st.mobile);
+      line('WhatsApp No.', st.whatsapp);
+      line('Gender / Religion', `${st.gender || '-'} / ${st.religion || '-'}`);
+      line('Marital / Category', `${st.marital_status || '-'} / ${st.category || '-'}`);
+      line('ID Card', `${st.id_card_type || '-'} - ${st.id_card_number || '-'}`);
+      line('Postal Address', `${st.address || '-'} (${st.pin_code || '-'})`);
+
+      doc.save(`Student_Application_${appNo}.pdf`);
     }
 
     async function acceptStudentApplication(appNo) {
@@ -3292,38 +3480,55 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     async function submitStudentApplicationForm(e) {
       e.preventDefault();
       const name = (document.getElementById('stFullName').value || '').trim();
+      const courseCategory = document.getElementById('stCourseCategory').value || '1 Year Course';
       const course = document.getElementById('stCourseName').value || 'ADCA (1 Year Diploma)';
+      const studyMode = document.getElementById('stStudyMode').value || 'Offline';
       const mobile = (document.getElementById('stMobile').value || '').trim();
+      const whatsapp = (document.getElementById('stWhatsapp').value || '').trim();
       const fatherName = (document.getElementById('stFatherName').value || '').trim();
       const motherName = (document.getElementById('stMotherName').value || '').trim();
       const dob = document.getElementById('stDOB').value || '';
+      const age = calculateAgeFromDOB(dob);
       const religion = document.getElementById('stReligion').value || '';
       const gender = document.getElementById('stGender').value || '';
       const maritalStatus = document.getElementById('stMaritalStatus').value || '';
       const category = document.getElementById('stCategory').value || '';
+      const enquirySource = document.getElementById('stEnquirySource').value || '';
+      const idCardType = document.getElementById('stIdCardType').value || '';
+      const idCardNumber = (document.getElementById('stIdCardNumber').value || '').trim();
       const address = (document.getElementById('stPostalAddress').value || '').trim();
       const pinCode = (document.getElementById('stPinCode').value || '').trim();
+      const photoFile = document.getElementById('stPhotoFile')?.files?.[0] || null;
 
-      if (!name) return;
+      if (!name || !whatsapp) return;
 
       const app_no = generate6DigitAppNo();
       const centreCode = document.getElementById('centrePanelCodePill')?.textContent?.trim() || 'NBCE0001';
+      const photoUrl = await uploadStudentPhotoToSupabase(app_no, photoFile);
 
       const studentRecord = {
         app_no,
         reg_no: app_no,
         name,
+        course_category: courseCategory,
         course,
+        study_mode: studyMode,
         mobile: mobile || '-',
+        whatsapp,
         father_name: fatherName,
         mother_name: motherName,
         dob,
+        age,
         religion,
         gender,
         marital_status: maritalStatus,
         category,
+        enquiry_source: enquirySource,
+        id_card_type: idCardType,
+        id_card_number: idCardNumber,
         address,
         pin_code: pinCode,
+        photo_url: photoUrl,
         centre_code: centreCode,
         status: 'Applied'
       };
@@ -3340,6 +3545,13 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         }]);
       } catch (err) {
         console.warn('Supabase student insert note:', err);
+      }
+
+      currentPickedPhotoDataUrl = '';
+      const prevImg = document.getElementById('stPhotoPreviewImg');
+      if (prevImg) { prevImg.src = ''; prevImg.classList.add('hidden'); }
+      if (document.getElementById('stCurrentAgeText')) {
+        document.getElementById('stCurrentAgeText').textContent = 'Current Age: -';
       }
 
       e.target.reset();
