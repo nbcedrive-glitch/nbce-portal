@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -385,23 +386,45 @@
               </div>
             </div>
 
-            <!-- WORKSPACE 1A: Our Franchise -->
+            <!-- WORKSPACE 1A: Our Franchise (Auto-generated Centre Codes NBCE0001+ & Active/Inactive/Cancel Controls) -->
             <div id="ws-centre-our-franchise" class="admin-ws-panel space-y-4">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <p class="text-xs text-slate-500 font-semibold">Total Franchise Inquiries</p>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <p class="text-xs text-slate-500 font-semibold">Total Authorized Centres</p>
                   <p id="statFranchiseTotal" class="text-2xl font-bold text-brand-950 mt-1">0</p>
                 </div>
-                <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
-                  <p class="text-xs text-emerald-700 font-semibold">Authorized / Approved</p>
+                <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <p class="text-xs text-emerald-700 font-semibold">Active Centres</p>
                   <p id="statFranchiseApproved" class="text-2xl font-bold text-emerald-800 mt-1">0</p>
                 </div>
-                <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
-                  <p class="text-xs text-amber-800 font-semibold">Pending Review</p>
-                  <p id="statFranchisePending" class="text-2xl font-bold text-amber-800 mt-1">0</p>
+                <div class="p-3.5 rounded-xl bg-orange-50 border border-orange-200">
+                  <p class="text-xs text-orange-700 font-semibold">Inactive Centres</p>
+                  <p id="statFranchiseInactive" class="text-2xl font-bold text-orange-700 mt-1">0</p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-red-50 border border-red-200">
+                  <p class="text-xs text-red-700 font-semibold">Cancelled Centres</p>
+                  <p id="statFranchiseCancelled" class="text-2xl font-bold text-red-700 mt-1">0</p>
                 </div>
               </div>
-              <div id="franchiseQueue" class="space-y-3 text-sm"></div>
+
+              <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                  <thead>
+                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
+                      <th class="py-3 px-3">Centre Code</th>
+                      <th class="py-3 px-3">Centre Name</th>
+                      <th class="py-3 px-3">Person Name</th>
+                      <th class="py-3 px-3">Contact</th>
+                      <th class="py-3 px-3">State</th>
+                      <th class="py-3 px-3">Dist</th>
+                      <th class="py-3 px-3">Area</th>
+                      <th class="py-3 px-3">Status</th>
+                      <th class="py-3 px-3 no-print">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ourFranchiseTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
             </div>
 
             <!-- WORKSPACE 1B: Franchise Notice -->
@@ -564,32 +587,37 @@
               <div class="p-4 rounded-xl border border-slate-200 bg-slate-50"><p class="font-bold text-brand-950">Practical Lab Modules</p><p class="text-xs text-slate-500 mt-1">Hands-on Centre Evaluation</p></div>
             </div>
 
-            <!-- WORKSPACE 4A: Franchise Application -->
+            <!-- WORKSPACE 4A: Franchise Application (Application No, View Icon, Approved/Pending/Reject with Confirm Warning) -->
             <div id="ws-franchise-application" class="admin-ws-panel hidden space-y-4">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                   <p class="text-xs text-slate-500 font-semibold">Total Applications</p>
                   <p id="faTotalCount" class="text-2xl font-bold text-brand-950 mt-1">0</p>
                 </div>
-                <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
-                  <p class="text-xs text-emerald-700 font-semibold">Approved Franchises</p>
+                <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                  <p class="text-xs text-emerald-700 font-semibold">Approved</p>
                   <p id="faApprovedCount" class="text-2xl font-bold text-emerald-800 mt-1">0</p>
                 </div>
-                <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
-                  <p class="text-xs text-amber-800 font-semibold">Pending Applications</p>
+                <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200">
+                  <p class="text-xs text-amber-800 font-semibold">Pending</p>
                   <p id="faPendingCount" class="text-2xl font-bold text-amber-800 mt-1">0</p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-red-50/70 border border-red-200">
+                  <p class="text-xs text-red-700 font-semibold">Rejected</p>
+                  <p id="faRejectedCount" class="text-2xl font-bold text-red-700 mt-1">0</p>
                 </div>
               </div>
 
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-sm">
+              <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
                   <thead>
-                    <tr class="border-b border-slate-200 text-slate-500 text-xs uppercase">
-                      <th class="py-2.5 px-3">Institute Name</th>
-                      <th class="py-2.5 px-3">Applicant &amp; City</th>
-                      <th class="py-2.5 px-3">Mobile</th>
-                      <th class="py-2.5 px-3">Status</th>
-                      <th class="py-2.5 px-3 no-print">Action</th>
+                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
+                      <th class="py-3 px-3">App. No</th>
+                      <th class="py-3 px-3">Institute Name</th>
+                      <th class="py-3 px-3">Centre Head &amp; Location</th>
+                      <th class="py-3 px-3">Contact</th>
+                      <th class="py-3 px-3">Status</th>
+                      <th class="py-3 px-3 no-print">View &amp; Action</th>
                     </tr>
                   </thead>
                   <tbody id="franchiseApplicationTable" class="divide-y divide-slate-100"></tbody>
@@ -807,9 +835,9 @@
             <a href="#course" class="bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-sm px-6 py-3.5 rounded-md shadow-lg transition flex items-center gap-2">
               <span>Explore Courses</span>
             </a>
-            <a href="#franchise" class="bg-brand-950/65 hover:bg-brand-950/85 border border-white/50 text-white font-semibold text-sm px-6 py-3.5 rounded-md backdrop-blur-xs transition flex items-center gap-2">
+            <button type="button" onclick="openAffiliationFormModal()" class="bg-brand-950/65 hover:bg-brand-950/85 border border-white/50 text-white font-semibold text-sm px-6 py-3.5 rounded-md backdrop-blur-xs transition flex items-center gap-2 cursor-pointer">
               <span>Apply for Franchise</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -1099,7 +1127,7 @@
 
           <!-- Franchise Sub-Navigation Tabs -->
           <div class="flex flex-wrap gap-2 text-xs font-bold">
-            <button type="button" id="ftab-application" onclick="switchHomeFranchiseTab('application')" class="home-ftab px-3.5 py-2 rounded-lg bg-brand-gold text-brand-950 cursor-pointer">
+            <button type="button" id="ftab-application" onclick="openAffiliationFormModal()" class="home-ftab px-3.5 py-2 rounded-lg bg-brand-gold text-brand-950 cursor-pointer">
               Application form
             </button>
             <button type="button" id="ftab-track" onclick="switchHomeFranchiseTab('track')" class="home-ftab px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white cursor-pointer">
@@ -1274,6 +1302,687 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       </div>
     </div>
   </footer>
+
+  <!-- APPLICATION FORM FOR AFFILIATION MODAL -->
+  <div id="affiliationFormModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs overflow-y-auto p-3 sm:p-6 no-print">
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-4">
+      <!-- Top Control Bar -->
+      <div class="bg-brand-950 text-white px-5 py-3 flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Online Franchise Affiliation Portal</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer">
+            <i class="fa-solid fa-print mr-1"></i> Print Form
+          </button>
+          <button type="button" onclick="closeAffiliationFormModal()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
+            <i class="fa-solid fa-xmark mr-1"></i> Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Official NBCE Letterhead Heading -->
+      <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 text-white px-6 py-7 text-center border-b-4 border-brand-gold">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full border-2 border-brand-gold bg-brand-950 text-brand-gold text-2xl mb-3 shadow-md">
+          <i class="fa-solid fa-desktop"></i>
+        </div>
+        <h2 class="font-display font-extrabold text-xl sm:text-3xl tracking-wide text-white">
+          NATIONAL BOARD OF COMPUTER EDUCATION
+        </h2>
+        <p class="text-brand-gold font-bold text-xs sm:text-sm mt-1">
+          NBCE Skill Development (Corporate Identification Number : U80903WB2017PTC223024)
+        </p>
+        <p class="text-slate-200 text-xs sm:text-sm mt-0.5">
+          Registered Under Ministry of Corporate Affairs, Govt. of India
+        </p>
+        <p class="text-slate-300 text-xs mt-1">
+          Regd. Office : 28 RabindraSarani, P.O. + P.S. - Ranaghat, Dist - Nadia, Pin - 741201 (W.B.)
+        </p>
+      </div>
+
+      <!-- Form Title Banner -->
+      <div class="bg-amber-50 border-b border-amber-200 px-6 py-3.5 text-center">
+        <h3 class="font-display font-extrabold text-base sm:text-lg text-brand-950 uppercase tracking-wide">
+          APPLICATION FORM FOR AFFILIATION
+        </h3>
+        <p class="text-xs font-bold text-brand-800 uppercase tracking-wider mt-0.5">
+          APPLICATION FORM FOR STUDY CENTRE
+        </p>
+      </div>
+
+      <!-- Main Affiliation Form -->
+      <form id="fullAffiliationForm" onsubmit="submitFullAffiliationForm(event)" class="p-5 sm:p-8 space-y-8 text-sm text-slate-800">
+
+        <!-- SECTION 1: Institute Location -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-brand-900 text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-location-dot text-brand-gold"></i> Institute Location
+          </div>
+          <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Study Centre Applied For *</label>
+              <select id="afAppliedFor" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">-- Select Study Centre Type --</option>
+                <option value="Authorized Study Centre (Urban)">Authorized Study Centre (Urban)</option>
+                <option value="Authorized Study Centre (Rural / Semi-Urban)">Authorized Study Centre (Rural / Semi-Urban)</option>
+                <option value="District Nodal Skill Centre">District Nodal Skill Centre</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">State *</label>
+              <select id="afInstState" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select State ]</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">District *</label>
+              <select id="afInstDistrict" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select District ]</option>
+                <option value="Nadia">Nadia</option>
+                <option value="Kolkata">Kolkata</option>
+                <option value="North 24 Parganas">North 24 Parganas</option>
+                <option value="South 24 Parganas">South 24 Parganas</option>
+                <option value="Hooghly">Hooghly</option>
+                <option value="Howrah">Howrah</option>
+                <option value="Murshidabad">Murshidabad</option>
+                <option value="Purba Bardhaman">Purba Bardhaman</option>
+                <option value="Paschim Bardhaman">Paschim Bardhaman</option>
+                <option value="Darjeeling">Darjeeling</option>
+                <option value="Jalpaiguri">Jalpaiguri</option>
+                <option value="Malda">Malda</option>
+                <option value="Purba Medinipur">Purba Medinipur</option>
+                <option value="Paschim Medinipur">Paschim Medinipur</option>
+                <option value="Other District">Other District</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">City / Town / Village *</label>
+              <input id="afInstCity" type="text" required placeholder="Enter City / Town / Village" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Institute Information -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-brand-900 text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-building-columns text-brand-gold"></i> Institute Information
+          </div>
+          <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Name of the Institute *</label>
+              <input id="afInstName" type="text" required placeholder="Enter Full Name of the Institute" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Year of Establishment *</label>
+              <select id="afEstYear" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select Year of Establishment ]</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+                <option value="2015-2019">2015 – 2019</option>
+                <option value="Before 2015">Before 2015</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Status of The Institution *</label>
+              <select id="afInstStatus" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Trust / Society / Others ]</option>
+                <option value="Trust">Trust</option>
+                <option value="Society">Society</option>
+                <option value="Proprietorship">Proprietorship</option>
+                <option value="Partnership">Partnership</option>
+                <option value="Private Limited">Private Limited</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">P.O. (Post Office) *</label>
+              <input id="afInstPO" type="text" required placeholder="Enter Post Office" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">P.S. (Police Station) *</label>
+              <input id="afInstPS" type="text" required placeholder="Enter Police Station" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Pin Code *</label>
+              <input id="afInstPin" type="text" required maxlength="6" placeholder="e.g. 741201" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Postal Address of the Institute *</label>
+              <input id="afInstAddress" type="text" required placeholder="House / Building No., Street / Para, Landmark..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Institute Contact No. / Business Phone No. *</label>
+              <input id="afInstPhone" type="tel" required placeholder="Enter Contact No." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Whatsapp No. *</label>
+              <input id="afInstWhatsapp" type="tel" required placeholder="Enter WhatsApp No." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Email Address *</label>
+              <input id="afInstEmail" type="email" required placeholder="Enter Institute Email" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Information About Centre Head -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-brand-900 text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-user-tie text-brand-gold"></i> Information About Centre Head
+          </div>
+          <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Name of the Centre Head *</label>
+              <input id="afHeadName" type="text" required placeholder="Enter Centre Head Full Name" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Designation / Position Hold of the Centre *</label>
+              <input id="afHeadDesignation" type="text" required placeholder="e.g. Director / Principal / Secretary" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">State *</label>
+              <select id="afHeadState" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select State ]</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">District *</label>
+              <select id="afHeadDistrict" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select District ]</option>
+                <option value="Nadia">Nadia</option>
+                <option value="Kolkata">Kolkata</option>
+                <option value="North 24 Parganas">North 24 Parganas</option>
+                <option value="South 24 Parganas">South 24 Parganas</option>
+                <option value="Hooghly">Hooghly</option>
+                <option value="Howrah">Howrah</option>
+                <option value="Murshidabad">Murshidabad</option>
+                <option value="Other District">Other District</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">P.O. (Post Office) *</label>
+              <input id="afHeadPO" type="text" required placeholder="Enter Post Office" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">P.S. (Police Station) *</label>
+              <input id="afHeadPS" type="text" required placeholder="Enter Police Station" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Postal Address of the Centre Head *</label>
+              <input id="afHeadAddress" type="text" required placeholder="Enter Complete Residential / Postal Address" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Pin Code *</label>
+              <input id="afHeadPin" type="text" required maxlength="6" placeholder="e.g. 741201" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mobile No. *</label>
+              <input id="afHeadMobile" type="tel" required placeholder="Enter Mobile No." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Email Address of the Centre Head *</label>
+              <input id="afHeadEmail" type="email" required placeholder="Enter Email Address" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Date of Birth of the Centre Head *</label>
+              <input id="afHeadDOB" type="date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nationality *</label>
+              <select id="afHeadNationality" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select Nationality ]</option>
+                <option value="Indian">Indian</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Religion *</label>
+              <select id="afHeadReligion" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select Religion ]</option>
+                <option value="Hinduism">Hinduism</option>
+                <option value="Islam">Islam</option>
+                <option value="Christianity">Christianity</option>
+                <option value="Sikhism">Sikhism</option>
+                <option value="Buddhism">Buddhism</option>
+                <option value="Jainism">Jainism</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Sex / Gender *</label>
+              <select id="afHeadGender" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select Gender ]</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Marital Status *</label>
+              <select id="afHeadMarital" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Married / Unmarried ]</option>
+                <option value="Married">Married</option>
+                <option value="Unmarried">Unmarried</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Educational Qualification of the Centre Head *</label>
+              <select id="afHeadQual" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select Educational Qualification ]</option>
+                <option value="10+2 / Higher Secondary">10+2 / Higher Secondary</option>
+                <option value="Graduate (B.A / B.Sc / B.Com / BCA)">Graduate (B.A / B.Sc / B.Com / BCA)</option>
+                <option value="Post Graduate (M.A / M.Sc / M.Com / MCA)">Post Graduate (M.A / M.Sc / M.Com / MCA)</option>
+                <option value="B.Tech / M.Tech / MBA">B.Tech / M.Tech / MBA</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Professional Experience of the Centre Head *</label>
+              <select id="afHeadExp" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">[ Select Professional Experience ]</option>
+                <option value="0 - 1 Year">0 – 1 Year</option>
+                <option value="1 - 3 Years">1 – 3 Years</option>
+                <option value="3 - 5 Years">3 – 5 Years</option>
+                <option value="5 - 10 Years">5 – 10 Years</option>
+                <option value="10+ Years">10+ Years</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Centre Director OR Centre's Pan No. *</label>
+              <input id="afPanNo" type="text" required maxlength="10" placeholder="Enter PAN No." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs uppercase font-mono outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Centre Director Aadhar No *</label>
+              <input id="afAadharNo" type="text" required maxlength="14" placeholder="Enter 12-digit ID No." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">GSTIN No. (Optional)</label>
+              <input id="afGstNo" type="text" maxlength="15" placeholder="Enter GSTIN No. (if available)" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs uppercase font-mono outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Available Infrastructure Facility of the Centre -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-brand-900 text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-door-open text-brand-gold"></i> Available Infrastructure Facility of the Centre
+          </div>
+          <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Office Room</label>
+              <select id="afInfraOffice" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1 Room">1 Room</option><option value="2 Rooms">2 Rooms</option><option value="3+ Rooms">3+ Rooms</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Theory Room</label>
+              <select id="afInfraTheory" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1 Room">1 Room</option><option value="2 Rooms">2 Rooms</option><option value="3+ Rooms">3+ Rooms</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Practical Room</label>
+              <select id="afInfraPractical" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1 Room">1 Room</option><option value="2 Rooms">2 Rooms</option><option value="3+ Rooms">3+ Rooms</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Staff Room</label>
+              <select id="afInfraStaff" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1 Room">1 Room</option><option value="2 Rooms">2 Rooms</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Library</label>
+              <select id="afInfraLibrary" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1 Room">1 Room</option><option value="2 Rooms">2 Rooms</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Reception</label>
+              <select id="afInfraReception" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1 Room">1 Room</option><option value="2 Rooms">2 Rooms</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Toilet</label>
+              <select id="afInfraToilet" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1">1</option><option value="2">2</option><option value="3+">3+</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Waiting Room</label>
+              <select id="afInfraWaiting" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Rooms ]</option>
+                <option value="1 Room">1 Room</option><option value="2 Rooms">2 Rooms</option><option value="Nil">Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Any Other</label>
+              <select id="afInfraOther" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="0">[ Select No. of Rooms ]</option>
+                <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3+">3+</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: Faculty Information of the Centre (As on date of proposal) -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-brand-900 text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-chalkboard-user text-brand-gold"></i> Faculty Information of the Centre (As on date of proposal)
+          </div>
+          <div class="p-4 overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 uppercase">
+                  <th class="py-2.5 px-2.5 w-10">Sl.</th>
+                  <th class="py-2.5 px-2.5">Name</th>
+                  <th class="py-2.5 px-2.5">Qualification</th>
+                  <th class="py-2.5 px-2.5">Teaching Experience</th>
+                  <th class="py-2.5 px-2.5">Status (Full time / Part time)</th>
+                </tr>
+              </thead>
+              <tbody id="afFacultyRows" class="divide-y divide-slate-100">
+                <tr>
+                  <td class="py-2 px-2.5 font-bold">1.</td>
+                  <td class="py-2 px-2.5"><input type="text" data-fac="name" placeholder="Faculty 1 Name" class="w-full px-2.5 py-1.5 border border-slate-300 rounded outline-none"></td>
+                  <td class="py-2 px-2.5"><select data-fac="qual" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Qualification ]</option><option>BCA / B.Sc IT</option><option>MCA / M.Sc IT</option><option>B.Tech / M.Tech</option><option>ADCA / PGDCA</option><option>Other</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="exp" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Experience ]</option><option>0 - 1 Year</option><option>1 - 3 Years</option><option>3 - 5 Years</option><option>5+ Years</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="status" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Status ]</option><option>Full time</option><option>Part time</option></select></td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-2.5 font-bold">2.</td>
+                  <td class="py-2 px-2.5"><input type="text" data-fac="name" placeholder="Faculty 2 Name" class="w-full px-2.5 py-1.5 border border-slate-300 rounded outline-none"></td>
+                  <td class="py-2 px-2.5"><select data-fac="qual" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Qualification ]</option><option>BCA / B.Sc IT</option><option>MCA / M.Sc IT</option><option>B.Tech / M.Tech</option><option>ADCA / PGDCA</option><option>Other</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="exp" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Experience ]</option><option>0 - 1 Year</option><option>1 - 3 Years</option><option>3 - 5 Years</option><option>5+ Years</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="status" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Status ]</option><option>Full time</option><option>Part time</option></select></td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-2.5 font-bold">3.</td>
+                  <td class="py-2 px-2.5"><input type="text" data-fac="name" placeholder="Faculty 3 Name" class="w-full px-2.5 py-1.5 border border-slate-300 rounded outline-none"></td>
+                  <td class="py-2 px-2.5"><select data-fac="qual" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Qualification ]</option><option>BCA / B.Sc IT</option><option>MCA / M.Sc IT</option><option>B.Tech / M.Tech</option><option>ADCA / PGDCA</option><option>Other</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="exp" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Experience ]</option><option>0 - 1 Year</option><option>1 - 3 Years</option><option>3 - 5 Years</option><option>5+ Years</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="status" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Status ]</option><option>Full time</option><option>Part time</option></select></td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-2.5 font-bold">4.</td>
+                  <td class="py-2 px-2.5"><input type="text" data-fac="name" placeholder="Faculty 4 Name" class="w-full px-2.5 py-1.5 border border-slate-300 rounded outline-none"></td>
+                  <td class="py-2 px-2.5"><select data-fac="qual" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Qualification ]</option><option>BCA / B.Sc IT</option><option>MCA / M.Sc IT</option><option>B.Tech / M.Tech</option><option>ADCA / PGDCA</option><option>Other</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="exp" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Experience ]</option><option>0 - 1 Year</option><option>1 - 3 Years</option><option>3 - 5 Years</option><option>5+ Years</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="status" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Status ]</option><option>Full time</option><option>Part time</option></select></td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-2.5 font-bold">5.</td>
+                  <td class="py-2 px-2.5"><input type="text" data-fac="name" placeholder="Faculty 5 Name" class="w-full px-2.5 py-1.5 border border-slate-300 rounded outline-none"></td>
+                  <td class="py-2 px-2.5"><select data-fac="qual" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Qualification ]</option><option>BCA / B.Sc IT</option><option>MCA / M.Sc IT</option><option>B.Tech / M.Tech</option><option>ADCA / PGDCA</option><option>Other</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="exp" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Experience ]</option><option>0 - 1 Year</option><option>1 - 3 Years</option><option>3 - 5 Years</option><option>5+ Years</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="status" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Status ]</option><option>Full time</option><option>Part time</option></select></td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-2.5 font-bold">6.</td>
+                  <td class="py-2 px-2.5"><input type="text" data-fac="name" placeholder="Faculty 6 Name" class="w-full px-2.5 py-1.5 border border-slate-300 rounded outline-none"></td>
+                  <td class="py-2 px-2.5"><select data-fac="qual" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Qualification ]</option><option>BCA / B.Sc IT</option><option>MCA / M.Sc IT</option><option>B.Tech / M.Tech</option><option>ADCA / PGDCA</option><option>Other</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="exp" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Experience ]</option><option>0 - 1 Year</option><option>1 - 3 Years</option><option>3 - 5 Years</option><option>5+ Years</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="status" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Status ]</option><option>Full time</option><option>Part time</option></select></td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-2.5 font-bold">7.</td>
+                  <td class="py-2 px-2.5"><input type="text" data-fac="name" placeholder="Faculty 7 Name" class="w-full px-2.5 py-1.5 border border-slate-300 rounded outline-none"></td>
+                  <td class="py-2 px-2.5"><select data-fac="qual" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Qualification ]</option><option>BCA / B.Sc IT</option><option>MCA / M.Sc IT</option><option>B.Tech / M.Tech</option><option>ADCA / PGDCA</option><option>Other</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="exp" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Experience ]</option><option>0 - 1 Year</option><option>1 - 3 Years</option><option>3 - 5 Years</option><option>5+ Years</option></select></td>
+                  <td class="py-2 px-2.5"><select data-fac="status" class="w-full px-2 py-1.5 border border-slate-300 rounded outline-none"><option value="">[ Select Status ]</option><option>Full time</option><option>Part time</option></select></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SECTION 6: Details of Available Facilities of the Centre -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-brand-900 text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-computer text-brand-gold"></i> Details of Available Facilities of the Centre
+          </div>
+          <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">No. of Computer</label>
+              <select id="afFacComputers" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Not Specified">[ Select No. of Computer ]</option>
+                <option>1 - 5 Computers</option><option>6 - 10 Computers</option><option>11 - 20 Computers</option><option>20+ Computers</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">No. of Reference Books</label>
+              <select id="afFacBooks" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Not Specified">[ Select No. of Reference Books ]</option>
+                <option>1 - 25 Books</option><option>26 - 50 Books</option><option>51 - 100 Books</option><option>100+ Books</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Licensed Software</label>
+              <select id="afFacSoftware" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Not Specified">[ Select No. of Licensed Software ]</option>
+                <option>Available (Windows / Office / Tally)</option><option>Partially Available</option><option>Open Source / Linux</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">No. of Journal</label>
+              <select id="afFacJournals" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Journal ]</option>
+                <option>1 - 5 Journals</option><option>6 - 10 Journals</option><option>10+ Journals</option><option>Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">No. of CD's</label>
+              <select id="afFacCDs" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of CD's ]</option>
+                <option>1 - 10 CD's</option><option>11 - 30 CD's</option><option>30+ CD's</option><option>Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">No. of Projector / LED</label>
+              <select id="afFacProjector" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Nil">[ Select No. of Projector / LED ]</option>
+                <option>1</option><option>2</option><option>3+</option><option>Nil</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Internet Facility with Speed</label>
+              <select id="afFacInternet" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Not Specified">[ Select Internet Facility ]</option>
+                <option>Broadband / Fiber (50+ Mbps)</option><option>Broadband / Fiber (100+ Mbps)</option><option>Mobile / Wi-Fi Hotspot</option><option>Not Available</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Inverter / Generator Facility</label>
+              <select id="afFacPower" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Not Specified">[ Select Inverter / Generator Facility ]</option>
+                <option>Inverter Available</option><option>Generator Available</option><option>Both Inverter &amp; Generator</option><option>Not Available</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Drinking Water Facility</label>
+              <select id="afFacWater" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs outline-none">
+                <option value="Not Specified">[ Select Drinking Water Facility ]</option>
+                <option>Purified / RO Drinking Water</option><option>Available</option><option>Not Available</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 7: Upload Documents -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="bg-brand-900 text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up text-brand-gold"></i> Upload Documents
+          </div>
+          <div class="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">1. Colour Passport Size Photograph of The Head of The Institute</label>
+              <input type="file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">2. Voter Card of The Institute Head (Both Side in One Page)</label>
+              <input type="file" accept="image/*,.pdf" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">3. Pan Card of The Institute Head</label>
+              <input type="file" accept="image/*,.pdf" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">4. Trade License / Registration Certificate of The Institute</label>
+              <input type="file" accept="image/*,.pdf" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">5. Colour Photograph of Theory Room</label>
+              <input type="file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">6. Colour Photograph of Practical Room</label>
+              <input type="file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">7. Colour Photograph of Office Room</label>
+              <input type="file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <label class="block font-bold text-slate-800 mb-1.5">8. Colour Photograph of Front Side of The Institute</label>
+              <input type="file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-white hover:file:bg-brand-800">
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 8: DECLARATION -->
+        <div class="border border-amber-300 bg-amber-50/70 rounded-xl p-5 space-y-3">
+          <h4 class="font-display font-extrabold text-sm text-brand-950 uppercase tracking-wider">DECLARATION</h4>
+          <label class="flex items-start gap-3 text-xs text-slate-800 leading-relaxed cursor-pointer">
+            <input id="afDeclarationCheck" type="checkbox" required class="mt-1 w-4 h-4 accent-brand-900 shrink-0">
+            <span>
+              I hereby certify that the context stated above are correct and true to my knowledge and belief and hereby confirm that our Organization / Society / Trust is free from any legal / official disputes whatsoever. I accept that any facts stated above, if found incorrect will automatically result in cancellation for nominations associate. However I will have no right whatsoever to fight / challenge legally against the judgment in any court of law. All disputes are subject to Ranaghat Jurisdiction only.
+            </span>
+          </label>
+        </div>
+
+        <!-- SUBMIT BUTTON & FEEDBACK -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <p id="afSubmitFeedback" class="text-xs font-bold text-emerald-700"></p>
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+            <button type="button" onclick="closeAffiliationFormModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-xs hover:bg-slate-100 cursor-pointer">
+              Cancel
+            </button>
+            <button type="submit" class="px-8 py-3 rounded-xl bg-brand-900 hover:bg-brand-800 text-brand-gold font-display font-extrabold text-sm uppercase tracking-wider shadow-lg transition cursor-pointer">
+              SUBMIT
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- POST-SUBMIT APPLICATION RECEIPT & WHATSAPP MODAL -->
+  <div id="appReceiptModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center gap-3 text-emerald-700">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-2xl shrink-0">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-extrabold text-lg text-brand-950">Application Submitted Successfully!</h3>
+          <p class="text-xs text-slate-500">Your form PDF has been downloaded automatically.</p>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs">
+        <div class="flex justify-between"><span class="text-slate-500">Application Number:</span><strong id="rcptAppNo" class="font-mono text-sm text-brand-950">NBCE-APP-0000</strong></div>
+        <div class="flex justify-between"><span class="text-slate-500">Institute Name:</span><strong id="rcptInstName" class="text-slate-900">-</strong></div>
+        <div class="flex justify-between"><span class="text-slate-500">Registered Mobile:</span><strong id="rcptMobile" class="font-mono text-slate-900">-</strong></div>
+        <div class="flex justify-between"><span class="text-slate-500">Current Status:</span><span class="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full">Pending</span></div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+        <a id="rcptWhatsappBtn" href="#" target="_blank" rel="noopener" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs text-center flex items-center justify-center gap-2 transition">
+          <i class="fa-brands fa-whatsapp text-base"></i> Send App No &amp; PDF on WhatsApp
+        </a>
+        <button type="button" id="rcptRedownloadPdfBtn" class="bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold py-2.5 px-4 rounded-xl text-xs cursor-pointer">
+          <i class="fa-solid fa-file-pdf mr-1"></i> PDF Again
+        </button>
+      </div>
+
+      <div class="text-right pt-1">
+        <button type="button" onclick="closeAppReceiptModal()" class="text-xs font-semibold text-slate-500 hover:text-slate-800 cursor-pointer">Close &amp; Track Status</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN VIEW APPLICATION DETAILS MODAL -->
+  <div id="viewApplicationModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs overflow-y-auto p-4 no-print">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-6">
+      <div class="bg-brand-950 text-white px-5 py-3.5 flex justify-between items-center">
+        <div>
+          <span class="text-[10px] uppercase tracking-wider text-brand-gold font-bold">Franchise Affiliation Dossier</span>
+          <h3 id="viewAppModalTitle" class="font-display font-bold text-base">Application Details</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="viewAppDownloadPdfBtn" class="bg-brand-gold text-brand-950 text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
+            <i class="fa-solid fa-file-pdf mr-1"></i> Download PDF
+          </button>
+          <button type="button" onclick="closeViewApplicationModal()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
+            Close
+          </button>
+        </div>
+      </div>
+      <div id="viewAppModalBody" class="p-5 sm:p-6 space-y-4 text-xs text-slate-800"></div>
+    </div>
+  </div>
+
+  <!-- WARNING CONFIRMATION DIALOG (Yes / No) -->
+  <div id="adminConfirmModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="w-11 h-11 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-extrabold text-base text-brand-950">Confirmation Warning</h3>
+          <p id="adminConfirmMessage" class="text-sm text-slate-700 mt-1">Are you sure you want to proceed?</p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2.5 pt-2">
+        <button type="button" onclick="resolveAdminConfirm(false)" class="px-5 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-100 cursor-pointer">
+          No
+        </button>
+        <button type="button" onclick="resolveAdminConfirm(true)" class="px-5 py-2 rounded-xl bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold text-xs cursor-pointer">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Login Modal -->
   <div id="loginModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4 no-print">
@@ -1549,49 +2258,370 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     }
 
     let cachedFranchises = [];
+    let pendingConfirmCallback = null;
     let discountCodes = [
       { id: 1, code: 'NBCEFR10', value: '10% Off', target: 'Franchise Affiliation', active: true },
       { id: 2, code: 'SKILL500', value: '₹500 Off', target: 'Student Admission', active: true }
     ];
 
+    function askAdminConfirm(messageText, onYesCallback) {
+      document.getElementById('adminConfirmMessage').textContent = messageText;
+      pendingConfirmCallback = onYesCallback;
+      document.getElementById('adminConfirmModal').classList.remove('hidden');
+    }
+
+    function resolveAdminConfirm(confirmed) {
+      document.getElementById('adminConfirmModal').classList.add('hidden');
+      const cb = pendingConfirmCallback;
+      pendingConfirmCallback = null;
+      if (confirmed && typeof cb === 'function') {
+        cb();
+      }
+    }
+
+    // Parse packed JSON metadata from applicant_info if available, with fallback for legacy rows
+    function parseFranchiseRecord(row) {
+      const fallback = {
+        appNo: `NBCEAPP${String(row.id || 1).padStart(4, '0')}`,
+        headName: row.applicant_info || '-',
+        designation: 'Director',
+        appliedFor: 'Authorized Study Centre',
+        state: 'West Bengal',
+        district: 'Nadia',
+        city: '-',
+        pin: '-',
+        email: '-',
+        phone: row.mobile || '-',
+        whatsapp: row.mobile || '-',
+        centreCode: '',
+        centreState: 'Active', // Active | Inactive | Cancel
+        rawText: row.applicant_info || ''
+      };
+      if (!row.applicant_info) return fallback;
+      const marker = '::META::';
+      const idx = row.applicant_info.indexOf(marker);
+      if (idx !== -1) {
+        try {
+          const parsed = JSON.parse(row.applicant_info.slice(idx + marker.length));
+          return { ...fallback, ...parsed, rawText: row.applicant_info.slice(0, idx).trim() };
+        } catch (err) {
+          return fallback;
+        }
+      }
+      return fallback;
+    }
+
+    function buildApplicantInfoWithMeta(summaryText, metaObj) {
+      return `${summaryText} ::META::${JSON.stringify(metaObj)}`;
+    }
+
+    function getNextCentreCode() {
+      let maxNum = 0;
+      cachedFranchises.forEach(r => {
+        const m = parseFranchiseRecord(r);
+        if (m.centreCode && /^NBCE\d+$/i.test(m.centreCode)) {
+          const num = parseInt(m.centreCode.replace(/[^0-9]/g, ''), 10);
+          if (num > maxNum) maxNum = num;
+        }
+      });
+      return 'NBCE' + String(maxNum + 1).padStart(4, '0');
+    }
+
+    function generateAffiliationPDF(appData) {
+      if (!window.jspdf || !window.jspdf.jsPDF) return;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFillColor(11, 29, 58);
+      doc.rect(0, 0, 210, 34, 'F');
+      doc.setTextColor(234, 179, 8);
+      doc.setFontSize(15);
+      doc.setFont('helvetica', 'bold');
+      doc.text('NATIONAL BOARD OF COMPUTER EDUCATION', 105, 13, { align: 'center' });
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text('NBCE Skill Development (CIN : U80903WB2017PTC223024) | Regd. Under MCA, Govt. of India', 105, 19, { align: 'center' });
+      doc.text('Regd. Office : 28 RabindraSarani, P.O. + P.S. - Ranaghat, Dist - Nadia, Pin - 741201 (W.B.)', 105, 25, { align: 'center' });
+
+      doc.setTextColor(11, 29, 58);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('APPLICATION FORM FOR AFFILIATION (STUDY CENTRE)', 105, 43, { align: 'center' });
+
+      doc.setFontSize(10);
+      doc.text(`Application No: ${appData.appNo}`, 14, 52);
+      doc.text(`Status: ${appData.status || 'Pending'}`, 160, 52);
+      doc.line(14, 55, 196, 55);
+
+      let y = 63;
+      const addLine = (label, val) => {
+        if (y > 275) { doc.addPage(); y = 20; }
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}:`, 14, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(String(val || '-'), 75, y);
+        y += 7;
+      };
+
+      addLine('Institute Name', appData.instituteName);
+      addLine('Applied For', appData.appliedFor);
+      addLine('Year of Establishment', appData.estYear);
+      addLine('Institution Status', appData.instStatus);
+      addLine('Location', `${appData.city}, Dist: ${appData.district}, ${appData.state} - ${appData.pin}`);
+      addLine('PO / PS', `${appData.instPO || '-'} / ${appData.instPS || '-'}`);
+      addLine('Institute Address', appData.instAddress);
+      addLine('Contact / WhatsApp', `${appData.phone} / ${appData.whatsapp}`);
+      addLine('Institute Email', appData.email);
+      y += 2;
+      addLine('Centre Head Name', appData.headName);
+      addLine('Designation', appData.designation);
+      addLine('Head Mobile / Email', `${appData.headMobile || appData.phone} / ${appData.headEmail || appData.email}`);
+      addLine('DOB / Gender / Marital', `${appData.headDOB || '-'} | ${appData.headGender || '-'} | ${appData.headMarital || '-'}`);
+      addLine('Nationality / Religion', `${appData.headNationality || '-'} / ${appData.headReligion || '-'}`);
+      addLine('Qualification / Exp.', `${appData.headQual || '-'} / ${appData.headExp || '-'}`);
+      addLine('PAN / ID / GSTIN', `${appData.panNo || '-'} | ${appData.aadharNo || '-'} | ${appData.gstNo || 'N/A'}`);
+      y += 2;
+      addLine('Infrastructure', appData.infraSummary || '-');
+      addLine('Facilities', appData.facilitySummary || '-');
+      addLine('Faculty Count', `${(appData.faculties || []).length} Listed`);
+
+      y += 4;
+      doc.setFontSize(8);
+      doc.setTextColor(80, 80, 80);
+      doc.text('Declaration Accepted: Subject to Ranaghat Jurisdiction only.', 14, y);
+
+      doc.save(`${appData.appNo}_NBCE_Affiliation_Form.pdf`);
+    }
+
+    function openViewApplicationModal(id) {
+      const row = cachedFranchises.find(f => f.id === id);
+      if (!row) return;
+      const meta = parseFranchiseRecord(row);
+      document.getElementById('viewAppModalTitle').textContent = `${meta.appNo} — ${row.institute_name}`;
+      const pdfBtn = document.getElementById('viewAppDownloadPdfBtn');
+      pdfBtn.onclick = () => generateAffiliationPDF({
+        ...meta,
+        instituteName: row.institute_name,
+        status: row.status || 'Pending'
+      });
+
+      const facHtml = (meta.faculties && meta.faculties.length)
+        ? meta.faculties.map((fc, i) => `<li>${i + 1}. <strong>${fc.name}</strong> — ${fc.qual || '-'} (${fc.exp || '-'}, ${fc.status || '-'})</li>`).join('')
+        : '<li>No faculty entries recorded.</li>';
+
+      document.getElementById('viewAppModalBody').innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+          <div><span class="text-slate-500 block">Application Number</span><strong class="font-mono text-sm text-brand-950">${meta.appNo}</strong></div>
+          <div><span class="text-slate-500 block">Application Status</span><strong class="text-sm ${row.status === 'Approved' ? 'text-emerald-700' : row.status === 'Rejected' ? 'text-red-700' : 'text-amber-700'}">${row.status || 'Pending'}</strong></div>
+          ${meta.centreCode ? `<div><span class="text-slate-500 block">Generated Centre Code</span><strong class="font-mono text-sm text-emerald-800">${meta.centreCode} (${meta.centreState || 'Active'})</strong></div>` : ''}
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
+            <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Institute Details</p>
+            <p><strong>Name:</strong> ${row.institute_name}</p>
+            <p><strong>Applied For:</strong> ${meta.appliedFor}</p>
+            <p><strong>Est. Year / Status:</strong> ${meta.estYear || '-'} / ${meta.instStatus || '-'}</p>
+            <p><strong>Location:</strong> ${meta.city}, Dist: ${meta.district}, ${meta.state} - ${meta.pin}</p>
+            <p><strong>PO / PS:</strong> ${meta.instPO || '-'} / ${meta.instPS || '-'}</p>
+            <p><strong>Address:</strong> ${meta.instAddress || '-'}</p>
+            <p><strong>Phone / WhatsApp:</strong> ${meta.phone} / ${meta.whatsapp}</p>
+            <p><strong>Email:</strong> ${meta.email}</p>
+          </div>
+          <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
+            <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Centre Head Details</p>
+            <p><strong>Head Name:</strong> ${meta.headName}</p>
+            <p><strong>Designation:</strong> ${meta.designation}</p>
+            <p><strong>Mobile:</strong> ${meta.headMobile || row.mobile}</p>
+            <p><strong>Email:</strong> ${meta.headEmail || meta.email}</p>
+            <p><strong>DOB / Gender:</strong> ${meta.headDOB || '-'} / ${meta.headGender || '-'}</p>
+            <p><strong>Qualification / Exp.:</strong> ${meta.headQual || '-'} / ${meta.headExp || '-'}</p>
+            <p><strong>PAN / ID / GSTIN:</strong> ${meta.panNo || '-'} / ${meta.aadharNo || '-'} / ${meta.gstNo || 'N/A'}</p>
+          </div>
+        </div>
+        <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
+          <p class="font-bold text-brand-900 uppercase text-[11px]">Infrastructure &amp; Facilities</p>
+          <p><strong>Infrastructure:</strong> ${meta.infraSummary || '-'}</p>
+          <p><strong>Facilities:</strong> ${meta.facilitySummary || '-'}</p>
+        </div>
+        <div class="p-3.5 rounded-xl border border-slate-200">
+          <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Faculty List</p>
+          <ul class="space-y-1">${facHtml}</ul>
+        </div>
+      `;
+      document.getElementById('viewApplicationModal').classList.remove('hidden');
+    }
+
+    function closeViewApplicationModal() {
+      document.getElementById('viewApplicationModal').classList.add('hidden');
+    }
+
+    function closeAppReceiptModal() {
+      document.getElementById('appReceiptModal').classList.add('hidden');
+      switchHomeFranchiseTab('track');
+      const sec = document.getElementById('franchise');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Admin Action on Franchise Application: Approved / Pending / Reject with Yes/No warning
+    function confirmApplicationStatusChange(id, newStatus) {
+      const actionWord = newStatus === 'Approved' ? 'approve' : newStatus === 'Rejected' ? 'reject' : 'mark as pending';
+      askAdminConfirm(`Are you sure you want to ${actionWord} this franchise application?`, async () => {
+        const row = cachedFranchises.find(f => f.id === id);
+        if (!row) return;
+        const meta = parseFranchiseRecord(row);
+        if (newStatus === 'Approved') {
+          if (!meta.centreCode) {
+            meta.centreCode = getNextCentreCode();
+          }
+          if (!meta.centreState) {
+            meta.centreState = 'Active';
+          }
+        }
+        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+        const { error } = await db
+          .from('franchises')
+          .update({ status: newStatus, applicant_info: updatedInfo })
+          .eq('id', id);
+        if (error) return alert('Error updating application status: ' + error.message);
+        await refreshDashboardData();
+      });
+    }
+
+    // Admin Action on Our Franchise: Active / Inactive (orange) / Cancel (red) with Yes/No warning
+    function confirmCentreOperationalState(id, nextState) {
+      const label = nextState === 'Active' ? 'activate' : nextState === 'Inactive' ? 'deactivate (Inactive)' : 'cancel';
+      askAdminConfirm(`Are you sure you want to ${label} this study centre?`, async () => {
+        const row = cachedFranchises.find(f => f.id === id);
+        if (!row) return;
+        const meta = parseFranchiseRecord(row);
+        meta.centreState = nextState;
+        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+        const { error } = await db
+          .from('franchises')
+          .update({ applicant_info: updatedInfo })
+          .eq('id', id);
+        if (error) return alert('Error updating centre status: ' + error.message);
+        await refreshDashboardData();
+      });
+    }
+
+    // Render 01. Study Centre -> Our Franchise (Approved centres with NBCE0001+ and Active/Inactive/Cancel)
+    function renderOurFranchiseTable() {
+      const tbody = document.getElementById('ourFranchiseTableBody');
+      if (!tbody) return;
+      const approvedRows = cachedFranchises.filter(f => f.status === 'Approved');
+
+      let activeCnt = 0, inactiveCnt = 0, cancelCnt = 0;
+      approvedRows.forEach(f => {
+        const st = parseFranchiseRecord(f).centreState || 'Active';
+        if (st === 'Inactive') inactiveCnt++;
+        else if (st === 'Cancel') cancelCnt++;
+        else activeCnt++;
+      });
+
+      if (document.getElementById('statFranchiseTotal')) {
+        document.getElementById('statFranchiseTotal').textContent = approvedRows.length;
+        document.getElementById('statFranchiseApproved').textContent = activeCnt;
+        document.getElementById('statFranchiseInactive').textContent = inactiveCnt;
+        document.getElementById('statFranchiseCancelled').textContent = cancelCnt;
+      }
+
+      tbody.innerHTML = approvedRows.length ? approvedRows.map((f, idx) => {
+        const meta = parseFranchiseRecord(f);
+        const code = meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'));
+        const cState = meta.centreState || 'Active';
+
+        let rowBg = '';
+        let badgeHtml = '<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Active</span>';
+        if (cState === 'Inactive') {
+          rowBg = 'bg-orange-50';
+          badgeHtml = '<span class="bg-orange-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Inactive</span>';
+        } else if (cState === 'Cancel') {
+          rowBg = 'bg-red-50';
+          badgeHtml = '<span class="bg-red-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Cancelled</span>';
+        }
+
+        return `
+          <tr class="${rowBg} transition">
+            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-950">${code}</td>
+            <td class="py-2.5 px-3 font-semibold text-slate-900">${f.institute_name}</td>
+            <td class="py-2.5 px-3 text-slate-700">${meta.headName}</td>
+            <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
+            <td class="py-2.5 px-3 text-xs">${meta.state}</td>
+            <td class="py-2.5 px-3 text-xs">${meta.district}</td>
+            <td class="py-2.5 px-3 text-xs">${meta.city}</td>
+            <td class="py-2.5 px-3">${badgeHtml}</td>
+            <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
+              <button type="button" onclick="confirmCentreOperationalState(${f.id}, 'Active')" class="px-2 py-1 rounded text-[11px] font-bold cursor-pointer ${cState === 'Active' ? 'bg-emerald-600 text-white' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}">Active</button>
+              <button type="button" onclick="confirmCentreOperationalState(${f.id}, 'Inactive')" class="px-2 py-1 rounded text-[11px] font-bold cursor-pointer ${cState === 'Inactive' ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-800 hover:bg-orange-200'}">Inactive</button>
+              <button type="button" onclick="confirmCentreOperationalState(${f.id}, 'Cancel')" class="px-2 py-1 rounded text-[11px] font-bold cursor-pointer ${cState === 'Cancel' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-800 hover:bg-red-200'}">Cancel</button>
+            </td>
+          </tr>
+        `;
+      }).join('') : '<tr><td colspan="9" class="py-5 px-3 text-slate-500 text-xs text-center">No approved centres yet. Approve a Franchise Application to generate Centre Code (NBCE0001).</td></tr>';
+    }
+
+    // Render 04. Franchise -> Franchise Application (Approved / Pending / Reject + View icon)
     function renderFranchiseApplicationTable() {
       const tbody = document.getElementById('franchiseApplicationTable');
       if (!tbody) return;
-      tbody.innerHTML = cachedFranchises.length ? cachedFranchises.map(f => `
-        <tr>
-          <td class="py-2.5 px-3 font-semibold text-brand-950">${f.institute_name}</td>
-          <td class="py-2.5 px-3 text-slate-700">${f.applicant_info}</td>
-          <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
-          <td class="py-2.5 px-3">
-            ${f.status === 'Approved'
-              ? '<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Approved</span>'
-              : '<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Pending</span>'}
-          </td>
-          <td class="py-2.5 px-3 no-print">
-            ${f.status === 'Approved'
-              ? '<span class="text-xs text-slate-400">Authorized</span>'
-              : `<button type="button" onclick="approveFranchise(${f.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1 rounded font-semibold cursor-pointer">Approve</button>`}
-          </td>
-        </tr>
-      `).join('') : '<tr><td colspan="5" class="py-4 px-3 text-slate-500 text-xs">No franchise applications found.</td></tr>';
+      tbody.innerHTML = cachedFranchises.length ? cachedFranchises.map(f => {
+        const meta = parseFranchiseRecord(f);
+        const st = f.status || 'Pending';
+        let statusBadge = '<span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Pending</span>';
+        if (st === 'Approved') {
+          statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Approved (${meta.centreCode || 'NBCE0001'})</span>`;
+        } else if (st === 'Rejected') {
+          statusBadge = '<span class="bg-red-100 text-red-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Rejected</span>';
+        }
+
+        return `
+          <tr>
+            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-900">${meta.appNo}</td>
+            <td class="py-2.5 px-3 font-semibold text-brand-950">${f.institute_name}</td>
+            <td class="py-2.5 px-3 text-xs text-slate-700">${meta.headName} • ${meta.city}, ${meta.district}</td>
+            <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
+            <td class="py-2.5 px-3">${statusBadge}</td>
+            <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
+              <button type="button" onclick="openViewApplicationModal(${f.id})" title="View Full Application" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">
+                <i class="fa-solid fa-eye mr-1"></i>View
+              </button>
+              <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Approved</button>
+              <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Pending')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Pending</button>
+              <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Reject</button>
+            </td>
+          </tr>
+        `;
+      }).join('') : '<tr><td colspan="6" class="py-4 px-3 text-slate-500 text-xs">No franchise applications found.</td></tr>';
     }
 
     function renderFranchiseEnquiryList() {
       const box = document.getElementById('franchiseEnquiryList');
       if (!box) return;
       const q = (document.getElementById('franchiseEnqSearch')?.value || '').toLowerCase();
-      const rows = cachedFranchises.filter(f =>
-        `${f.institute_name} ${f.applicant_info} ${f.mobile}`.toLowerCase().includes(q)
-      );
-      box.innerHTML = rows.length ? rows.map(f => `
+      const rows = cachedFranchises.filter(f => {
+        const meta = parseFranchiseRecord(f);
+        return `${meta.appNo} ${f.institute_name} ${meta.headName} ${meta.city} ${f.mobile}`.toLowerCase().includes(q);
+      });
+      box.innerHTML = rows.length ? rows.map(f => {
+        const meta = parseFranchiseRecord(f);
+        return `
         <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <p class="font-bold text-brand-950">${f.institute_name}</p>
-            <p class="text-xs text-slate-600 mt-0.5"><i class="fa-solid fa-user mr-1 text-slate-400"></i>${f.applicant_info} &nbsp;•&nbsp; <i class="fa-solid fa-phone mr-1 text-slate-400"></i>${f.mobile}</p>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-[11px] font-bold bg-brand-900 text-brand-gold px-2 py-0.5 rounded">${meta.appNo}</span>
+              <p class="font-bold text-brand-950">${f.institute_name}</p>
+            </div>
+            <p class="text-xs text-slate-600 mt-1"><i class="fa-solid fa-user mr-1 text-slate-400"></i>${meta.headName} (${meta.city}, ${meta.district}) &nbsp;•&nbsp; <i class="fa-solid fa-phone mr-1 text-slate-400"></i>${f.mobile}</p>
           </div>
-          <span class="text-xs font-bold px-3 py-1 rounded-full w-fit ${f.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}">${f.status || 'Pending'}</span>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="openViewApplicationModal(${f.id})" class="bg-slate-800 text-white text-xs px-2.5 py-1 rounded-lg font-semibold cursor-pointer"><i class="fa-solid fa-eye mr-1"></i>View</button>
+            <span class="text-xs font-bold px-3 py-1 rounded-full w-fit ${f.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : f.status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-900'}">${f.status || 'Pending'}</span>
+          </div>
         </div>
-      `).join('') : '<p class="text-xs text-slate-500">No matching franchise enquiries.</p>';
+      `;
+      }).join('') : '<p class="text-xs text-slate-500">No matching franchise enquiries.</p>';
     }
 
     function renderDiscountCodeTable() {
@@ -1688,35 +2718,23 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
       if (franchises) {
         cachedFranchises = franchises;
-        const pendingF = franchises.filter(f => f.status !== 'Approved').length;
+        const pendingF = franchises.filter(f => (f.status || 'Pending') === 'Pending').length;
         const approvedF = franchises.filter(f => f.status === 'Approved').length;
-        if (document.getElementById('statFranchiseTotal')) {
-          document.getElementById('statFranchiseTotal').textContent = franchises.length;
-          document.getElementById('statFranchiseApproved').textContent = approvedF;
-          document.getElementById('statFranchisePending').textContent = pendingF;
-        }
+        const rejectedF = franchises.filter(f => f.status === 'Rejected').length;
+
         if (document.getElementById('faTotalCount')) {
           document.getElementById('faTotalCount').textContent = franchises.length;
           document.getElementById('faApprovedCount').textContent = approvedF;
           document.getElementById('faPendingCount').textContent = pendingF;
+          if (document.getElementById('faRejectedCount')) {
+            document.getElementById('faRejectedCount').textContent = rejectedF;
+          }
         }
         if (document.getElementById('sideCntFranchiseApp')) {
           document.getElementById('sideCntFranchiseApp').textContent = franchises.length;
           document.getElementById('sideCntFranchiseEnq').textContent = franchises.length;
         }
-        if (document.getElementById('franchiseQueue')) {
-          document.getElementById('franchiseQueue').innerHTML = franchises.length ? franchises.map(f => `
-            <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
-              <div>
-                <p class="font-semibold text-slate-800">${f.institute_name}</p>
-                <p class="text-xs text-slate-500">${f.applicant_info} • ${f.mobile}</p>
-              </div>
-              ${f.status === 'Approved'
-                ? '<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Approved</span>'
-                : `<button type="button" onclick="approveFranchise(${f.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold">Approve</button>`}
-            </div>
-          `).join('') : '<p class="text-slate-500 text-xs">No franchise inquiries in database yet.</p>';
-        }
+        renderOurFranchiseTable();
         renderFranchiseApplicationTable();
         renderFranchiseEnquiryList();
       }
@@ -1730,12 +2748,6 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const { error } = await db.from('notices').insert([{ title }]);
       if (error) return alert('Error saving notice: ' + error.message);
       input.value = '';
-      await refreshDashboardData();
-    }
-
-    async function approveFranchise(id) {
-      const { error } = await db.from('franchises').update({ status: 'Approved' }).eq('id', id);
-      if (error) return alert('Error approving: ' + error.message);
       await refreshDashboardData();
     }
 
@@ -1822,22 +2834,194 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     }
 
     function openFranchiseSection(tabName) {
+      if (tabName === 'application') {
+        openAffiliationFormModal();
+        return;
+      }
       switchHomeFranchiseTab(tabName);
       const sec = document.getElementById('franchise');
       if (sec) sec.scrollIntoView({ behavior: 'smooth' });
     }
 
+    function openAffiliationFormModal() {
+      const modal = document.getElementById('affiliationFormModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+    }
+
+    function closeAffiliationFormModal() {
+      const modal = document.getElementById('affiliationFormModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    async function submitFullAffiliationForm(e) {
+      e.preventDefault();
+      const appNo = 'NBCEAPP2026' + Math.floor(1000 + Math.random() * 9000);
+      const instituteName = document.getElementById('afInstName').value.trim();
+      const appliedFor = document.getElementById('afAppliedFor').value;
+      const state = document.getElementById('afInstState').value;
+      const district = document.getElementById('afInstDistrict').value;
+      const city = document.getElementById('afInstCity').value.trim();
+      const estYear = document.getElementById('afEstYear').value;
+      const instStatus = document.getElementById('afInstStatus').value;
+      const instPO = document.getElementById('afInstPO').value.trim();
+      const instPS = document.getElementById('afInstPS').value.trim();
+      const pin = document.getElementById('afInstPin').value.trim();
+      const instAddress = document.getElementById('afInstAddress').value.trim();
+      const phone = document.getElementById('afInstPhone').value.trim();
+      const whatsapp = document.getElementById('afInstWhatsapp').value.trim();
+      const email = document.getElementById('afInstEmail').value.trim();
+
+      const headName = document.getElementById('afHeadName').value.trim();
+      const designation = document.getElementById('afHeadDesignation').value.trim();
+      const headMobile = document.getElementById('afHeadMobile').value.trim() || whatsapp || phone;
+      const headEmail = document.getElementById('afHeadEmail').value.trim();
+      const headDOB = document.getElementById('afHeadDOB').value;
+      const headNationality = document.getElementById('afHeadNationality').value;
+      const headReligion = document.getElementById('afHeadReligion').value;
+      const headGender = document.getElementById('afHeadGender').value;
+      const headMarital = document.getElementById('afHeadMarital').value;
+      const headQual = document.getElementById('afHeadQual').value;
+      const headExp = document.getElementById('afHeadExp').value;
+      const panNo = document.getElementById('afPanNo').value.trim().toUpperCase();
+      const aadharNo = document.getElementById('afAadharNo').value.trim();
+      const gstNo = document.getElementById('afGstNo').value.trim().toUpperCase();
+
+      const infraSummary = [
+        `Office: ${document.getElementById('afInfraOffice').value}`,
+        `Theory: ${document.getElementById('afInfraTheory').value}`,
+        `Practical: ${document.getElementById('afInfraPractical').value}`,
+        `Staff: ${document.getElementById('afInfraStaff').value}`,
+        `Library: ${document.getElementById('afInfraLibrary').value}`,
+        `Reception: ${document.getElementById('afInfraReception').value}`,
+        `Toilet: ${document.getElementById('afInfraToilet').value}`,
+        `Waiting: ${document.getElementById('afInfraWaiting').value}`
+      ].join(', ');
+
+      const facilitySummary = [
+        `Computers: ${document.getElementById('afFacComputers').value}`,
+        `Books: ${document.getElementById('afFacBooks').value}`,
+        `Software: ${document.getElementById('afFacSoftware').value}`,
+        `Projector: ${document.getElementById('afFacProjector').value}`,
+        `Internet: ${document.getElementById('afFacInternet').value}`,
+        `Power: ${document.getElementById('afFacPower').value}`,
+        `Water: ${document.getElementById('afFacWater').value}`
+      ].join(', ');
+
+      const faculties = [];
+      document.querySelectorAll('#afFacultyRows tr').forEach(tr => {
+        const fName = tr.querySelector('[data-fac="name"]')?.value.trim();
+        if (fName) {
+          faculties.push({
+            name: fName,
+            qual: tr.querySelector('[data-fac="qual"]')?.value || '',
+            exp: tr.querySelector('[data-fac="exp"]')?.value || '',
+            status: tr.querySelector('[data-fac="status"]')?.value || ''
+          });
+        }
+      });
+
+      const appData = {
+        appNo,
+        instituteName,
+        appliedFor,
+        state,
+        district,
+        city,
+        estYear,
+        instStatus,
+        instPO,
+        instPS,
+        pin,
+        instAddress,
+        phone,
+        whatsapp,
+        email,
+        headName,
+        designation,
+        headMobile,
+        headEmail,
+        headDOB,
+        headNationality,
+        headReligion,
+        headGender,
+        headMarital,
+        headQual,
+        headExp,
+        panNo,
+        aadharNo,
+        gstNo,
+        infraSummary,
+        facilitySummary,
+        faculties,
+        centreCode: '',
+        centreState: 'Active',
+        status: 'Pending'
+      };
+
+      const summaryText = `${appNo} | ${headName} (${designation}) | ${city}, ${district}, ${state} - ${pin}`;
+      const applicant_info = buildApplicantInfoWithMeta(summaryText, appData);
+
+      const { error } = await db.from('franchises').insert([{
+        institute_name: instituteName,
+        applicant_info,
+        mobile: headMobile,
+        status: 'Pending'
+      }]);
+
+      if (error) {
+        alert('Error submitting affiliation form: ' + error.message);
+        return;
+      }
+
+      // 1. Auto-download PDF of the submitted application form
+      generateAffiliationPDF(appData);
+
+      // 2. Prepare WhatsApp message to registered mobile number with Application Number & PDF info
+      const cleanPhone = headMobile.replace(/[^0-9]/g, '');
+      const waNumber = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+      const waText = encodeURIComponent(
+        `NATIONAL BOARD OF COMPUTER EDUCATION (NBCE)
+` +
+        `Franchise Affiliation Application Submitted!
+` +
+        `Application No: ${appNo}
+` +
+        `Institute: ${instituteName}
+` +
+        `Centre Head: ${headName}
+` +
+        `Location: ${city}, ${district}, ${state}
+` +
+        `Status: Pending
+` +
+        `(Your application form PDF ${appNo}_NBCE_Affiliation_Form.pdf has been generated.)`
+      );
+      const waUrl = `https://wa.me/${waNumber}?text=${waText}`;
+
+      e.target.reset();
+      closeAffiliationFormModal();
+
+      // Show receipt modal with WhatsApp trigger & Track Application prefill
+      document.getElementById('rcptAppNo').textContent = appNo;
+      document.getElementById('rcptInstName').textContent = instituteName;
+      document.getElementById('rcptMobile').textContent = headMobile;
+      document.getElementById('rcptWhatsappBtn').href = waUrl;
+      document.getElementById('rcptRedownloadPdfBtn').onclick = () => generateAffiliationPDF(appData);
+      document.getElementById('appReceiptModal').classList.remove('hidden');
+
+      const trackInput = document.getElementById('trackFranchiseInput');
+      if (trackInput) trackInput.value = appNo;
+    }
+
     async function submitFranchiseApplication(e) {
       e.preventDefault();
-      const institute_name = document.getElementById('appInstituteName').value.trim();
-      const applicant = document.getElementById('appApplicantName').value.trim();
-      const mobile = document.getElementById('appMobile').value.trim();
-      const cityState = document.getElementById('appCityState').value.trim();
-      const applicant_info = `${applicant} (${cityState})`;
-      const { error } = await db.from('franchises').insert([{ institute_name, applicant_info, mobile }]);
-      if (error) return alert('Error submitting application: ' + error.message);
-      document.getElementById('appFormMsg').textContent = 'Franchise application submitted! You can track it using your mobile number.';
-      e.target.reset();
+      openAffiliationFormModal();
     }
 
     async function trackFranchiseApplication(e) {
@@ -1850,36 +3034,60 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         return;
       }
       const qLower = queryVal.toLowerCase();
-      const match = (data || []).find(item =>
-        (item.mobile || '').toLowerCase().includes(qLower) ||
-        (item.institute_name || '').toLowerCase().includes(qLower)
-      );
+      const match = (data || []).find(item => {
+        const meta = parseFranchiseRecord(item);
+        return (
+          (meta.appNo || '').toLowerCase().includes(qLower) ||
+          (meta.centreCode || '').toLowerCase().includes(qLower) ||
+          (item.mobile || '').toLowerCase().includes(qLower) ||
+          (item.institute_name || '').toLowerCase().includes(qLower)
+        );
+      });
       if (match) {
-        const isApproved = match.status === 'Approved';
+        const meta = parseFranchiseRecord(match);
+        const st = match.status || 'Pending';
+        const isApproved = st === 'Approved';
+        const isRejected = st === 'Rejected';
         box.innerHTML = `
-          <div class="p-4 rounded-xl ${isApproved ? 'bg-emerald-500/20 border border-emerald-300' : 'bg-amber-400/20 border border-amber-300'} text-white">
-            <div class="flex justify-between items-center gap-2">
-              <p class="font-bold text-sm">${match.institute_name}</p>
-              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${isApproved ? 'bg-emerald-400 text-brand-950' : 'bg-amber-300 text-brand-950'}">${match.status || 'Pending'}</span>
+          <div class="p-4 rounded-xl ${isApproved ? 'bg-emerald-500/20 border border-emerald-300' : isRejected ? 'bg-red-500/20 border border-red-300' : 'bg-amber-400/20 border border-amber-300'} text-white">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div>
+                <span class="font-mono text-xs text-brand-gold font-bold block">${meta.appNo}</span>
+                <p class="font-bold text-sm">${match.institute_name}</p>
+              </div>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${isApproved ? 'bg-emerald-400 text-brand-950' : isRejected ? 'bg-red-500 text-white' : 'bg-amber-300 text-brand-950'}">
+                ${isApproved ? `Approved • Centre Code: ${meta.centreCode || 'NBCE0001'}` : st}
+              </span>
             </div>
-            <p class="text-xs text-slate-200 mt-1">Applicant: ${match.applicant_info} • Mobile: ${match.mobile}</p>
+            <p class="text-xs text-slate-200 mt-1.5">Centre Head: ${meta.headName} • Location: ${meta.city}, ${meta.district} • Mobile: ${match.mobile}</p>
           </div>`;
       } else {
         box.innerHTML = `
           <div class="p-4 rounded-xl bg-white/10 border border-white/20 text-slate-200 text-xs">
-            No franchise application found matching "<strong>${queryVal}</strong>". Check the mobile number or institute name.
+            No franchise application found matching "<strong>${queryVal}</strong>". Check Application No, Mobile, or Institute Name.
           </div>`;
       }
     }
 
     async function submitFranchise(e) {
       e.preventDefault();
+      const appNo = 'NBCEAPP2026' + Math.floor(1000 + Math.random() * 9000);
       const institute_name = document.getElementById('franchiseInstitute').value.trim();
-      const applicant_info = document.getElementById('franchiseApplicant').value.trim();
+      const applicant_raw = document.getElementById('franchiseApplicant').value.trim();
       const mobile = document.getElementById('franchiseMobile').value.trim();
-      const { error } = await db.from('franchises').insert([{ institute_name, applicant_info, mobile }]);
+      const meta = {
+        appNo,
+        headName: applicant_raw,
+        city: applicant_raw,
+        district: '-',
+        state: 'West Bengal',
+        centreCode: '',
+        centreState: 'Active'
+      };
+      const applicant_info = buildApplicantInfoWithMeta(`${appNo} | ${applicant_raw}`, meta);
+      const { error } = await db.from('franchises').insert([{ institute_name, applicant_info, mobile, status: 'Pending' }]);
       if (error) return alert('Error submitting inquiry: ' + error.message);
-      document.getElementById('franchiseMsg').textContent = 'Franchise inquiry saved to database!';
+      document.getElementById('franchiseMsg').textContent = `Enquiry submitted! Application No: ${appNo}`;
       e.target.reset();
     }
 
