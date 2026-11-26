@@ -313,28 +313,17 @@
                   <i id="icon-acc-student" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
                 </button>
                 <div id="acc-student" class="hidden px-2 pb-2.5 pt-1 space-y-1 text-xs border-t border-white/10">
-                  <button type="button" onclick="openAdminWorkspace('student-applied', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-file-pen w-3.5"></i> Applied</span>
-                    <span id="sideCntApplied" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
-                  </button>
-                  <button type="button" onclick="openAdminWorkspace('student-accepted', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check w-3.5"></i> Accepted</span>
-                    <span id="sideCntAccepted" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
-                  </button>
-                  <button type="button" onclick="openAdminWorkspace('student-registered', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-id-card w-3.5"></i> Registered</span>
-                    <span id="sideCntRegistered" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
+                  <button type="button" onclick="openAdminWorkspace('student-approved', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle-check w-3.5 text-emerald-400"></i> All Approved Student</span>
+                    <span id="sideCntApproved" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
                   </button>
                   <button type="button" onclick="openAdminWorkspace('student-pending', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-hourglass w-3.5"></i> Pending</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-hourglass w-3.5 text-amber-400"></i> All Pending Student</span>
                     <span id="sideCntPending" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
                   </button>
-                  <button type="button" onclick="openAdminWorkspace('student-rejected', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle-xmark w-3.5"></i> Rejected</span>
-                    <span id="sideCntRejected" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
-                  </button>
-                  <button type="button" onclick="openAdminWorkspace('student-hall-ticket', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-ticket w-3.5"></i> Hall Ticket
+                  <button type="button" onclick="openAdminWorkspace('student-all-application', this)" class="admin-side-link w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center justify-between cursor-pointer">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-file-pen w-3.5 text-sky-400"></i> All Student Application</span>
+                    <span id="sideCntAllApp" class="bg-white/15 px-1.5 py-0.5 rounded text-[10px]">0</span>
                   </button>
                 </div>
               </div>
@@ -531,22 +520,21 @@
               </div>
             </div>
 
-            <!-- WORKSPACE 2A: Student Status List (Applied / Accepted / Registered / Pending / Rejected) -->
+            <!-- WORKSPACE 2A: Admin Student Section (All Approved Student / All Pending Student / All Student Application) -->
             <div id="ws-student-list" class="admin-ws-panel hidden space-y-4">
-              <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-center text-xs">
-                <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200"><span class="text-slate-500 block">Applied</span><strong id="cntApplied" class="text-base text-brand-950">0</strong></div>
-                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200"><span class="text-emerald-700 block">Accepted</span><strong id="cntAccepted" class="text-base text-emerald-800">0</strong></div>
-                <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200"><span class="text-blue-700 block">Registered</span><strong id="cntRegistered" class="text-base text-blue-800">0</strong></div>
-                <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200"><span class="text-amber-700 block">Pending</span><strong id="cntPending" class="text-base text-amber-800">0</strong></div>
-                <div class="p-2.5 rounded-lg bg-red-50 border border-red-200"><span class="text-red-700 block">Rejected</span><strong id="cntRejected" class="text-base text-red-800">0</strong></div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs">
+                <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200"><span class="text-emerald-700 font-semibold block">All Approved Student</span><strong id="cntApproved" class="text-lg text-emerald-900">0</strong></div>
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200"><span class="text-amber-700 font-semibold block">All Pending Student</span><strong id="cntPending" class="text-lg text-amber-900">0</strong></div>
+                <div class="p-3 rounded-xl bg-sky-50 border border-sky-200"><span class="text-sky-700 font-semibold block">All Student Application</span><strong id="cntAllApp" class="text-lg text-sky-900">0</strong></div>
               </div>
-              <div class="overflow-x-auto">
+              <div class="overflow-x-auto border border-slate-200 rounded-xl">
                 <table class="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr class="border-b border-slate-200 text-slate-500 text-xs uppercase">
+                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase">
                       <th class="py-2.5 px-3">Application No</th>
                       <th class="py-2.5 px-3">Student Name</th>
                       <th class="py-2.5 px-3">Course</th>
+                      <th class="py-2.5 px-3">Centre</th>
                       <th class="py-2.5 px-3">Status</th>
                       <th class="py-2.5 px-3 no-print">Action</th>
                     </tr>
@@ -956,30 +944,12 @@
             </div>
 
             <!-- DEFAULT VIEW: Dashboard -->
-            <div id="cp-view-dashboard" class="cp-workspace-panel space-y-5">
-              <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div id="cp-view-dashboard" class="cp-workspace-panel space-y-4">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                 <div>
-                  <p class="font-bold text-sm text-brand-950">Centre Operations &amp; Student Lifecycle</p>
-                  <p class="text-xs text-slate-600 mt-0.5">Open <strong>Students → Applied Student</strong> on the left sidebar to click <strong>Apply New Student</strong> and submit the Student Application Form.</p>
+                  <p class="font-bold text-sm text-brand-950">Centre Overview</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Select any menu option from the left sidebar to manage students, classes, exams, or finance.</p>
                 </div>
-                <button type="button" onclick="openCentreStudentCategory('applied')" class="bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-xs px-4 py-2 rounded-lg cursor-pointer shrink-0">
-                  Apply New Student
-                </button>
-              </div>
-
-              <div class="overflow-x-auto border border-slate-200 rounded-xl">
-                <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                  <thead>
-                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
-                      <th class="py-3 px-3">Reg. No</th>
-                      <th class="py-3 px-3">Student Name</th>
-                      <th class="py-3 px-3">Course</th>
-                      <th class="py-3 px-3">Marks</th>
-                      <th class="py-3 px-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="centreStudentTable" class="divide-y divide-slate-100"></tbody>
-                </table>
               </div>
             </div>
 
@@ -2652,12 +2622,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       'centre-countdown': ['01. Study Centre Section', 'Countdown'],
       'centre-authorization': ['01. Study Centre Section', 'Authorization'],
       'centre-download': ['01. Study Centre Section', 'Download'],
-      'student-applied': ['02. Student Section', 'Applied Students'],
-      'student-accepted': ['02. Student Section', 'Accepted Students'],
-      'student-registered': ['02. Student Section', 'Registered Students'],
-      'student-pending': ['02. Student Section', 'Pending Students'],
-      'student-rejected': ['02. Student Section', 'Rejected Students'],
-      'student-hall-ticket': ['02. Student Section', 'Hall Ticket'],
+      'student-approved': ['02. Student Section', 'All Approved Student'],
+      'student-pending': ['02. Student Section', 'All Pending Student'],
+      'student-all-application': ['02. Student Section', 'All Student Application'],
       'course-course': ['03. Course Section', 'Course'],
       'course-approval': ['03. Course Section', 'Approval'],
       'course-fees': ['03. Course Section', 'Fees'],
@@ -2737,28 +2704,42 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const tbody = document.getElementById('adminStudentStatusTable');
       if (!tbody) return;
       const filtered = cachedStudents.filter(s => {
-        const st = (s.status || '').toLowerCase();
-        if (currentStudentFilterTab === 'applied') return true;
-        if (currentStudentFilterTab === 'accepted') return st === 'accepted' || st === 'verified' || st === 'evaluated';
-        if (currentStudentFilterTab === 'registered') return st === 'registered' || st === 'enrolled' || st === 'accepted' || st === 'verified' || st === 'evaluated';
-        if (currentStudentFilterTab === 'pending') return st === 'pending' || st === 'enrolled';
-        if (currentStudentFilterTab === 'rejected') return st === 'rejected';
+        const st = (s.status || 'Applied').toLowerCase();
+        if (st === 'rejected') return false;
+        if (currentStudentFilterTab === 'approved') {
+          return st === 'registered' || st === 'certified' || st === 'approved';
+        }
+        if (currentStudentFilterTab === 'pending') {
+          return st === 'applied' || st === 'accepted' || st === 'pending';
+        }
+        // 'all-application'
         return true;
       });
 
-      tbody.innerHTML = filtered.length ? filtered.map(s => `
-        <tr>
-          <td class="py-2.5 px-3 font-mono text-xs">${s.reg_no}</td>
-          <td class="py-2.5 px-3 font-medium">${s.name}</td>
-          <td class="py-2.5 px-3">${s.course}</td>
-          <td class="py-2.5 px-3"><span class="bg-blue-50 text-blue-800 text-xs px-2 py-0.5 rounded-full font-semibold">${s.status}</span></td>
-          <td class="py-2.5 px-3 no-print space-x-1">
-            <button type="button" onclick="setStudentStatus('${s.reg_no}', 'Accepted')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded">Accept</button>
-            <button type="button" onclick="setStudentStatus('${s.reg_no}', 'Registered')" class="bg-blue-700 hover:bg-blue-800 text-white text-xs px-2.5 py-1 rounded">Register</button>
-            <button type="button" onclick="setStudentStatus('${s.reg_no}', 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded">Reject</button>
-          </td>
-        </tr>
-      `).join('') : '<tr><td colspan="5" class="py-4 px-3 text-slate-500 text-xs">No students in this status tab.</td></tr>';
+      tbody.innerHTML = filtered.length ? filtered.map(s => {
+        const appNo = s.app_no || s.reg_no;
+        const st = s.status || 'Applied';
+        const isReg = ['registered', 'certified', 'approved'].includes(st.toLowerCase());
+        const badgeCls = isReg
+          ? 'bg-emerald-100 text-emerald-800'
+          : st.toLowerCase() === 'accepted'
+          ? 'bg-sky-100 text-sky-800'
+          : 'bg-amber-100 text-amber-800';
+
+        return `
+          <tr>
+            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-950">${appNo}</td>
+            <td class="py-2.5 px-3 font-medium">${s.name}</td>
+            <td class="py-2.5 px-3">${s.course}</td>
+            <td class="py-2.5 px-3 font-mono text-xs">${s.centre_code || 'NBCE0001'}</td>
+            <td class="py-2.5 px-3"><span class="${badgeCls} text-xs px-2.5 py-0.5 rounded-full font-semibold">${st}</span></td>
+            <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
+              <button type="button" onclick="openStudentViewModal('${appNo}', 'view')" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer"><i class="fa-solid fa-eye mr-1"></i>View</button>
+              ${!isReg ? `<button type="button" onclick="setStudentStatus('${appNo}', 'Registered')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Approve / Register</button>` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('') : '<tr><td colspan="6" class="py-5 px-3 text-slate-500 text-xs text-center">No student records found in this section.</td></tr>';
     }
 
     async function setStudentStatus(regNo, newStatus) {
@@ -3444,29 +3425,24 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const merged = getMergedStudents(cachedStudents);
       cachedStudents = merged;
 
-      const appliedCnt = merged.filter(s => ['applied', 'pending', 'enrolled', 'accepted', 'verified', 'evaluated', 'registered', 'certified'].includes((s.status || 'applied').toLowerCase())).length;
-      const accepted = merged.filter(s => ['accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
-      const registered = merged.filter(s => ['registered', 'enrolled', 'accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
-      const pending = merged.filter(s => ['applied', 'pending', 'enrolled'].includes((s.status || '').toLowerCase())).length;
-      const rejected = 0;
+      const onlyAppliedCnt = merged.filter(s => ['applied', 'pending'].includes((s.status || 'applied').toLowerCase())).length;
+      const approvedRegCnt = merged.filter(s => ['registered', 'certified', 'approved'].includes((s.status || '').toLowerCase())).length;
+      const pendingAllCnt = merged.filter(s => ['applied', 'accepted', 'pending'].includes((s.status || 'applied').toLowerCase())).length;
+      const allAppCnt = merged.length;
 
-      if (document.getElementById('cntApplied')) {
-        document.getElementById('cntApplied').textContent = appliedCnt;
-        document.getElementById('cntAccepted').textContent = accepted;
-        document.getElementById('cntRegistered').textContent = registered;
-        document.getElementById('cntPending').textContent = pending;
-        document.getElementById('cntRejected').textContent = rejected;
+      if (document.getElementById('cntApproved')) {
+        document.getElementById('cntApproved').textContent = approvedRegCnt;
+        document.getElementById('cntPending').textContent = pendingAllCnt;
+        document.getElementById('cntAllApp').textContent = allAppCnt;
       }
-      if (document.getElementById('sideCntApplied')) {
-        document.getElementById('sideCntApplied').textContent = appliedCnt;
-        document.getElementById('sideCntAccepted').textContent = accepted;
-        document.getElementById('sideCntRegistered').textContent = registered;
-        document.getElementById('sideCntPending').textContent = pending;
-        document.getElementById('sideCntRejected').textContent = rejected;
+      if (document.getElementById('sideCntApproved')) {
+        document.getElementById('sideCntApproved').textContent = approvedRegCnt;
+        document.getElementById('sideCntPending').textContent = pendingAllCnt;
+        document.getElementById('sideCntAllApp').textContent = allAppCnt;
       }
       if (document.getElementById('cpAppliedCount')) {
-        document.getElementById('cpAppliedCount').textContent = appliedCnt;
-        document.getElementById('cpRegCount').textContent = registered;
+        document.getElementById('cpAppliedCount').textContent = onlyAppliedCnt;
+        document.getElementById('cpRegCount').textContent = approvedRegCnt;
         document.getElementById('cpCertCount').textContent = merged.filter(s => (s.status || '').toLowerCase() === 'certified').length;
       }
 
@@ -3563,6 +3539,39 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       console.warn('Supabase realtime subscription fallback:', rtErr);
     }
 
+    async function registerAcceptedStudent(appNo) {
+      await syncStudentStatusLive(appNo, 'Registered');
+    }
+
+    function openRegistrationCertification(appNo) {
+      const st = cachedStudents.find(s => String(s.app_no || s.reg_no) === String(appNo));
+      if (!st) return;
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert(`Registration Certification ready for ${st.name} (${appNo})`);
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFillColor(11, 29, 58);
+      doc.rect(0, 0, 210, 32, 'F');
+      doc.setTextColor(234, 179, 8);
+      doc.setFontSize(15);
+      doc.setFont('helvetica', 'bold');
+      doc.text('NATIONAL BOARD OF COMPUTER EDUCATION', 105, 14, { align: 'center' });
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.text('STUDENT REGISTRATION CERTIFICATE', 105, 23, { align: 'center' });
+
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`This is to certify that ${st.name} (Application / Reg. No: ${appNo})`, 20, 50);
+      doc.text(`is officially registered under Study Centre ${st.centre_code || 'NBCE0001'}`, 20, 60);
+      doc.text(`for the course: ${st.course} (${st.study_mode || 'Offline'} Mode).`, 20, 70);
+      doc.text(`Status: Registered`, 20, 84);
+      doc.save(`Registration_Certificate_${appNo}.pdf`);
+    }
+
     function renderCentreCategoryStudentTable() {
       const tbody = document.getElementById('cpCategoryStudentTable');
       if (!tbody) return;
@@ -3571,7 +3580,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         if (st === 'rejected') return false;
         if (activeCentreStudentCategory === 'applied') return st === 'applied' || st === 'pending';
         if (activeCentreStudentCategory === 'accepted') return st === 'accepted' || st === 'verified';
-        if (activeCentreStudentCategory === 'registered') return st === 'registered' || st === 'enrolled' || st === 'accepted' || st === 'verified' || st === 'evaluated';
+        if (activeCentreStudentCategory === 'registered') return st === 'registered' || st === 'certified';
         if (activeCentreStudentCategory === 'exam-complete') return st === 'evaluated' || st === 'exam complete' || (s.marks !== null && s.marks !== undefined);
         if (activeCentreStudentCategory === 'certified') return st === 'certified';
         return true;
@@ -3580,14 +3589,22 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       tbody.innerHTML = filtered.length ? filtered.map(s => {
         const appNo = s.app_no || s.reg_no;
         const stLabel = s.status || 'Applied';
-        const isAppliedView = activeCentreStudentCategory === 'applied';
 
-        const statusActionHtml = isAppliedView
-          ? `<div class="inline-flex items-center gap-1.5">
+        let statusActionHtml = `<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-semibold">${stLabel}</span>`;
+        if (activeCentreStudentCategory === 'applied') {
+          statusActionHtml = `<div class="inline-flex items-center gap-1.5">
                <button type="button" onclick="acceptStudentApplication('${appNo}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">Accept</button>
                <button type="button" onclick="rejectStudentApplication('${appNo}')" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">Reject</button>
-             </div>`
-          : `<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-semibold">${stLabel}</span>`;
+             </div>`;
+        } else if (activeCentreStudentCategory === 'accepted') {
+          statusActionHtml = `<div class="inline-flex items-center gap-1.5">
+               <button type="button" onclick="registerAcceptedStudent('${appNo}')" class="bg-brand-900 hover:bg-brand-800 text-brand-gold text-[11px] font-bold px-3 py-1 rounded-lg cursor-pointer">Registration</button>
+             </div>`;
+        } else if (activeCentreStudentCategory === 'registered') {
+          statusActionHtml = `<button type="button" onclick="openRegistrationCertification('${appNo}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1 rounded-lg cursor-pointer inline-flex items-center gap-1">
+               <i class="fa-solid fa-certificate"></i> Registration Certification
+             </button>`;
+        }
 
         return `
           <tr>
@@ -4058,45 +4075,8 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const { data: franchises } = await db.from('franchises').select('*').order('id', { ascending: false });
 
       if (students || localCentreStudents.length) {
-        const merged = getMergedStudents(students);
-        cachedStudents = merged;
-        const appliedCnt = merged.filter(s => ['applied', 'pending', 'enrolled', 'accepted', 'verified', 'evaluated', 'registered', 'certified'].includes((s.status || 'applied').toLowerCase())).length;
-        const accepted = merged.filter(s => ['accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
-        const registered = merged.filter(s => ['registered', 'enrolled', 'accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
-        const pending = merged.filter(s => ['applied', 'pending', 'enrolled'].includes((s.status || '').toLowerCase())).length;
-        const rejected = 0;
-
-        if (document.getElementById('cntApplied')) {
-          document.getElementById('cntApplied').textContent = appliedCnt;
-          document.getElementById('cntAccepted').textContent = accepted;
-          document.getElementById('cntRegistered').textContent = registered;
-          document.getElementById('cntPending').textContent = pending;
-          document.getElementById('cntRejected').textContent = rejected;
-          if (document.getElementById('sideCntApplied')) {
-            document.getElementById('sideCntApplied').textContent = appliedCnt;
-            document.getElementById('sideCntAccepted').textContent = accepted;
-            document.getElementById('sideCntRegistered').textContent = registered;
-            document.getElementById('sideCntPending').textContent = pending;
-            document.getElementById('sideCntRejected').textContent = rejected;
-          }
-        }
-        renderAdminStudentStatusTable();
-
-        if (document.getElementById('cpAppliedCount')) {
-          document.getElementById('cpAppliedCount').textContent = appliedCnt;
-          document.getElementById('cpRegCount').textContent = registered;
-          document.getElementById('cpCertCount').textContent = students.filter(s => (s.status || '').toLowerCase() === 'certified').length;
-        }
-        renderCentreCategoryStudentTable();
-        document.getElementById('centreStudentTable').innerHTML = students.map(s => `
-          <tr>
-            <td class="py-2.5 px-3 font-mono text-xs">${s.reg_no}</td>
-            <td class="py-2.5 px-3 font-medium">${s.name}</td>
-            <td class="py-2.5 px-3">${s.course}</td>
-            <td class="py-2.5 px-3">${s.marks ?? '-'}</td>
-            <td class="py-2.5 px-3"><span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">${s.status}</span></td>
-          </tr>
-        `).join('');
+        cachedStudents = getMergedStudents(students);
+        applyLiveStudentViewsImmediately();
       }
 
       if (notices && notices.length) {
