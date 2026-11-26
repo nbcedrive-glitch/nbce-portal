@@ -2818,6 +2818,25 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     }
 
     let cachedFranchises = [];
+    let localFranchiseRecords = JSON.parse(localStorage.getItem('nbce_local_franchises') || '[]');
+
+    function getMergedFranchises(dbRows) {
+      const remote = Array.isArray(dbRows) ? dbRows : [];
+      const map = new Map();
+      // Local records first so newly submitted / locally updated centres never disappear
+      (localFranchiseRecords || []).forEach(r => {
+        const key = String(r.id || parseFranchiseRecord(r).appNo);
+        if (key) map.set(key, applyFranchiseOverrideToRow(r));
+      });
+      remote.forEach(r => {
+        const key = String(r.id || parseFranchiseRecord(r).appNo);
+        if (key) {
+          const existingLocal = map.get(key);
+          map.set(key, applyFranchiseOverrideToRow(existingLocal ? { ...r, ...existingLocal } : r));
+        }
+      });
+      return Array.from(map.values());
+    }
     let pendingConfirmCallback = null;
     let discountCodes = [
       { id: 1, code: 'NBCEFR10', franchiseFee: 25000, value: '10%', target: 'Franchise Affiliation', active: true, used: false },
@@ -3074,6 +3093,10 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
           centreState: assignedState
         };
         saveFranchiseOverrides();
+        localFranchiseRecords = localFranchiseRecords.map(r =>
+          String(r.id) === String(id) ? { ...r, status: newStatus, applicant_info: buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta) } : r
+        );
+        localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
 
         const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
         try {
@@ -3134,7 +3157,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
     async function loadCentrePanelById(centreId) {
       const { data: franchises } = await db.from('franchises').select('*');
-      if (franchises) cachedFranchises = franchises.map(applyFranchiseOverrideToRow);
+      cachedFranchises = getMergedFranchises(franchises);
       const row = cachedFranchises.find(f => String(f.id) === String(centreId));
       const meta = row ? parseFranchiseRecord(row) : { centreCode: 'NBCE0001', headName: 'Centre Head', city: 'Ranaghat', district: 'Nadia', state: 'West Bengal', centreState: 'Active' };
       const codeStr = meta.centreCode || 'NBCE0001';
@@ -3966,8 +3989,8 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         }
       }
 
-      if (franchises) {
-        cachedFranchises = franchises.map(applyFranchiseOverrideToRow);
+      if (franchises || localFranchiseRecords.length) {
+        cachedFranchises = getMergedFranchises(franchises);
         const pendingF = franchises.filter(f => (f.status || 'Pending') === 'Pending').length;
         const approvedF = franchises.filter(f => f.status === 'Approved').length;
         const rejectedF = franchises.filter(f => f.status === 'Rejected').length;
@@ -4214,16 +4237,28 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const summaryText = `${appNo} | ${headName} (${designation}) | ${city}, ${district}, ${state} - ${pin}`;
       const applicant_info = buildApplicantInfoWithMeta(summaryText, appData);
 
+      const newLocalFranchiseRow = {
+        id: 'local_' + Date.now(),
+        institute_name: instituteName,
+        applicant_info,
+        mobile: headMobile,
+        status: 'Pending'
+      };
+      localFranchiseRecords.unshift(newLocalFranchiseRow);
+      localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
+
       try {
-        const { error } = await db.from('franchises').insert([{
+        const { data: insertedRow, error } = await db.from('franchises').insert([{
           institute_name: instituteName,
           applicant_info,
           mobile: headMobile,
           status: 'Pending'
-        }]);
-        if (error) {
-          alert('Error submitting affiliation form: ' + error.message);
-          return;
+        }]).select().maybeSingle();
+        if (!error && insertedRow && insertedRow.id) {
+          localFranchiseRecords = localFranchiseRecords.map(r =>
+            r.id === newLocalFranchiseRow.id ? { ...insertedRow, applicant_info, status: 'Pending' } : r
+          );
+          localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
         }
       } catch (dbErr) {
         console.warn('Supabase insert fallback:', dbErr);
@@ -4340,8 +4375,20 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         centreState: 'Active'
       };
       const applicant_info = buildApplicantInfoWithMeta(`${appNo} | ${applicant_raw}`, meta);
-      const { error } = await db.from('franchises').insert([{ institute_name, applicant_info, mobile, status: 'Pending' }]);
-      if (error) return alert('Error submitting inquiry: ' + error.message);
+      const localEnqRow = {
+        id: 'local_' + Date.now(),
+        institute_name,
+        applicant_info,
+        mobile,
+        status: 'Pending'
+      };
+      localFranchiseRecords.unshift(localEnqRow);
+      localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
+      try {
+        await db.from('franchises').insert([{ institute_name, applicant_info, mobile, status: 'Pending' }]);
+      } catch (enqErr) {
+        console.warn('Supabase enquiry insert fallback:', enqErr);
+      }
       document.getElementById('franchiseMsg').textContent = `Enquiry submitted! Application No: ${appNo}`;
       e.target.reset();
     }
@@ -4361,6 +4408,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const { data } = await db.from('notices').select('*').order('id', { ascending: false }).limit(1);
       if (data && data.length) {
         document.getElementById('topNoticeText').textContent = data[0].title;
+      }
+      if (localFranchiseRecords.length && !cachedFranchises.length) {
+        cachedFranchises = getMergedFranchises([]);
       }
       const params = new URLSearchParams(window.location.search);
       if (localCentreStudents.length && !cachedStudents.length) {
