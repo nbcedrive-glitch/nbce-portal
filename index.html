@@ -386,7 +386,7 @@
               </div>
             </div>
 
-            <!-- WORKSPACE 1A: Our Franchise (Auto-generated Centre Codes NBCE0001+ & Active/Inactive/Cancel Controls) -->
+            <!-- WORKSPACE 1A: Our Franchise (Filter + Auto-generated Centre Codes NBCE0001+ & Active/Inactive/Cancel Controls) -->
             <div id="ws-centre-our-franchise" class="admin-ws-panel space-y-4">
               <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
@@ -405,6 +405,18 @@
                   <p class="text-xs text-red-700 font-semibold">Cancelled Centres</p>
                   <p id="statFranchiseCancelled" class="text-2xl font-bold text-red-700 mt-1">0</p>
                 </div>
+              </div>
+
+              <!-- Filter Bar -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs no-print">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-bold text-slate-700 uppercase tracking-wider mr-1"><i class="fa-solid fa-filter text-brand-700 mr-1"></i>Filter:</span>
+                  <button type="button" id="ffilter-All" onclick="setOurFranchiseFilter('All')" class="of-filter-btn px-3 py-1.5 rounded-lg bg-brand-900 text-white font-bold cursor-pointer">All</button>
+                  <button type="button" id="ffilter-Active" onclick="setOurFranchiseFilter('Active')" class="of-filter-btn px-3 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold cursor-pointer">Active</button>
+                  <button type="button" id="ffilter-Inactive" onclick="setOurFranchiseFilter('Inactive')" class="of-filter-btn px-3 py-1.5 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-900 font-bold cursor-pointer">Inactive</button>
+                  <button type="button" id="ffilter-Cancel" onclick="setOurFranchiseFilter('Cancel')" class="of-filter-btn px-3 py-1.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-900 font-bold cursor-pointer">Cancel</button>
+                </div>
+                <input id="ourFranchiseSearchInput" type="text" onkeyup="renderOurFranchiseTable()" placeholder="Search code, name, dist or area..." class="px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500 w-full sm:w-64">
               </div>
 
               <div class="overflow-x-auto border border-slate-200 rounded-xl">
@@ -506,7 +518,7 @@
                 <table class="w-full text-left border-collapse text-sm">
                   <thead>
                     <tr class="border-b border-slate-200 text-slate-500 text-xs uppercase">
-                      <th class="py-2.5 px-3">Reg. No</th>
+                      <th class="py-2.5 px-3">Application No</th>
                       <th class="py-2.5 px-3">Student Name</th>
                       <th class="py-2.5 px-3">Course</th>
                       <th class="py-2.5 px-3">Status</th>
@@ -684,51 +696,291 @@
         </div>
       </div>
 
-      <!-- 2. CENTRE DASHBOARD -->
+      <!-- 2. CENTRE DASHBOARD (ADMIN-STYLE COLORFUL SIDEBAR + KPI CARDS + WORKSPACE) -->
       <div id="centreDashboard" class="hidden space-y-6">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h3 class="font-bold text-lg text-brand-900 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-user-plus text-brand-600"></i> Register New Student (Supabase)
-            </h3>
-            <form onsubmit="addStudentByCentre(event)" class="space-y-3 text-sm">
-              <div>
-                <label class="block font-medium text-slate-700 mb-1">Student Full Name</label>
-                <input id="newStudentName" type="text" required placeholder="e.g. Subhajit Mondal" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+          <!-- LEFT SIDEBAR OF CENTRE PANEL (Dark Navy + Gold Active Pill + Accordion Sections) -->
+          <aside class="lg:col-span-3 bg-brand-950 text-slate-100 rounded-2xl shadow-xl border border-slate-800 overflow-hidden no-print text-sm">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-9 h-9 rounded-xl bg-brand-gold text-brand-950 flex items-center justify-center font-bold text-base shadow-sm">
+                  <i class="fa-solid fa-building-columns"></i>
+                </span>
+                <div>
+                  <p class="font-display font-bold text-sm text-white leading-tight">Centre Menu</p>
+                  <p id="centrePanelCodePill" class="text-[11px] font-mono text-brand-gold font-bold">NBCE0001</p>
+                </div>
               </div>
-              <div>
-                <label class="block font-medium text-slate-700 mb-1">Course</label>
-                <select id="newStudentCourse" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-                  <option value="ADCA (1 Year Diploma)">ADCA (1 Year Diploma)</option>
-                  <option value="DCA (6 Months Certificate)">DCA (6 Months Certificate)</option>
-                  <option value="Tally Prime & GST">Tally Prime &amp; GST</option>
-                  <option value="Web & Python Programming">Web &amp; Python Programming</option>
-                </select>
+            </div>
+
+            <nav class="p-3 space-y-2 text-[13px]">
+              <!-- MAIN SECTION -->
+              <div class="rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+                <button type="button" onclick="toggleCpSubmenu('cp-sec-main', this)" class="w-full flex items-center justify-between px-3.5 py-3 text-left font-bold text-white hover:bg-white/10 transition cursor-pointer">
+                  <span class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-layer-group text-brand-gold w-4 text-center"></i>
+                    <span>MAIN</span>
+                  </span>
+                  <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform rotate-180"></i>
+                </button>
+                <div id="cp-sec-main" class="px-2 pb-2.5 pt-1 space-y-1 text-xs border-t border-white/10">
+                  <button type="button" onclick="switchCentrePanelView('dashboard', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg bg-brand-gold text-brand-950 font-bold flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-border-all w-4 text-center"></i> Dashboard
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('profile', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-regular fa-user w-4 text-center"></i> My Profile
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('kyc', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-regular fa-file-lines w-4 text-center"></i> KYC Documents
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('centre-manager', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-user-gear w-4 text-center"></i> Centre Manager
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('faculty', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-chalkboard-user w-4 text-center"></i> Faculty
+                  </button>
+
+                  <!-- Courses Submenu -->
+                  <div>
+                    <button type="button" onclick="toggleCpSubmenu('cp-sub-courses', this)" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium cursor-pointer">
+                      <span class="flex items-center gap-2.5"><i class="fa-solid fa-book-open w-4 text-center text-amber-400"></i> Courses</span>
+                      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="cp-sub-courses" class="hidden pl-7 pr-1 py-1 space-y-1">
+                      <button type="button" onclick="switchCentrePanelView('courses', this)" class="cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white cursor-pointer">All Courses</button>
+                      <button type="button" onclick="switchCentrePanelView('courses', this)" class="cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white cursor-pointer">Syllabus</button>
+                    </div>
+                  </div>
+
+                  <!-- Students Submenu -->
+                  <div>
+                    <button type="button" onclick="toggleCpSubmenu('cp-sub-students', this)" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium cursor-pointer">
+                      <span class="flex items-center gap-2.5"><i class="fa-solid fa-user-graduate w-4 text-center text-sky-400"></i> Students</span>
+                      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform rotate-180"></i>
+                    </button>
+                    <div id="cp-sub-students" class="pl-5 pr-1 py-1 space-y-1">
+                      <button type="button" onclick="openCentreStudentCategory('applied', this)" class="cp-sub-link cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-brand-gold font-medium cursor-pointer">Applied Student</button>
+                      <button type="button" onclick="openCentreStudentCategory('accepted', this)" class="cp-sub-link cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-brand-gold font-medium cursor-pointer">Accepted Student</button>
+                      <button type="button" onclick="openCentreStudentCategory('registered', this)" class="cp-sub-link cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-brand-gold font-medium cursor-pointer">Registered Student</button>
+                      <button type="button" onclick="openCentreStudentCategory('exam-complete', this)" class="cp-sub-link cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-brand-gold font-medium cursor-pointer">Exam Complete Student</button>
+                      <button type="button" onclick="openCentreStudentCategory('certified', this)" class="cp-sub-link cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-brand-gold font-medium cursor-pointer">Certified Student</button>
+                    </div>
+                  </div>
+
+                  <!-- Classes Submenu -->
+                  <div>
+                    <button type="button" onclick="toggleCpSubmenu('cp-sub-classes', this)" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium cursor-pointer">
+                      <span class="flex items-center gap-2.5"><i class="fa-regular fa-calendar-check w-4 text-center text-emerald-400"></i> Classes</span>
+                      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="cp-sub-classes" class="hidden pl-7 pr-1 py-1 space-y-1">
+                      <button type="button" onclick="switchCentrePanelView('classes', this)" class="cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white cursor-pointer">Batch Timings</button>
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="switchCentrePanelView('attendance', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-clipboard-check w-4 text-center"></i> Attendance
+                  </button>
+
+                  <!-- Examination Submenu -->
+                  <div>
+                    <button type="button" onclick="toggleCpSubmenu('cp-sub-exam', this)" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium cursor-pointer">
+                      <span class="flex items-center gap-2.5"><i class="fa-regular fa-clipboard w-4 text-center text-purple-400"></i> Examination</span>
+                      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="cp-sub-exam" class="hidden pl-7 pr-1 py-1 space-y-1">
+                      <button type="button" onclick="switchCentrePanelView('examination', this)" class="cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white cursor-pointer">Exam Schedule &amp; Admit Card</button>
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="switchCentrePanelView('results', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-square-poll-vertical w-4 text-center"></i> Results
+                  </button>
+
+                  <!-- Certificates Submenu -->
+                  <div>
+                    <button type="button" onclick="toggleCpSubmenu('cp-sub-cert', this)" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium cursor-pointer">
+                      <span class="flex items-center gap-2.5"><i class="fa-solid fa-award w-4 text-center text-brand-gold"></i> Certificates</span>
+                      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="cp-sub-cert" class="hidden pl-7 pr-1 py-1 space-y-1">
+                      <button type="button" onclick="switchCentrePanelView('certificates', this)" class="cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white cursor-pointer">Issued Certificates</button>
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="switchCentrePanelView('notices', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-bullhorn w-4 text-center"></i> Notices
+                  </button>
+
+                  <button type="button" onclick="switchCentrePanelView('downloads', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-download w-4 text-center"></i> Downloads
+                  </button>
+                </div>
               </div>
-              <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white py-2.5 rounded-lg font-semibold transition">
-                Save to Database
-              </button>
-            </form>
+
+              <!-- FINANCE & STORE SECTION -->
+              <div class="rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+                <button type="button" onclick="toggleCpSubmenu('cp-sec-finance', this)" class="w-full flex items-center justify-between px-3.5 py-3 text-left font-bold text-white hover:bg-white/10 transition cursor-pointer">
+                  <span class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-coins text-emerald-400 w-4 text-center"></i>
+                    <span>FINANCE &amp; STORE</span>
+                  </span>
+                  <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform rotate-180"></i>
+                </button>
+                <div id="cp-sec-finance" class="px-2 pb-2.5 pt-1 space-y-1 text-xs border-t border-white/10">
+                  <div>
+                    <button type="button" onclick="toggleCpSubmenu('cp-sub-fees', this)" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium cursor-pointer">
+                      <span class="flex items-center gap-2.5"><i class="fa-solid fa-hand-holding-dollar w-4 text-center"></i> Student Fees</span>
+                      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="cp-sub-fees" class="hidden pl-7 pr-1 py-1 space-y-1">
+                      <button type="button" onclick="switchCentrePanelView('student-fees', this)" class="cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white cursor-pointer">Fee Collection</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button type="button" onclick="toggleCpSubmenu('cp-sub-payments', this)" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium cursor-pointer">
+                      <span class="flex items-center gap-2.5"><i class="fa-solid fa-wallet w-4 text-center"></i> Payments</span>
+                      <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="cp-sub-payments" class="hidden pl-7 pr-1 py-1 space-y-1">
+                      <button type="button" onclick="switchCentrePanelView('payments', this)" class="cp-nav-item block w-full text-left py-1.5 px-2.5 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white cursor-pointer">Wallet &amp; Transactions</button>
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="switchCentrePanelView('points', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-coins w-4 text-center"></i> Points
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('store', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-bag-shopping w-4 text-center"></i> NBCE Store
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('kits', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-cube w-4 text-center"></i> Kits
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('support', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-solid fa-life-ring w-4 text-center"></i> Student Support
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('messages', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-regular fa-message w-4 text-center"></i> Messages
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('idea', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-regular fa-lightbulb w-4 text-center"></i> Submit Your Idea
+                  </button>
+                  <button type="button" onclick="switchCentrePanelView('notifications', this)" class="cp-nav-item w-full text-left px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white font-medium flex items-center gap-2.5 cursor-pointer">
+                    <i class="fa-regular fa-bell w-4 text-center"></i> Notifications
+                  </button>
+                </div>
+              </div>
+            </nav>
+          </aside>
+
+          <!-- RIGHT MAIN AREA OF CENTRE PANEL (Colorful Cards Matching Admin Style) -->
+          <div class="lg:col-span-9 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 min-h-[420px] space-y-6">
+
+            <!-- Workspace Header + Countdown Pill -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-700">CENTRE WORKSPACE</span>
+                <h3 id="cpActiveHeading" class="text-xl font-display font-bold text-brand-950">Dashboard</h3>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span id="cpActiveCentreInfo" class="hidden sm:inline text-xs font-mono text-slate-500">NBCE0001</span>
+                <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-300 text-amber-950 px-3 py-1.5 rounded-xl text-xs font-bold">
+                  <i class="fa-solid fa-hourglass-half text-amber-600"></i>
+                  <span>Countdown:</span>
+                  <span id="cpCountdownText" class="font-mono">Loading...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5 COLORFUL KPI CARDS (Matching Admin Pastel/Tinted Card Style) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3">
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <p class="text-[11px] font-semibold text-slate-600">Main Balance</p>
+                <p class="text-xl font-bold text-brand-950 mt-1">Rs. 0</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">View transactions</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200">
+                <p class="text-[11px] font-semibold text-amber-800">SRB Balance</p>
+                <p class="text-xl font-bold text-amber-900 mt-1">Rs. 0</p>
+                <p class="text-[11px] text-amber-700 mt-0.5">For registrations only</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-sky-50 border border-sky-200">
+                <p class="text-[11px] font-semibold text-sky-800">Applied Students</p>
+                <p id="cpAppliedCount" class="text-xl font-bold text-sky-900 mt-1">0</p>
+                <p class="text-[11px] text-sky-700 mt-0.5">Waiting for admission</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                <p class="text-[11px] font-semibold text-emerald-800">Reg. Students</p>
+                <p id="cpRegCount" class="text-xl font-bold text-emerald-900 mt-1">0</p>
+                <p class="text-[11px] text-emerald-700 mt-0.5">Only Active Students</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-purple-50 border border-purple-200">
+                <p class="text-[11px] font-semibold text-purple-800">Certified Students</p>
+                <p id="cpCertCount" class="text-xl font-bold text-purple-900 mt-1">0</p>
+                <p class="text-[11px] text-purple-700 mt-0.5">Certificates issued</p>
+              </div>
+            </div>
+
+            <!-- DEFAULT VIEW: Dashboard -->
+            <div id="cp-view-dashboard" class="cp-workspace-panel space-y-5">
+              <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <p class="font-bold text-sm text-brand-950">Centre Operations &amp; Student Lifecycle</p>
+                  <p class="text-xs text-slate-600 mt-0.5">Open <strong>Students → Applied Student</strong> on the left sidebar to click <strong>Apply New Student</strong> and submit the Student Application Form.</p>
+                </div>
+                <button type="button" onclick="openCentreStudentCategory('applied')" class="bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-xs px-4 py-2 rounded-lg cursor-pointer shrink-0">
+                  Apply New Student
+                </button>
+              </div>
+
+              <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                  <thead>
+                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
+                      <th class="py-3 px-3">Reg. No</th>
+                      <th class="py-3 px-3">Student Name</th>
+                      <th class="py-3 px-3">Course</th>
+                      <th class="py-3 px-3">Marks</th>
+                      <th class="py-3 px-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="centreStudentTable" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- APPLIED / ACCEPTED / REGISTERED / EXAM COMPLETE / CERTIFIED STUDENT VIEW -->
+            <div id="cp-view-students-category" class="cp-workspace-panel hidden space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <p id="cpStudentCatSubtitle" class="text-xs font-semibold text-slate-700">Showing Applied Student records</p>
+                <button type="button" id="cpApplyNewStudentBtn" onclick="openStudentApplicationModal()" class="hidden bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-xs px-4 py-2 rounded-lg shadow-xs cursor-pointer">
+                  <i class="fa-solid fa-user-plus mr-1.5"></i> Apply New Student
+                </button>
+              </div>
+
+              <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                  <thead>
+                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
+                      <th class="py-3 px-3">Application No</th>
+                      <th class="py-3 px-3">Student Name</th>
+                      <th class="py-3 px-3">Course</th>
+                      <th class="py-3 px-3">Contact</th>
+                      <th class="py-3 px-3">Status</th>
+                      <th class="py-3 px-3 no-print">Action &amp; Tools</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cpCategoryStudentTable" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- DYNAMIC VIEW FOR OTHER SIDEBAR ITEMS -->
+            <div id="cp-view-generic" class="cp-workspace-panel hidden space-y-3 text-sm text-slate-700"></div>
           </div>
 
-          <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="font-bold text-lg text-brand-900">Enrolled Students (Live Database)</h3>
-              <span class="text-xs bg-blue-50 text-blue-700 font-semibold px-3 py-1 rounded-full">NBCE-WB-042</span>
-            </div>
-            <table class="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr class="border-b border-slate-200 text-slate-500 text-xs uppercase">
-                  <th class="py-2.5 px-3">Reg. No</th>
-                  <th class="py-2.5 px-3">Student Name</th>
-                  <th class="py-2.5 px-3">Course</th>
-                  <th class="py-2.5 px-3">Marks</th>
-                  <th class="py-2.5 px-3">Status</th>
-                </tr>
-              </thead>
-              <tbody id="centreStudentTable" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
         </div>
       </div>
 
@@ -1982,6 +2234,212 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     </div>
   </div>
 
+  <!-- STUDENT APPLICATION FORM MODAL (Triggered by 'Apply New Student') -->
+  <div id="studentApplicationModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs overflow-y-auto p-3 sm:p-6 no-print">
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-4">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-orange-600">Applied Student • New Admission</span>
+          <h3 class="font-display font-extrabold text-lg text-slate-900">Student Application Form</h3>
+        </div>
+        <button type="button" onclick="closeStudentApplicationModal()" class="text-slate-400 hover:text-slate-700 text-xl cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="newStudentApplicationForm" onsubmit="submitStudentApplicationForm(event)" class="p-6 space-y-7 text-sm text-slate-800">
+        <!-- Choose course -->
+        <div class="space-y-4">
+          <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Choose course</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Course Category <span class="text-red-500">*</span></label>
+              <select id="stCourseCategory" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="1 Year Course">1 Year Course</option>
+                <option value="6 Months Course">6 Months Course</option>
+                <option value="3 Months Course">3 Months Course</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Course <span class="text-red-500">*</span></label>
+              <select id="stCourseName" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Select course</option>
+                <option value="ADCA (1 Year Diploma)">ADCA (1 Year Diploma)</option>
+                <option value="DCA (6 Months Certificate)">DCA (6 Months Certificate)</option>
+                <option value="Tally Prime & GST">Tally Prime &amp; GST</option>
+                <option value="Web & Python Programming">Web &amp; Python Programming</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Study Mode <span class="text-red-500">*</span></label>
+              <select id="stStudyMode" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="Offline">Offline</option>
+                <option value="Online">Online</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal information -->
+        <div class="space-y-4">
+          <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Personal information</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Student Name <span class="text-red-500">*</span></label>
+              <input id="stFullName" type="text" required placeholder="Enter name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Father's Name <span class="text-red-500">*</span></label>
+              <input id="stFatherName" type="text" required placeholder="Enter father's name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Mother's Name <span class="text-red-500">*</span></label>
+              <input id="stMotherName" type="text" required placeholder="Enter mother's name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Date of Birth <span class="text-red-500">*</span></label>
+              <input id="stDOB" type="date" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Religion <span class="text-red-500">*</span></label>
+              <select id="stReligion" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Select religion</option>
+                <option value="Hinduism">Hinduism</option>
+                <option value="Islam">Islam</option>
+                <option value="Christianity">Christianity</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Gender <span class="text-red-500">*</span></label>
+              <select id="stGender" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Marital Status <span class="text-red-500">*</span></label>
+              <select id="stMaritalStatus" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Select status</option>
+                <option value="Unmarried">Unmarried</option>
+                <option value="Married">Married</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Category <span class="text-red-500">*</span></label>
+              <select id="stCategory" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Select category</option>
+                <option value="General">General</option>
+                <option value="OBC">OBC</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact & identity -->
+        <div class="space-y-4">
+          <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Contact &amp; identity</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Mobile No. <span class="text-red-500">*</span></label>
+              <input id="stMobile" type="tel" required placeholder="Enter 10-digit mobile no." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Whatsapp No.</label>
+              <input id="stWhatsapp" type="tel" placeholder="Enter whatsapp no. (optional)" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Enquiry Source <span class="text-red-500">*</span></label>
+              <select id="stEnquirySource" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Select source</option>
+                <option value="Walk-in">Walk-in</option>
+                <option value="Referral">Referral</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Website">Website</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Identity Card Type <span class="text-red-500">*</span></label>
+              <select id="stIdCardType" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Select ID type</option>
+                <option value="Aadhaar Card">Aadhaar Card</option>
+                <option value="Voter ID">Voter ID</option>
+                <option value="PAN Card">PAN Card</option>
+                <option value="Birth Certificate">Birth Certificate</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">ID Card Number <span class="text-red-500">*</span></label>
+              <input id="stIdCardNumber" type="text" required placeholder="Enter ID card number" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+          </div>
+        </div>
+
+        <!-- Postal address -->
+        <div class="space-y-4">
+          <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Postal address</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Address <span class="text-red-500">*</span></label>
+              <textarea id="stPostalAddress" rows="3" required placeholder="Enter full postal address" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Pin Code <span class="text-red-500">*</span></label>
+              <input id="stPinCode" type="text" required maxlength="6" placeholder="Enter 6-digit pin" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="space-y-3">
+          <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Photo</h4>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Student Photo (optional)</label>
+            <input id="stPhotoFile" type="file" accept="image/*" class="block w-full max-w-md text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-lg file:border file:border-slate-300 file:text-xs file:font-semibold file:bg-slate-50 file:text-slate-800 hover:file:bg-slate-100">
+          </div>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+          <button type="button" onclick="closeStudentApplicationModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-sm transition cursor-pointer">
+            Create student
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- STUDENT APPLICATION VIEW / PRINT MODAL -->
+  <div id="studentViewModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs overflow-y-auto p-4 no-print">
+    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-6">
+      <div class="bg-brand-950 text-white px-5 py-3.5 flex justify-between items-center">
+        <div>
+          <span class="text-[10px] uppercase tracking-wider text-brand-gold font-bold">NBCE Student Application</span>
+          <h3 id="stViewModalTitle" class="font-display font-bold text-base">Student Details</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="window.print()" class="bg-brand-gold text-brand-950 text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
+            <i class="fa-solid fa-print mr-1"></i> Print
+          </button>
+          <button type="button" onclick="document.getElementById('studentViewModal').classList.add('hidden')" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">
+            Close
+          </button>
+        </div>
+      </div>
+      <div id="stViewModalBody" class="p-6 space-y-2.5 text-xs text-slate-800"></div>
+    </div>
+  </div>
+
   <!-- ADMIN VIEW APPLICATION DETAILS MODAL -->
   <div id="viewApplicationModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs overflow-y-auto p-4 no-print">
     <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-6">
@@ -2300,8 +2758,12 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         document.getElementById('cdMins').textContent = pad(mins);
         document.getElementById('cdSecs').textContent = pad(secs);
       }
+      const cdLabel = `${days}d ${pad(hours)}h ${pad(mins)}m ${pad(secs)}s`;
       if (document.getElementById('countdownTimerText')) {
-        document.getElementById('countdownTimerText').textContent = `${days}d ${pad(hours)}h ${pad(mins)}m ${pad(secs)}s`;
+        document.getElementById('countdownTimerText').textContent = cdLabel;
+      }
+      if (document.getElementById('cpCountdownText')) {
+        document.getElementById('cpCountdownText').textContent = cdLabel;
       }
     }
 
@@ -2337,6 +2799,732 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       appliedCodeStr: ''
     };
 
+    function askAdminConfirm(messageText, onYesCallback) {
+      document.getElementById('adminConfirmMessage').textContent = messageText;
+      pendingConfirmCallback = onYesCallback;
+      document.getElementById('adminConfirmModal').classList.remove('hidden');
+    }
+
+    function resolveAdminConfirm(confirmed) {
+      document.getElementById('adminConfirmModal').classList.add('hidden');
+      const cb = pendingConfirmCallback;
+      pendingConfirmCallback = null;
+      if (confirmed && typeof cb === 'function') {
+        cb();
+      }
+    }
+
+    function parseFranchiseRecord(row) {
+      const fallback = {
+        appNo: `NBCEAPP${String(row.id || 1).padStart(4, '0')}`,
+        headName: row.applicant_info || '-',
+        designation: 'Director',
+        appliedFor: 'Authorized Study Centre',
+        state: 'West Bengal',
+        district: 'Nadia',
+        city: '-',
+        pin: '-',
+        email: '-',
+        phone: row.mobile || '-',
+        whatsapp: row.mobile || '-',
+        centreCode: '',
+        centreState: 'Active',
+        rawText: row.applicant_info || ''
+      };
+      if (!row.applicant_info) return fallback;
+      const marker = '::META::';
+      const idx = row.applicant_info.indexOf(marker);
+      if (idx !== -1) {
+        try {
+          const parsed = JSON.parse(row.applicant_info.slice(idx + marker.length));
+          return { ...fallback, ...parsed, rawText: row.applicant_info.slice(0, idx).trim() };
+        } catch (err) {
+          return fallback;
+        }
+      }
+      return fallback;
+    }
+
+    function buildApplicantInfoWithMeta(summaryText, metaObj) {
+      return `${summaryText} ::META::${JSON.stringify(metaObj)}`;
+    }
+
+    function getNextCentreCode() {
+      let maxNum = 0;
+      cachedFranchises.forEach(r => {
+        const m = parseFranchiseRecord(r);
+        if (m.centreCode && /^NBCE\d+$/i.test(m.centreCode)) {
+          const num = parseInt(m.centreCode.replace(/[^0-9]/g, ''), 10);
+          if (num > maxNum) maxNum = num;
+        }
+      });
+      return 'NBCE' + String(maxNum + 1).padStart(4, '0');
+    }
+
+    function generateAffiliationPDF(appData) {
+      try {
+        if (!window.jspdf || !window.jspdf.jsPDF) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFillColor(11, 29, 58);
+        doc.rect(0, 0, 210, 34, 'F');
+        doc.setTextColor(234, 179, 8);
+        doc.setFontSize(15);
+        doc.setFont('helvetica', 'bold');
+        doc.text('NATIONAL BOARD OF COMPUTER EDUCATION', 105, 13, { align: 'center' });
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(8.5);
+        doc.setFont('helvetica', 'normal');
+        doc.text('NBCE Skill Development (CIN : U80903WB2017PTC223024) | Regd. Under MCA, Govt. of India', 105, 19, { align: 'center' });
+        doc.text('Regd. Office : 28 RabindraSarani, P.O. + P.S. - Ranaghat, Dist - Nadia, Pin - 741201 (W.B.)', 105, 25, { align: 'center' });
+
+        doc.setTextColor(11, 29, 58);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('APPLICATION FORM FOR AFFILIATION (STUDY CENTRE)', 105, 43, { align: 'center' });
+
+        doc.setFontSize(10);
+        doc.text(`Application No: ${appData.appNo}`, 14, 52);
+        doc.text(`Status: ${appData.status || 'Pending'}`, 160, 52);
+        doc.line(14, 55, 196, 55);
+
+        let y = 63;
+        const addLine = (label, val) => {
+          if (y > 275) { doc.addPage(); y = 20; }
+          doc.setFont('helvetica', 'bold');
+          doc.text(`${label}:`, 14, y);
+          doc.setFont('helvetica', 'normal');
+          doc.text(String(val || '-'), 75, y);
+          y += 7;
+        };
+
+        addLine('Institute Name', appData.instituteName);
+        addLine('Applied For', appData.appliedFor);
+        addLine('Year of Establishment', appData.estYear);
+        addLine('Institution Status', appData.instStatus);
+        addLine('Location', `${appData.city}, Dist: ${appData.district}, ${appData.state} - ${appData.pin}`);
+        addLine('PO / PS', `${appData.instPO || '-'} / ${appData.instPS || '-'}`);
+        addLine('Institute Address', appData.instAddress);
+        addLine('Contact / WhatsApp', `${appData.phone} / ${appData.whatsapp}`);
+        addLine('Institute Email', appData.email);
+        y += 2;
+        addLine('Centre Head Name', appData.headName);
+        addLine('Designation', appData.designation);
+        addLine('Head Mobile / Email', `${appData.headMobile || appData.phone} / ${appData.headEmail || appData.email}`);
+        addLine('DOB / Gender / Marital', `${appData.headDOB || '-'} | ${appData.headGender || '-'} | ${appData.headMarital || '-'}`);
+        addLine('Nationality / Religion', `${appData.headNationality || '-'} / ${appData.headReligion || '-'}`);
+        addLine('Qualification / Exp.', `${appData.headQual || '-'} / ${appData.headExp || '-'}`);
+        addLine('PAN / ID / GSTIN', `${appData.panNo || '-'} | ${appData.aadharNo || '-'} | ${appData.gstNo || 'N/A'}`);
+        y += 2;
+        addLine('Infrastructure', appData.infraSummary || '-');
+        addLine('Facilities', appData.facilitySummary || '-');
+        addLine('Faculty Count', `${(appData.faculties || []).length} Listed`);
+
+        doc.save(`${appData.appNo}_NBCE_Affiliation_Form.pdf`);
+      } catch (e) {
+        console.warn('PDF generation note:', e);
+      }
+    }
+
+    function openViewApplicationModal(id) {
+      const row = cachedFranchises.find(f => f.id === id);
+      if (!row) return;
+      const meta = parseFranchiseRecord(row);
+      document.getElementById('viewAppModalTitle').textContent = `${meta.appNo} — ${row.institute_name}`;
+      const pdfBtn = document.getElementById('viewAppDownloadPdfBtn');
+      pdfBtn.onclick = () => generateAffiliationPDF({
+        ...meta,
+        instituteName: row.institute_name,
+        status: row.status || 'Pending'
+      });
+
+      const facHtml = (meta.faculties && meta.faculties.length)
+        ? meta.faculties.map((fc, i) => `<li>${i + 1}. <strong>${fc.name}</strong> — ${fc.qual || '-'} (${fc.exp || '-'}, ${fc.status || '-'})</li>`).join('')
+        : '<li>No faculty entries recorded.</li>';
+
+      document.getElementById('viewAppModalBody').innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+          <div><span class="text-slate-500 block">Application Number</span><strong class="font-mono text-sm text-brand-950">${meta.appNo}</strong></div>
+          <div><span class="text-slate-500 block">Application Status</span><strong class="text-sm ${row.status === 'Approved' ? 'text-emerald-700' : row.status === 'Rejected' ? 'text-red-700' : 'text-amber-700'}">${row.status || 'Pending'}</strong></div>
+          ${meta.centreCode ? `<div><span class="text-slate-500 block">Generated Centre Code</span><strong class="font-mono text-sm text-emerald-800">${meta.centreCode} (${meta.centreState || 'Active'})</strong></div>` : ''}
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
+            <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Institute Details</p>
+            <p><strong>Name:</strong> ${row.institute_name}</p>
+            <p><strong>Applied For:</strong> ${meta.appliedFor}</p>
+            <p><strong>Est. Year / Status:</strong> ${meta.estYear || '-'} / ${meta.instStatus || '-'}</p>
+            <p><strong>Location:</strong> ${meta.city}, Dist: ${meta.district}, ${meta.state} - ${meta.pin}</p>
+            <p><strong>PO / PS:</strong> ${meta.instPO || '-'} / ${meta.instPS || '-'}</p>
+            <p><strong>Address:</strong> ${meta.instAddress || '-'}</p>
+            <p><strong>Phone / WhatsApp:</strong> ${meta.phone} / ${meta.whatsapp}</p>
+            <p><strong>Email:</strong> ${meta.email}</p>
+          </div>
+          <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
+            <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Centre Head Details</p>
+            <p><strong>Head Name:</strong> ${meta.headName}</p>
+            <p><strong>Designation:</strong> ${meta.designation}</p>
+            <p><strong>Mobile:</strong> ${meta.headMobile || row.mobile}</p>
+            <p><strong>Email:</strong> ${meta.headEmail || meta.email}</p>
+            <p><strong>DOB / Gender:</strong> ${meta.headDOB || '-'} / ${meta.headGender || '-'}</p>
+            <p><strong>Qualification / Exp.:</strong> ${meta.headQual || '-'} / ${meta.headExp || '-'}</p>
+            <p><strong>PAN / ID / GSTIN:</strong> ${meta.panNo || '-'} / ${meta.aadharNo || '-'} / ${meta.gstNo || 'N/A'}</p>
+          </div>
+        </div>
+        <div class="p-3.5 rounded-xl border border-slate-200 space-y-1">
+          <p class="font-bold text-brand-900 uppercase text-[11px]">Infrastructure &amp; Facilities</p>
+          <p><strong>Infrastructure:</strong> ${meta.infraSummary || '-'}</p>
+          <p><strong>Facilities:</strong> ${meta.facilitySummary || '-'}</p>
+        </div>
+        <div class="p-3.5 rounded-xl border border-slate-200">
+          <p class="font-bold text-brand-900 uppercase text-[11px] mb-1">Faculty List</p>
+          <ul class="space-y-1">${facHtml}</ul>
+        </div>
+      `;
+      document.getElementById('viewApplicationModal').classList.remove('hidden');
+    }
+
+    function closeViewApplicationModal() {
+      document.getElementById('viewApplicationModal').classList.add('hidden');
+    }
+
+    let localFranchiseOverrides = JSON.parse(localStorage.getItem('nbce_franchise_overrides') || '{}');
+
+    function saveFranchiseOverrides() {
+      localStorage.setItem('nbce_franchise_overrides', JSON.stringify(localFranchiseOverrides));
+    }
+
+    function applyFranchiseOverrideToRow(row) {
+      if (!row) return row;
+      const ov = localFranchiseOverrides[String(row.id)];
+      if (!ov) return row;
+      const baseMeta = parseFranchiseRecord(row);
+      const mergedMeta = {
+        ...baseMeta,
+        centreCode: ov.centreCode || baseMeta.centreCode || '',
+        centreState: ov.centreState || baseMeta.centreState || 'Active'
+      };
+      const nextStatus = ov.status || row.status || 'Pending';
+      return {
+        ...row,
+        status: nextStatus,
+        applicant_info: buildApplicantInfoWithMeta(mergedMeta.rawText || `${mergedMeta.headName} (${mergedMeta.city})`, mergedMeta)
+      };
+    }
+
+    function confirmApplicationStatusChange(id, newStatus) {
+      const existingRow = cachedFranchises.find(f => String(f.id) === String(id));
+      if (existingRow && existingRow.status === 'Approved') return;
+      const actionWord = newStatus === 'Approved' ? 'approve' : newStatus === 'Rejected' ? 'reject' : 'mark as pending';
+      askAdminConfirm(`Are you sure you want to ${actionWord} this franchise application?`, async () => {
+        const row = cachedFranchises.find(f => String(f.id) === String(id));
+        if (!row || row.status === 'Approved') return;
+        const meta = parseFranchiseRecord(row);
+        let assignedCode = meta.centreCode || '';
+        let assignedState = meta.centreState || 'Active';
+        if (newStatus === 'Approved') {
+          if (!assignedCode) assignedCode = getNextCentreCode();
+          assignedState = 'Active';
+          meta.centreCode = assignedCode;
+          meta.centreState = assignedState;
+        }
+
+        // Persist locally immediately so data & centre code never vanish on refresh
+        localFranchiseOverrides[String(id)] = {
+          status: newStatus,
+          centreCode: assignedCode,
+          centreState: assignedState
+        };
+        saveFranchiseOverrides();
+
+        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+        try {
+          await db.from('franchises').update({ status: newStatus, applicant_info: updatedInfo }).eq('id', id);
+        } catch (err) {
+          console.warn('Supabase franchise status update note:', err);
+        }
+        await refreshDashboardData();
+      });
+    }
+
+    function confirmCentreOperationalState(id, nextState) {
+      const label = nextState === 'Active' ? 'activate' : nextState === 'Inactive' ? 'deactivate (Inactive)' : 'cancel';
+      askAdminConfirm(`Are you sure you want to ${label} this study centre?`, async () => {
+        const row = cachedFranchises.find(f => String(f.id) === String(id));
+        if (!row) return;
+        const meta = parseFranchiseRecord(row);
+        const codeToKeep = meta.centreCode || getNextCentreCode();
+        meta.centreCode = codeToKeep;
+        meta.centreState = nextState;
+
+        localFranchiseOverrides[String(id)] = {
+          status: row.status || 'Approved',
+          centreCode: codeToKeep,
+          centreState: nextState
+        };
+        saveFranchiseOverrides();
+
+        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+        try {
+          await db.from('franchises').update({ applicant_info: updatedInfo }).eq('id', id);
+        } catch (err) {
+          console.warn('Supabase centre state update note:', err);
+        }
+        await refreshDashboardData();
+      });
+    }
+
+    let ourFranchiseFilterState = 'All';
+
+    function setOurFranchiseFilter(filterVal) {
+      ourFranchiseFilterState = filterVal;
+      document.querySelectorAll('.of-filter-btn').forEach(btn => {
+        btn.className = 'of-filter-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold cursor-pointer';
+      });
+      const activeBtn = document.getElementById(`ffilter-${filterVal}`);
+      if (activeBtn) {
+        activeBtn.className = 'of-filter-btn px-3 py-1.5 rounded-lg bg-brand-900 text-white font-bold cursor-pointer';
+      }
+      renderOurFranchiseTable();
+    }
+
+    function openAdminFranchiseCentrePanel(centreId) {
+      const baseUrl = window.location.href.split('#')[0].split('?')[0];
+      const newTabUrl = `${baseUrl}?centreId=${encodeURIComponent(centreId)}#centre-panel`;
+      window.open(newTabUrl, '_blank', 'noopener');
+    }
+
+    async function loadCentrePanelById(centreId) {
+      const { data: franchises } = await db.from('franchises').select('*');
+      if (franchises) cachedFranchises = franchises.map(applyFranchiseOverrideToRow);
+      const row = cachedFranchises.find(f => String(f.id) === String(centreId));
+      const meta = row ? parseFranchiseRecord(row) : { centreCode: 'NBCE0001', headName: 'Centre Head', city: 'Ranaghat', district: 'Nadia', state: 'West Bengal', centreState: 'Active' };
+      const codeStr = meta.centreCode || 'NBCE0001';
+      const instName = row ? row.institute_name : 'Authorized Study Centre';
+
+      document.getElementById('activeDashboardSection').classList.remove('hidden');
+      document.getElementById('adminDashboard').classList.add('hidden');
+      document.getElementById('staffDashboard').classList.add('hidden');
+      document.getElementById('studentDashboard').classList.add('hidden');
+      document.getElementById('centreDashboard').classList.remove('hidden');
+
+      document.getElementById('dashRoleBadge').textContent = `Centre Panel • ${codeStr}`;
+      document.getElementById('dashTitle').textContent = `${instName} (${codeStr})`;
+      document.getElementById('dashSubtitle').textContent = `Centre Head: ${meta.headName} • ${meta.city}, ${meta.district}, ${meta.state} • Mobile: ${row ? row.mobile : '-'}`;
+      if (document.getElementById('centrePanelCodePill')) {
+        document.getElementById('centrePanelCodePill').textContent = codeStr;
+      }
+      if (document.getElementById('cpActiveCentreInfo')) {
+        document.getElementById('cpActiveCentreInfo').textContent = `${instName} • ${codeStr}`;
+      }
+      await refreshDashboardData();
+    }
+
+    function toggleCpSubmenu(subId, btnEl) {
+      const sub = document.getElementById(subId);
+      if (sub) sub.classList.toggle('hidden');
+      const chev = btnEl?.querySelector('.fa-chevron-down');
+      if (chev) chev.classList.toggle('rotate-180');
+    }
+
+    let activeCentreStudentCategory = 'applied';
+
+    function openCentreStudentCategory(catKey, btnEl) {
+      activeCentreStudentCategory = catKey;
+      document.querySelectorAll('.cp-sub-link').forEach(b => {
+        b.classList.remove('bg-amber-50', 'text-orange-600', 'font-bold');
+      });
+      if (btnEl) {
+        btnEl.classList.add('bg-amber-50', 'text-orange-600', 'font-bold');
+      }
+
+      const titleMap = {
+        'applied': 'Applied Student',
+        'accepted': 'Accepted Student',
+        'registered': 'Registered Student',
+        'exam-complete': 'Exam Complete Student',
+        'certified': 'Certified Student'
+      };
+      const heading = titleMap[catKey] || 'Applied Student';
+      document.getElementById('cpActiveHeading').textContent = heading;
+      document.getElementById('cpStudentCatSubtitle').textContent = `Showing ${heading} records`;
+
+      const applyBtn = document.getElementById('cpApplyNewStudentBtn');
+      if (applyBtn) {
+        if (catKey === 'applied') applyBtn.classList.remove('hidden');
+        else applyBtn.classList.add('hidden');
+      }
+
+      document.querySelectorAll('.cp-workspace-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('cp-view-students-category').classList.remove('hidden');
+      renderCentreCategoryStudentTable();
+    }
+
+    let localCentreStudents = JSON.parse(localStorage.getItem('nbce_local_students') || '[]');
+
+    function generate6DigitAppNo() {
+      return String(Math.floor(100000 + Math.random() * 900000));
+    }
+
+    function getMergedStudents(dbStudents) {
+      const base = Array.isArray(dbStudents) ? dbStudents : [];
+      const byAppNo = new Map();
+      // Local records take priority so Accept / Reject / remove changes stay instant & consistent
+      (localCentreStudents || []).forEach(s => {
+        const key = String(s.app_no || s.reg_no || '');
+        if (key) byAppNo.set(key, s);
+      });
+      base.forEach(s => {
+        const key = String(s.app_no || s.reg_no || '');
+        if (key && !byAppNo.has(key)) {
+          byAppNo.set(key, { ...s, app_no: s.app_no || s.reg_no });
+        }
+      });
+      return Array.from(byAppNo.values()).filter(s => (s.status || '').toLowerCase() !== 'rejected');
+    }
+
+    function openStudentViewModal(appNo, mode) {
+      const st = cachedStudents.find(s => String(s.app_no || s.reg_no) === String(appNo));
+      if (!st) return;
+      document.getElementById('stViewModalTitle').textContent = `Application #${st.app_no || st.reg_no} — ${st.name}`;
+      document.getElementById('stViewModalBody').innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <div><span class="text-slate-500 block">Application No (6-Digit)</span><strong class="font-mono text-sm text-brand-950">${st.app_no || st.reg_no}</strong></div>
+          <div><span class="text-slate-500 block">Status</span><strong class="text-sm text-emerald-700">${st.status || 'Applied'}</strong></div>
+          <div><span class="text-slate-500 block">Student Name</span><strong>${st.name}</strong></div>
+          <div><span class="text-slate-500 block">Course</span><strong>${st.course}</strong></div>
+          <div><span class="text-slate-500 block">Mobile No.</span><strong class="font-mono">${st.mobile || '-'}</strong></div>
+          <div><span class="text-slate-500 block">Centre Code</span><strong class="font-mono">${st.centre_code || 'NBCE0001'}</strong></div>
+          <div><span class="text-slate-500 block">Father's / Mother's Name</span><strong>${st.father_name || '-'} / ${st.mother_name || '-'}</strong></div>
+          <div><span class="text-slate-500 block">Address</span><strong>${st.address || '-'} (${st.pin_code || '-'})</strong></div>
+        </div>
+      `;
+      document.getElementById('studentViewModal').classList.remove('hidden');
+      if (mode === 'print') {
+        setTimeout(() => window.print(), 150);
+      }
+    }
+
+    async function acceptStudentApplication(appNo) {
+      localCentreStudents = localCentreStudents.map(s =>
+        String(s.app_no || s.reg_no) === String(appNo) ? { ...s, status: 'Accepted' } : s
+      );
+      localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
+      try {
+        await db.from('students').update({ status: 'Accepted' }).eq('reg_no', String(appNo));
+      } catch (err) {
+        console.warn('Supabase accept sync:', err);
+      }
+      await refreshDashboardData();
+      renderCentreCategoryStudentTable();
+    }
+
+    async function rejectStudentApplication(appNo) {
+      // Remove rejected student from list
+      localCentreStudents = localCentreStudents.filter(s => String(s.app_no || s.reg_no) !== String(appNo));
+      localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
+      try {
+        await db.from('students').delete().eq('reg_no', String(appNo));
+      } catch (err) {
+        console.warn('Supabase reject remove sync:', err);
+      }
+      await refreshDashboardData();
+      renderCentreCategoryStudentTable();
+    }
+
+    function renderCentreCategoryStudentTable() {
+      const tbody = document.getElementById('cpCategoryStudentTable');
+      if (!tbody) return;
+      const filtered = cachedStudents.filter(s => {
+        const st = (s.status || 'Applied').toLowerCase();
+        if (st === 'rejected') return false;
+        if (activeCentreStudentCategory === 'applied') return st === 'applied' || st === 'pending';
+        if (activeCentreStudentCategory === 'accepted') return st === 'accepted' || st === 'verified';
+        if (activeCentreStudentCategory === 'registered') return st === 'registered' || st === 'enrolled' || st === 'accepted' || st === 'verified' || st === 'evaluated';
+        if (activeCentreStudentCategory === 'exam-complete') return st === 'evaluated' || st === 'exam complete' || (s.marks !== null && s.marks !== undefined);
+        if (activeCentreStudentCategory === 'certified') return st === 'certified';
+        return true;
+      });
+
+      tbody.innerHTML = filtered.length ? filtered.map(s => {
+        const appNo = s.app_no || s.reg_no;
+        const stLabel = s.status || 'Applied';
+        const isAppliedView = activeCentreStudentCategory === 'applied';
+
+        const statusActionHtml = isAppliedView
+          ? `<div class="inline-flex items-center gap-1.5">
+               <button type="button" onclick="acceptStudentApplication('${appNo}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">Accept</button>
+               <button type="button" onclick="rejectStudentApplication('${appNo}')" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">Reject</button>
+             </div>`
+          : `<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-semibold">${stLabel}</span>`;
+
+        return `
+          <tr>
+            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-950">${appNo}</td>
+            <td class="py-2.5 px-3 font-medium text-slate-900">${s.name}</td>
+            <td class="py-2.5 px-3">${s.course}</td>
+            <td class="py-2.5 px-3 font-mono text-xs">${s.mobile || '-'}</td>
+            <td class="py-2.5 px-3">${statusActionHtml}</td>
+            <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
+              <button type="button" onclick="openStudentViewModal('${appNo}', 'print')" title="Print Application" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs px-2 py-1 rounded-lg border border-slate-300 cursor-pointer">
+                <i class="fa-solid fa-print"></i>
+              </button>
+              <button type="button" onclick="openStudentViewModal('${appNo}', 'view')" title="View Application" class="bg-brand-900 hover:bg-brand-800 text-brand-gold text-xs px-2 py-1 rounded-lg cursor-pointer">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('') : '<tr><td colspan="6" class="py-5 px-3 text-slate-500 text-xs text-center">No students found in this category.</td></tr>';
+    }
+
+    function openStudentApplicationModal() {
+      document.getElementById('studentApplicationModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeStudentApplicationModal() {
+      document.getElementById('studentApplicationModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    async function submitStudentApplicationForm(e) {
+      e.preventDefault();
+      const name = (document.getElementById('stFullName').value || '').trim();
+      const course = document.getElementById('stCourseName').value || 'ADCA (1 Year Diploma)';
+      const mobile = (document.getElementById('stMobile').value || '').trim();
+      const fatherName = (document.getElementById('stFatherName').value || '').trim();
+      const motherName = (document.getElementById('stMotherName').value || '').trim();
+      const dob = document.getElementById('stDOB').value || '';
+      const religion = document.getElementById('stReligion').value || '';
+      const gender = document.getElementById('stGender').value || '';
+      const maritalStatus = document.getElementById('stMaritalStatus').value || '';
+      const category = document.getElementById('stCategory').value || '';
+      const address = (document.getElementById('stPostalAddress').value || '').trim();
+      const pinCode = (document.getElementById('stPinCode').value || '').trim();
+
+      if (!name) return;
+
+      const app_no = generate6DigitAppNo();
+      const centreCode = document.getElementById('centrePanelCodePill')?.textContent?.trim() || 'NBCE0001';
+
+      const studentRecord = {
+        app_no,
+        reg_no: app_no,
+        name,
+        course,
+        mobile: mobile || '-',
+        father_name: fatherName,
+        mother_name: motherName,
+        dob,
+        religion,
+        gender,
+        marital_status: maritalStatus,
+        category,
+        address,
+        pin_code: pinCode,
+        centre_code: centreCode,
+        status: 'Applied'
+      };
+
+      localCentreStudents.unshift(studentRecord);
+      localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
+
+      try {
+        await db.from('students').insert([{
+          reg_no: app_no,
+          name,
+          course,
+          status: 'Applied'
+        }]);
+      } catch (err) {
+        console.warn('Supabase student insert note:', err);
+      }
+
+      e.target.reset();
+      closeStudentApplicationModal();
+      await refreshDashboardData();
+      renderCentreCategoryStudentTable();
+      alert(`Student application submitted! 6-Digit Application No: ${app_no}`);
+    }
+
+    function switchCentrePanelView(viewKey, btnEl) {
+      if (btnEl) {
+        document.querySelectorAll('.cp-nav-item').forEach(b => {
+          b.classList.remove('bg-amber-50', 'text-orange-600', 'font-bold');
+        });
+        btnEl.classList.add('bg-amber-50', 'text-orange-600', 'font-bold');
+      }
+      const labelText = btnEl ? btnEl.textContent.trim() : viewKey.replace('-', ' ').toUpperCase();
+      document.getElementById('cpActiveHeading').textContent = labelText;
+
+      if (viewKey === 'dashboard') {
+        document.getElementById('cp-view-generic').classList.add('hidden');
+        document.getElementById('cp-view-dashboard').classList.remove('hidden');
+      } else {
+        document.getElementById('cp-view-dashboard').classList.add('hidden');
+        const gen = document.getElementById('cp-view-generic');
+        gen.classList.remove('hidden');
+        gen.innerHTML = `
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <p class="font-bold text-slate-900">${labelText} Module</p>
+            <p class="text-xs text-slate-500 mt-1">Manage ${labelText.toLowerCase()} records for this authorized NBCE study centre.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderOurFranchiseTable() {
+      const tbody = document.getElementById('ourFranchiseTableBody');
+      if (!tbody) return;
+      const approvedRows = cachedFranchises.filter(f => f.status === 'Approved');
+
+      let activeCnt = 0, inactiveCnt = 0, cancelCnt = 0;
+      approvedRows.forEach(f => {
+        const st = parseFranchiseRecord(f).centreState || 'Active';
+        if (st === 'Inactive') inactiveCnt++;
+        else if (st === 'Cancel') cancelCnt++;
+        else activeCnt++;
+      });
+
+      if (document.getElementById('statFranchiseTotal')) {
+        document.getElementById('statFranchiseTotal').textContent = approvedRows.length;
+        document.getElementById('statFranchiseApproved').textContent = activeCnt;
+        document.getElementById('statFranchiseInactive').textContent = inactiveCnt;
+        document.getElementById('statFranchiseCancelled').textContent = cancelCnt;
+      }
+
+      const searchQ = (document.getElementById('ourFranchiseSearchInput')?.value || '').toLowerCase();
+      const filteredRows = approvedRows.filter((f, idx) => {
+        const meta = parseFranchiseRecord(f);
+        const code = (meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'))).toLowerCase();
+        const cState = meta.centreState || 'Active';
+        const statusMatches = ourFranchiseFilterState === 'All' || cState === ourFranchiseFilterState;
+        const textMatches = !searchQ || `${code} ${f.institute_name} ${meta.headName} ${f.mobile} ${meta.state} ${meta.district} ${meta.city}`.toLowerCase().includes(searchQ);
+        return statusMatches && textMatches;
+      });
+
+      tbody.innerHTML = filteredRows.length ? filteredRows.map((f, idx) => {
+        const meta = parseFranchiseRecord(f);
+        const code = meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'));
+        const cState = meta.centreState || 'Active';
+
+        let rowBg = '';
+        let badgeHtml = '<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Active</span>';
+        let selectStyle = 'border-emerald-400 bg-emerald-50 text-emerald-950';
+        if (cState === 'Inactive') {
+          rowBg = 'bg-orange-50';
+          badgeHtml = '<span class="bg-orange-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Inactive</span>';
+          selectStyle = 'border-orange-500 bg-orange-500 text-white';
+        } else if (cState === 'Cancel') {
+          rowBg = 'bg-red-50';
+          badgeHtml = '<span class="bg-red-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Cancelled</span>';
+          selectStyle = 'border-red-600 bg-red-600 text-white';
+        }
+
+        return `
+          <tr class="${rowBg} transition">
+            <td class="py-2.5 px-3 font-mono font-bold text-xs">
+              <button type="button" onclick="openAdminFranchiseCentrePanel(${f.id})" title="Open Centre Panel in New Tab" class="text-brand-700 hover:text-brand-950 underline decoration-brand-gold underline-offset-2 font-extrabold cursor-pointer">
+                ${code}
+              </button>
+            </td>
+            <td class="py-2.5 px-3 font-semibold text-slate-900">${f.institute_name}</td>
+            <td class="py-2.5 px-3 text-slate-700">${meta.headName}</td>
+            <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
+            <td class="py-2.5 px-3 text-xs">${meta.state}</td>
+            <td class="py-2.5 px-3 text-xs">${meta.district}</td>
+            <td class="py-2.5 px-3 text-xs">${meta.city}</td>
+            <td class="py-2.5 px-3">${badgeHtml}</td>
+            <td class="py-2.5 px-3 no-print">
+              <select aria-label="Change Centre Status" onchange="onCentreDropdownChange(${f.id}, this)" class="px-2.5 py-1.5 rounded-lg border text-xs font-bold outline-none cursor-pointer ${selectStyle}">
+                <option value="Active" ${cState === 'Active' ? 'selected' : ''}>Active</option>
+                <option value="Inactive" ${cState === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                <option value="Cancel" ${cState === 'Cancel' ? 'selected' : ''}>Cancel</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('') : '<tr><td colspan="9" class="py-5 px-3 text-slate-500 text-xs text-center">No matching centres found for the selected filter.</td></tr>';
+    }
+
+    function onCentreDropdownChange(id, selectEl) {
+      const nextState = selectEl.value;
+      const row = cachedFranchises.find(f => f.id === id);
+      const prevState = row ? (parseFranchiseRecord(row).centreState || 'Active') : 'Active';
+      selectEl.value = prevState;
+      confirmCentreOperationalState(id, nextState);
+    }
+
+    function renderFranchiseApplicationTable() {
+      const tbody = document.getElementById('franchiseApplicationTable');
+      if (!tbody) return;
+      tbody.innerHTML = cachedFranchises.length ? cachedFranchises.map(f => {
+        const meta = parseFranchiseRecord(f);
+        const st = f.status || 'Pending';
+        const isApproved = st === 'Approved';
+        let statusBadge = '<span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Pending</span>';
+        if (isApproved) {
+          statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Approved (${meta.centreCode || 'NBCE0001'})</span>`;
+        } else if (st === 'Rejected') {
+          statusBadge = '<span class="bg-red-100 text-red-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Rejected</span>';
+        }
+
+        const actionButtonsHtml = isApproved
+          ? `<button type="button" disabled class="bg-emerald-600/40 text-white/80 text-xs px-2.5 py-1 rounded font-semibold cursor-not-allowed opacity-60">Approved</button>
+             <button type="button" disabled class="bg-amber-500/40 text-white/80 text-xs px-2.5 py-1 rounded font-semibold cursor-not-allowed opacity-60">Pending</button>
+             <button type="button" disabled class="bg-red-600/40 text-white/80 text-xs px-2.5 py-1 rounded font-semibold cursor-not-allowed opacity-60">Reject</button>`
+          : `<button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Approved</button>
+             <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Pending')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Pending</button>
+             <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Reject</button>`;
+
+        return `
+          <tr>
+            <td class="py-2.5 px-3 font-mono font-bold text-xs text-brand-900">${meta.appNo}</td>
+            <td class="py-2.5 px-3 font-semibold text-brand-950">${f.institute_name}</td>
+            <td class="py-2.5 px-3 text-xs text-slate-700">${meta.headName} • ${meta.city}, ${meta.district}</td>
+            <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
+            <td class="py-2.5 px-3">${statusBadge}</td>
+            <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
+              <button type="button" onclick="openViewApplicationModal(${f.id})" title="View Full Application" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">
+                <i class="fa-solid fa-eye mr-1"></i>View
+              </button>
+              ${actionButtonsHtml}
+            </td>
+          </tr>
+        `;
+      }).join('') : '<tr><td colspan="6" class="py-4 px-3 text-slate-500 text-xs">No franchise applications found.</td></tr>';
+    }
+
+    function renderFranchiseEnquiryList() {
+      const box = document.getElementById('franchiseEnquiryList');
+      if (!box) return;
+      const q = (document.getElementById('franchiseEnqSearch')?.value || '').toLowerCase();
+      const rows = cachedFranchises.filter(f => {
+        const meta = parseFranchiseRecord(f);
+        return `${meta.appNo} ${f.institute_name} ${meta.headName} ${meta.city} ${f.mobile}`.toLowerCase().includes(q);
+      });
+      box.innerHTML = rows.length ? rows.map(f => {
+        const meta = parseFranchiseRecord(f);
+        return `
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-[11px] font-bold bg-brand-900 text-brand-gold px-2 py-0.5 rounded">${meta.appNo}</span>
+              <p class="font-bold text-brand-950">${f.institute_name}</p>
+            </div>
+            <p class="text-xs text-slate-600 mt-1"><i class="fa-solid fa-user mr-1 text-slate-400"></i>${meta.headName} (${meta.city}, ${meta.district}) &nbsp;•&nbsp; <i class="fa-solid fa-phone mr-1 text-slate-400"></i>${f.mobile}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="openViewApplicationModal(${f.id})" class="bg-slate-800 text-white text-xs px-2.5 py-1 rounded-lg font-semibold cursor-pointer"><i class="fa-solid fa-eye mr-1"></i>View</button>
+            <span class="text-xs font-bold px-3 py-1 rounded-full w-fit ${f.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : f.status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-900'}">${f.status || 'Pending'}</span>
+          </div>
+        </div>
+      `;
+      }).join('') : '<p class="text-xs text-slate-500">No matching franchise enquiries.</p>';
+    }
+
     function formatINR(num) {
       return '₹' + Number(num || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
@@ -2368,6 +3556,16 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       document.getElementById('rcptDiscountAmtText').textContent = `- ${formatINR(discAmt)}`;
       document.getElementById('rcptGstAmtText').textContent = formatINR(gstAmt);
       document.getElementById('rcptTotalPayableText').textContent = formatINR(payable);
+    }
+
+    function closeAppReceiptModal() {
+      const modal = document.getElementById('appReceiptModal');
+      if (modal) modal.classList.add('hidden');
+      if (typeof switchHomeFranchiseTab === 'function') {
+        switchHomeFranchiseTab('track');
+      }
+      const sec = document.getElementById('franchise');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth' });
     }
 
     function renderDiscountCodeTable() {
@@ -2462,37 +3660,37 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     }
 
     async function finalizeReceiptBillingSubmit() {
-      if (activeReceiptState.appliedCodeId) {
-        discountCodes = discountCodes.map(d =>
-          d.id === activeReceiptState.appliedCodeId ? { ...d, used: true, active: false } : d
-        );
-        renderDiscountCodeTable();
-      }
+      try {
+        if (activeReceiptState.appliedCodeId) {
+          discountCodes = discountCodes.map(d =>
+            d.id === activeReceiptState.appliedCodeId ? { ...d, used: true, active: false } : d
+          );
+          renderDiscountCodeTable();
+        }
 
-      // Update Supabase record with payable billing metadata if found
-      const matchRow = cachedFranchises.find(f => (f.applicant_info || '').includes(activeReceiptState.appNo));
-      if (matchRow) {
-        const meta = parseFranchiseRecord(matchRow);
-        meta.billing = {
-          promoCode: activeReceiptState.appliedCodeStr || 'None',
-          totalFranchiseFees: activeReceiptState.baseFees,
-          discountAmount: activeReceiptState.discountAmount,
-          gstAmount: activeReceiptState.gstAmount,
-          totalAmountPayable: activeReceiptState.totalPayable
-        };
-        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
-        await db.from('franchises').update({ applicant_info: updatedInfo }).eq('id', matchRow.id);
+        const { data: latestRows } = await db.from('franchises').select('*');
+        const matchRow = (latestRows || []).find(f => (f.applicant_info || '').includes(activeReceiptState.appNo));
+        if (matchRow) {
+          const meta = parseFranchiseRecord(matchRow);
+          meta.billing = {
+            promoCode: activeReceiptState.appliedCodeStr || 'None',
+            totalFranchiseFees: activeReceiptState.baseFees,
+            discountAmount: activeReceiptState.discountAmount,
+            gstAmount: activeReceiptState.gstAmount,
+            totalAmountPayable: activeReceiptState.totalPayable
+          };
+          const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+          await db.from('franchises').update({ applicant_info: updatedInfo }).eq('id', matchRow.id);
+        }
+      } catch (err) {
+        console.warn('Billing sync note:', err);
       }
 
       alert(
-        `Billing Submitted for ${activeReceiptState.appNo}!
-` +
-        `Total Franchise Fees: ${formatINR(activeReceiptState.baseFees)}
-` +
-        `Discount: -${formatINR(activeReceiptState.discountAmount)}
-` +
-        `GST (18%): ${formatINR(activeReceiptState.gstAmount)}
-` +
+        `Submitted for ${activeReceiptState.appNo}!\n` +
+        `Total Franchise Fees: ${formatINR(activeReceiptState.baseFees)}\n` +
+        `Discount: -${formatINR(activeReceiptState.discountAmount)}\n` +
+        `GST (18%): ${formatINR(activeReceiptState.gstAmount)}\n` +
         `Total Amount Payable: ${formatINR(activeReceiptState.totalPayable)}`
       );
       closeAppReceiptModal();
@@ -2505,21 +3703,23 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const { data: notices } = await db.from('notices').select('*').order('id', { ascending: false });
       const { data: franchises } = await db.from('franchises').select('*').order('id', { ascending: false });
 
-      if (students) {
-        cachedStudents = students;
-        const accepted = students.filter(s => ['accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
-        const registered = students.filter(s => ['registered', 'enrolled', 'accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
-        const pending = students.filter(s => ['pending', 'enrolled'].includes((s.status || '').toLowerCase())).length;
-        const rejected = students.filter(s => (s.status || '').toLowerCase() === 'rejected').length;
+      if (students || localCentreStudents.length) {
+        const merged = getMergedStudents(students);
+        cachedStudents = merged;
+        const appliedCnt = merged.filter(s => ['applied', 'pending', 'enrolled', 'accepted', 'verified', 'evaluated', 'registered', 'certified'].includes((s.status || 'applied').toLowerCase())).length;
+        const accepted = merged.filter(s => ['accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
+        const registered = merged.filter(s => ['registered', 'enrolled', 'accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
+        const pending = merged.filter(s => ['applied', 'pending', 'enrolled'].includes((s.status || '').toLowerCase())).length;
+        const rejected = 0;
 
         if (document.getElementById('cntApplied')) {
-          document.getElementById('cntApplied').textContent = students.length;
+          document.getElementById('cntApplied').textContent = appliedCnt;
           document.getElementById('cntAccepted').textContent = accepted;
           document.getElementById('cntRegistered').textContent = registered;
           document.getElementById('cntPending').textContent = pending;
           document.getElementById('cntRejected').textContent = rejected;
           if (document.getElementById('sideCntApplied')) {
-            document.getElementById('sideCntApplied').textContent = students.length;
+            document.getElementById('sideCntApplied').textContent = appliedCnt;
             document.getElementById('sideCntAccepted').textContent = accepted;
             document.getElementById('sideCntRegistered').textContent = registered;
             document.getElementById('sideCntPending').textContent = pending;
@@ -2528,6 +3728,12 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         }
         renderAdminStudentStatusTable();
 
+        if (document.getElementById('cpAppliedCount')) {
+          document.getElementById('cpAppliedCount').textContent = appliedCnt;
+          document.getElementById('cpRegCount').textContent = registered;
+          document.getElementById('cpCertCount').textContent = students.filter(s => (s.status || '').toLowerCase() === 'certified').length;
+        }
+        renderCentreCategoryStudentTable();
         document.getElementById('centreStudentTable').innerHTML = students.map(s => `
           <tr>
             <td class="py-2.5 px-3 font-mono text-xs">${s.reg_no}</td>
@@ -2549,7 +3755,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       }
 
       if (franchises) {
-        cachedFranchises = franchises;
+        cachedFranchises = franchises.map(applyFranchiseOverrideToRow);
         const pendingF = franchises.filter(f => (f.status || 'Pending') === 'Pending').length;
         const approvedF = franchises.filter(f => f.status === 'Approved').length;
         const rejectedF = franchises.filter(f => f.status === 'Rejected').length;
@@ -2691,35 +3897,35 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     async function submitFullAffiliationForm(e) {
       e.preventDefault();
       const appNo = 'NBCEAPP2026' + Math.floor(1000 + Math.random() * 9000);
-      const instituteName = document.getElementById('afInstName').value.trim();
-      const appliedFor = document.getElementById('afAppliedFor').value;
-      const state = document.getElementById('afInstState').value;
-      const district = document.getElementById('afInstDistrict').value;
-      const city = document.getElementById('afInstCity').value.trim();
-      const estYear = document.getElementById('afEstYear').value;
-      const instStatus = document.getElementById('afInstStatus').value;
-      const instPO = document.getElementById('afInstPO').value.trim();
-      const instPS = document.getElementById('afInstPS').value.trim();
-      const pin = document.getElementById('afInstPin').value.trim();
-      const instAddress = document.getElementById('afInstAddress').value.trim();
-      const phone = document.getElementById('afInstPhone').value.trim();
-      const whatsapp = document.getElementById('afInstWhatsapp').value.trim();
-      const email = document.getElementById('afInstEmail').value.trim();
+      const instituteName = (document.getElementById('afInstName').value || 'NBCE Study Centre').trim();
+      const appliedFor = document.getElementById('afAppliedFor').value || 'Authorized Study Centre';
+      const state = document.getElementById('afInstState').value || 'West Bengal';
+      const district = document.getElementById('afInstDistrict').value || 'Nadia';
+      const city = (document.getElementById('afInstCity').value || 'Ranaghat').trim();
+      const estYear = document.getElementById('afEstYear').value || '2026';
+      const instStatus = document.getElementById('afInstStatus').value || 'Trust';
+      const instPO = (document.getElementById('afInstPO').value || '').trim();
+      const instPS = (document.getElementById('afInstPS').value || '').trim();
+      const pin = (document.getElementById('afInstPin').value || '741201').trim();
+      const instAddress = (document.getElementById('afInstAddress').value || '').trim();
+      const phone = (document.getElementById('afInstPhone').value || '').trim();
+      const whatsapp = (document.getElementById('afInstWhatsapp').value || '').trim();
+      const email = (document.getElementById('afInstEmail').value || '').trim();
 
-      const headName = document.getElementById('afHeadName').value.trim();
-      const designation = document.getElementById('afHeadDesignation').value.trim();
-      const headMobile = document.getElementById('afHeadMobile').value.trim() || whatsapp || phone;
-      const headEmail = document.getElementById('afHeadEmail').value.trim();
-      const headDOB = document.getElementById('afHeadDOB').value;
-      const headNationality = document.getElementById('afHeadNationality').value;
-      const headReligion = document.getElementById('afHeadReligion').value;
-      const headGender = document.getElementById('afHeadGender').value;
-      const headMarital = document.getElementById('afHeadMarital').value;
-      const headQual = document.getElementById('afHeadQual').value;
-      const headExp = document.getElementById('afHeadExp').value;
-      const panNo = document.getElementById('afPanNo').value.trim().toUpperCase();
-      const aadharNo = document.getElementById('afAadharNo').value.trim();
-      const gstNo = document.getElementById('afGstNo').value.trim().toUpperCase();
+      const headName = (document.getElementById('afHeadName').value || 'Centre Head').trim();
+      const designation = (document.getElementById('afHeadDesignation').value || 'Director').trim();
+      const headMobile = (document.getElementById('afHeadMobile').value || whatsapp || phone || '9876543210').trim();
+      const headEmail = (document.getElementById('afHeadEmail').value || email || '').trim();
+      const headDOB = document.getElementById('afHeadDOB').value || '';
+      const headNationality = document.getElementById('afHeadNationality').value || 'Indian';
+      const headReligion = document.getElementById('afHeadReligion').value || '';
+      const headGender = document.getElementById('afHeadGender').value || '';
+      const headMarital = document.getElementById('afHeadMarital').value || '';
+      const headQual = document.getElementById('afHeadQual').value || '';
+      const headExp = document.getElementById('afHeadExp').value || '';
+      const panNo = (document.getElementById('afPanNo').value || '').trim().toUpperCase();
+      const aadharNo = (document.getElementById('afAadharNo').value || '').trim();
+      const gstNo = (document.getElementById('afGstNo').value || '').trim().toUpperCase();
 
       const infraSummary = [
         `Office: ${document.getElementById('afInfraOffice').value}`,
@@ -2796,16 +4002,19 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const summaryText = `${appNo} | ${headName} (${designation}) | ${city}, ${district}, ${state} - ${pin}`;
       const applicant_info = buildApplicantInfoWithMeta(summaryText, appData);
 
-      const { error } = await db.from('franchises').insert([{
-        institute_name: instituteName,
-        applicant_info,
-        mobile: headMobile,
-        status: 'Pending'
-      }]);
-
-      if (error) {
-        alert('Error submitting affiliation form: ' + error.message);
-        return;
+      try {
+        const { error } = await db.from('franchises').insert([{
+          institute_name: instituteName,
+          applicant_info,
+          mobile: headMobile,
+          status: 'Pending'
+        }]);
+        if (error) {
+          alert('Error submitting affiliation form: ' + error.message);
+          return;
+        }
+      } catch (dbErr) {
+        console.warn('Supabase insert fallback:', dbErr);
       }
 
       generateAffiliationPDF(appData);
@@ -2813,20 +4022,13 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const cleanPhone = headMobile.replace(/[^0-9]/g, '');
       const waNumber = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
       const waText = encodeURIComponent(
-        `NATIONAL BOARD OF COMPUTER EDUCATION (NBCE)
-` +
-        `Franchise Affiliation Application Submitted!
-` +
-        `Application No: ${appNo}
-` +
-        `Institute: ${instituteName}
-` +
-        `Centre Head: ${headName}
-` +
-        `Location: ${city}, ${district}, ${state}
-` +
-        `Status: Pending
-` +
+        `NATIONAL BOARD OF COMPUTER EDUCATION (NBCE)\n` +
+        `Franchise Affiliation Application Submitted!\n` +
+        `Application No: ${appNo}\n` +
+        `Institute: ${instituteName}\n` +
+        `Centre Head: ${headName}\n` +
+        `Location: ${city}, ${district}, ${state}\n` +
+        `Status: Pending\n` +
         `(Your application form PDF ${appNo}_NBCE_Affiliation_Form.pdf has been generated.)`
       );
       const waUrl = `https://wa.me/${waNumber}?text=${waText}`;
@@ -2947,6 +4149,14 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const { data } = await db.from('notices').select('*').order('id', { ascending: false }).limit(1);
       if (data && data.length) {
         document.getElementById('topNoticeText').textContent = data[0].title;
+      }
+      const params = new URLSearchParams(window.location.search);
+      if (localCentreStudents.length && !cachedStudents.length) {
+        cachedStudents = getMergedStudents([]);
+      }
+      const cId = params.get('centreId');
+      if (cId) {
+        await loadCentrePanelById(cId);
       }
     })();
   </script>
