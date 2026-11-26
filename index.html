@@ -109,7 +109,26 @@
           <a href="#online" class="hover:text-brand-900 transition">Online</a>
           <a href="#download" class="hover:text-brand-900 transition">Download</a>
           <a href="#gallery" class="hover:text-brand-900 transition">Gallery</a>
-          <a href="#franchise" class="hover:text-brand-900 transition">Franchise</a>
+          <div class="relative group">
+            <a href="#franchise" class="hover:text-brand-900 transition inline-flex items-center gap-1 py-2">
+              <span>Franchise</span>
+              <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </a>
+            <div class="hidden group-hover:block absolute left-0 mt-0.5 w-52 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50">
+              <button type="button" onclick="openFranchiseSection('application')" class="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-amber-50 flex items-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-file-pen text-amber-600 w-4"></i> Application form
+              </button>
+              <button type="button" onclick="openFranchiseSection('track')" class="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-amber-50 flex items-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-magnifying-glass-location text-amber-600 w-4"></i> Track application
+              </button>
+              <button type="button" onclick="openFranchiseSection('enquiry')" class="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-amber-50 flex items-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-comments text-amber-600 w-4"></i> Enquiry
+              </button>
+              <button type="button" onclick="openFranchiseSection('downloads')" class="w-full text-left px-4 py-2 text-sm text-slate-800 hover:bg-amber-50 flex items-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-download text-amber-600 w-4"></i> Downloads
+              </button>
+            </div>
+          </div>
           <a href="#contact" class="hover:text-brand-900 transition">Contact Us</a>
 
           <div class="relative group">
@@ -149,7 +168,26 @@
       <a href="#online" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Online</a>
       <a href="#download" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Download</a>
       <a href="#gallery" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Gallery</a>
-      <a href="#franchise" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Franchise</a>
+      <div class="rounded-lg bg-slate-50 border border-slate-200/80">
+        <button type="button" onclick="toggleMobileFranchiseMenu()" class="w-full flex items-center justify-between py-2 px-3 rounded-lg text-left font-medium text-slate-800 hover:bg-slate-100 cursor-pointer">
+          <span>Franchise</span>
+          <i id="mobileFranchiseChevron" class="fa-solid fa-chevron-down text-xs text-amber-600 transition-transform duration-200"></i>
+        </button>
+        <div id="mobileFranchiseSubmenu" class="hidden px-3 pb-2.5 pt-1 space-y-1 text-xs border-t border-slate-200/70">
+          <button type="button" onclick="openFranchiseSection('application'); toggleMobileMenu();" class="w-full text-left py-1.5 px-2.5 rounded-md hover:bg-amber-50 text-slate-700 font-medium block cursor-pointer">
+            Application form
+          </button>
+          <button type="button" onclick="openFranchiseSection('track'); toggleMobileMenu();" class="w-full text-left py-1.5 px-2.5 rounded-md hover:bg-amber-50 text-slate-700 font-medium block cursor-pointer">
+            Track application
+          </button>
+          <button type="button" onclick="openFranchiseSection('enquiry'); toggleMobileMenu();" class="w-full text-left py-1.5 px-2.5 rounded-md hover:bg-amber-50 text-slate-700 font-medium block cursor-pointer">
+            Enquiry
+          </button>
+          <button type="button" onclick="openFranchiseSection('downloads'); toggleMobileMenu();" class="w-full text-left py-1.5 px-2.5 rounded-md hover:bg-amber-50 text-slate-700 font-medium block cursor-pointer">
+            Downloads
+          </button>
+        </div>
+      </div>
       <a href="#contact" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Contact Us</a>
       <div class="pt-2 border-t border-slate-200">
         <p class="px-3 py-1 text-xs font-bold uppercase text-slate-400">Portal Login</p>
@@ -1050,24 +1088,141 @@
 
   <!-- FRANCHISE SECTION -->
   <section id="franchise" class="py-20 bg-white">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-brand-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Partner With Us</span>
-          <h2 class="text-3xl font-display font-bold mt-2">Apply for NBCE Franchise</h2>
-          <p class="text-slate-200 text-sm mt-3 leading-relaxed">
-            Open an authorized National Board Of Computer Education centre with full academic curriculum, portal login, and certification support.
-          </p>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-brand-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/15">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Franchise Portal</span>
+            <h2 class="text-2xl sm:text-3xl font-display font-bold mt-1">NBCE Study Centre &amp; Franchise</h2>
+            <p class="text-slate-300 text-sm mt-1">Apply online, track your application status, send an enquiry, or download documents.</p>
+          </div>
+
+          <!-- Franchise Sub-Navigation Tabs -->
+          <div class="flex flex-wrap gap-2 text-xs font-bold">
+            <button type="button" id="ftab-application" onclick="switchHomeFranchiseTab('application')" class="home-ftab px-3.5 py-2 rounded-lg bg-brand-gold text-brand-950 cursor-pointer">
+              Application form
+            </button>
+            <button type="button" id="ftab-track" onclick="switchHomeFranchiseTab('track')" class="home-ftab px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white cursor-pointer">
+              Track application
+            </button>
+            <button type="button" id="ftab-enquiry" onclick="switchHomeFranchiseTab('enquiry')" class="home-ftab px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white cursor-pointer">
+              Enquiry
+            </button>
+            <button type="button" id="ftab-downloads" onclick="switchHomeFranchiseTab('downloads')" class="home-ftab px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white cursor-pointer">
+              Downloads
+            </button>
+          </div>
         </div>
-        <form onsubmit="submitFranchise(event)" class="bg-white text-slate-800 p-6 rounded-2xl space-y-3 text-sm">
-          <input id="franchiseInstitute" type="text" required placeholder="Proposed Institute Name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <input id="franchiseApplicant" type="text" required placeholder="Applicant Name &amp; City" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <input id="franchiseMobile" type="tel" required placeholder="Mobile Number" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-lg transition">
-            Submit Franchise Inquiry
-          </button>
-          <p id="franchiseMsg" class="text-xs font-semibold text-emerald-700"></p>
-        </form>
+
+        <!-- 1. Application form -->
+        <div id="fpanel-application" class="home-fpanel pt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-5 space-y-3">
+            <h3 class="text-xl font-display font-bold text-white">Franchise Application Form</h3>
+            <p class="text-slate-200 text-sm leading-relaxed">
+              Submit your institute and applicant details to register a franchise application with National Board Of Computer Education.
+            </p>
+            <ul class="text-xs text-slate-300 space-y-1.5 pt-1">
+              <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Authorized Centre Code &amp; Portal Access</li>
+              <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>ISO 9001:2015 Certified Curriculum</li>
+              <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Direct Status Tracking via Mobile / Institute</li>
+            </ul>
+          </div>
+          <form onsubmit="submitFranchiseApplication(event)" class="lg:col-span-7 bg-white text-slate-800 p-6 rounded-2xl space-y-3.5 text-sm shadow-md">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Proposed Institute Name</label>
+                <input id="appInstituteName" type="text" required placeholder="e.g. NBCE Skill Academy" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Applicant Full Name</label>
+                <input id="appApplicantName" type="text" required placeholder="e.g. Subhajit Mondal" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
+                <input id="appMobile" type="tel" required placeholder="e.g. 9876543210" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">City / District &amp; State</label>
+                <input id="appCityState" type="text" required placeholder="e.g. Ranaghat, West Bengal" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+              </div>
+            </div>
+            <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-bold py-2.5 rounded-lg transition cursor-pointer">
+              Submit Application Form
+            </button>
+            <p id="appFormMsg" class="text-xs font-semibold text-emerald-700"></p>
+          </form>
+        </div>
+
+        <!-- 2. Track application -->
+        <div id="fpanel-track" class="home-fpanel hidden pt-8 max-w-2xl mx-auto space-y-4">
+          <div class="text-center">
+            <h3 class="text-xl font-display font-bold text-white">Track Franchise Application</h3>
+            <p class="text-xs text-slate-300 mt-1">Enter your registered Mobile Number or Institute Name to check approval status.</p>
+          </div>
+          <form onsubmit="trackFranchiseApplication(event)" class="flex flex-col sm:flex-row gap-3">
+            <input id="trackFranchiseInput" type="text" required placeholder="Enter Mobile Number or Institute Name..." class="flex-1 px-4 py-2.5 rounded-lg bg-white text-slate-900 text-sm outline-none">
+            <button type="submit" class="bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold px-5 py-2.5 rounded-lg text-sm transition cursor-pointer">
+              Track Status
+            </button>
+          </form>
+          <div id="trackFranchiseResult" class="text-sm"></div>
+        </div>
+
+        <!-- 3. Enquiry -->
+        <div id="fpanel-enquiry" class="home-fpanel hidden pt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-5 space-y-2">
+            <h3 class="text-xl font-display font-bold text-white">Franchise Enquiry</h3>
+            <p class="text-slate-200 text-sm leading-relaxed">
+              Have questions about investment, centre space, lab setup, or affiliation norms? Send an enquiry directly to our franchise desk.
+            </p>
+          </div>
+          <form onsubmit="submitFranchise(event)" class="lg:col-span-7 bg-white text-slate-800 p-6 rounded-2xl space-y-3 text-sm shadow-md">
+            <input id="franchiseInstitute" type="text" required placeholder="Proposed Institute Name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+            <input id="franchiseApplicant" type="text" required placeholder="Applicant Name &amp; City" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+            <input id="franchiseMobile" type="tel" required placeholder="Mobile Number" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+            <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-lg transition cursor-pointer">
+              Submit Franchise Inquiry
+            </button>
+            <p id="franchiseMsg" class="text-xs font-semibold text-emerald-700"></p>
+          </form>
+        </div>
+
+        <!-- 4. Downloads -->
+        <div id="fpanel-downloads" class="home-fpanel hidden pt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div class="p-5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-3">
+            <div>
+              <p class="font-bold text-white">Franchise Application Kit</p>
+              <p class="text-xs text-slate-300 mt-1">Offline application form &amp; checklist</p>
+            </div>
+            <button type="button" onclick="downloadAdminDoc('NBCE_Franchise_Application_Form.txt', 'NATIONAL BOARD OF COMPUTER EDUCATION
+Franchise Application Form')" class="bg-brand-gold text-brand-950 font-bold px-3.5 py-2 rounded-lg text-xs w-fit cursor-pointer">
+              <i class="fa-solid fa-download mr-1"></i> Download Form
+            </button>
+          </div>
+          <div class="p-5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-3">
+            <div>
+              <p class="font-bold text-white">Centre Prospectus &amp; Norms</p>
+              <p class="text-xs text-slate-300 mt-1">Lab requirement &amp; affiliation rules</p>
+            </div>
+            <button type="button" onclick="downloadAdminDoc('NBCE_Franchise_Prospectus.txt', 'NATIONAL BOARD OF COMPUTER EDUCATION
+Study Centre Prospectus & Norms')" class="bg-brand-gold text-brand-950 font-bold px-3.5 py-2 rounded-lg text-xs w-fit cursor-pointer">
+              <i class="fa-solid fa-download mr-1"></i> Download Prospectus
+            </button>
+          </div>
+          <div class="p-5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-3">
+            <div>
+              <p class="font-bold text-white">Course &amp; Fee Brochure</p>
+              <p class="text-xs text-slate-300 mt-1">ADCA, DCA, Tally &amp; IT courses guide</p>
+            </div>
+            <button type="button" onclick="downloadAdminDoc('NBCE_Course_Brochure.txt', 'NATIONAL BOARD OF COMPUTER EDUCATION
+Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bold px-3.5 py-2 rounded-lg text-xs w-fit cursor-pointer">
+              <i class="fa-solid fa-download mr-1"></i> Download Brochure
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -1639,6 +1794,80 @@
           <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
             <p class="font-bold">No Record Found for ${reg}</p>
             <p class="text-xs mt-1">Check the registration number or enroll via Centre Login first.</p>
+          </div>`;
+      }
+    }
+
+    function toggleMobileFranchiseMenu() {
+      const sub = document.getElementById('mobileFranchiseSubmenu');
+      const chev = document.getElementById('mobileFranchiseChevron');
+      if (sub) sub.classList.toggle('hidden');
+      if (chev) chev.classList.toggle('rotate-180');
+    }
+
+    function switchHomeFranchiseTab(tabName) {
+      document.querySelectorAll('.home-fpanel').forEach(p => p.classList.add('hidden'));
+      const panel = document.getElementById(`fpanel-${tabName}`);
+      if (panel) panel.classList.remove('hidden');
+
+      document.querySelectorAll('.home-ftab').forEach(b => {
+        b.classList.remove('bg-brand-gold', 'text-brand-950');
+        b.classList.add('bg-white/10', 'text-white');
+      });
+      const activeBtn = document.getElementById(`ftab-${tabName}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-white/10', 'text-white');
+        activeBtn.classList.add('bg-brand-gold', 'text-brand-950');
+      }
+    }
+
+    function openFranchiseSection(tabName) {
+      switchHomeFranchiseTab(tabName);
+      const sec = document.getElementById('franchise');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function submitFranchiseApplication(e) {
+      e.preventDefault();
+      const institute_name = document.getElementById('appInstituteName').value.trim();
+      const applicant = document.getElementById('appApplicantName').value.trim();
+      const mobile = document.getElementById('appMobile').value.trim();
+      const cityState = document.getElementById('appCityState').value.trim();
+      const applicant_info = `${applicant} (${cityState})`;
+      const { error } = await db.from('franchises').insert([{ institute_name, applicant_info, mobile }]);
+      if (error) return alert('Error submitting application: ' + error.message);
+      document.getElementById('appFormMsg').textContent = 'Franchise application submitted! You can track it using your mobile number.';
+      e.target.reset();
+    }
+
+    async function trackFranchiseApplication(e) {
+      e.preventDefault();
+      const queryVal = document.getElementById('trackFranchiseInput').value.trim();
+      const box = document.getElementById('trackFranchiseResult');
+      const { data, error } = await db.from('franchises').select('*');
+      if (error) {
+        box.innerHTML = `<div class="p-4 rounded-xl bg-red-500/20 border border-red-400 text-white text-xs">${error.message}</div>`;
+        return;
+      }
+      const qLower = queryVal.toLowerCase();
+      const match = (data || []).find(item =>
+        (item.mobile || '').toLowerCase().includes(qLower) ||
+        (item.institute_name || '').toLowerCase().includes(qLower)
+      );
+      if (match) {
+        const isApproved = match.status === 'Approved';
+        box.innerHTML = `
+          <div class="p-4 rounded-xl ${isApproved ? 'bg-emerald-500/20 border border-emerald-300' : 'bg-amber-400/20 border border-amber-300'} text-white">
+            <div class="flex justify-between items-center gap-2">
+              <p class="font-bold text-sm">${match.institute_name}</p>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${isApproved ? 'bg-emerald-400 text-brand-950' : 'bg-amber-300 text-brand-950'}">${match.status || 'Pending'}</span>
+            </div>
+            <p class="text-xs text-slate-200 mt-1">Applicant: ${match.applicant_info} • Mobile: ${match.mobile}</p>
+          </div>`;
+      } else {
+        box.innerHTML = `
+          <div class="p-4 rounded-xl bg-white/10 border border-white/20 text-slate-200 text-xs">
+            No franchise application found matching "<strong>${queryVal}</strong>". Check the mobile number or institute name.
           </div>`;
       }
     }
