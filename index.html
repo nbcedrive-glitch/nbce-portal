@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html_code = """<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
@@ -20,12 +20,14 @@
           },
           colors: {
             brand: {
-              900: '#0a192f',
-              800: '#112240',
-              700: '#1d3557',
+              950: '#061021',
+              900: '#0b1d3a',
+              800: '#132d56',
+              700: '#1d4075',
               600: '#1e40af',
               500: '#2563eb',
               gold: '#eab308',
+              amber: '#f59e0b',
             }
           }
         }
@@ -33,12 +35,16 @@
     }
   </script>
   <style>
-    .hero-gradient {
-      background: linear-gradient(135deg, rgba(10, 25, 47, 0.94) 0%, rgba(29, 53, 87, 0.88) 55%, rgba(30, 64, 175, 0.82) 100%);
+    .hero-lab-bg {
+      background:
+        linear-gradient(90deg, rgba(11, 29, 58, 0.96) 0%, rgba(11, 29, 58, 0.86) 46%, rgba(19, 45, 86, 0.42) 75%, rgba(11, 29, 58, 0.55) 100%),
+        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
     }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
+    .portal-glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 22px 50px rgba(6, 16, 33, 0.35);
     }
     @media print {
       .no-print { display: none !important; }
@@ -47,78 +53,98 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
 
-  <!-- Top Announcement Bar -->
-  <div class="bg-brand-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 no-print">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-      <div class="flex items-center gap-4">
+  <!-- Top Utility & News Ticker Bar -->
+  <div class="bg-brand-950 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 no-print">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-2">
+      <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
         <span class="flex items-center gap-1.5">
-          <i class="fa-solid fa-bullhorn text-brand-gold"></i>
-          <strong class="text-white">Notice:</strong> <span id="topNoticeText">Admissions &amp; Centre Affiliation Open for 2026–27 Session</span>
+          <i class="fa-solid fa-phone text-brand-gold"></i> +91 98765 43210
+        </span>
+        <span class="text-slate-600">|</span>
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-envelope text-brand-gold"></i> info@nbceindia.org
+        </span>
+        <span class="hidden sm:inline text-slate-600">|</span>
+        <span class="hidden sm:inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-certificate text-brand-gold"></i> ISO 9001:2015 Certified
+        </span>
+        <span class="hidden md:inline text-slate-600">|</span>
+        <span class="hidden md:inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-landmark text-brand-gold"></i> Govt. Regd. Computer Education Board
         </span>
       </div>
-      <div class="flex items-center gap-4 text-slate-300">
-        <span><i class="fa-solid fa-phone text-brand-gold mr-1"></i> +91 98000 00000</span>
-        <span><i class="fa-solid fa-envelope text-brand-gold mr-1"></i> info@nbce-india.org</span>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2.5 text-slate-300">
+          <a href="#home" aria-label="Facebook" class="hover:text-brand-gold transition"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#home" aria-label="Twitter" class="hover:text-brand-gold transition"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#home" aria-label="Instagram" class="hover:text-brand-gold transition"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#home" aria-label="YouTube" class="hover:text-brand-gold transition"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+        <span class="bg-brand-gold text-brand-950 font-bold px-2.5 py-0.5 rounded text-[11px] shrink-0">Latest News</span>
+        <span id="topNoticeText" class="text-slate-100 font-medium truncate max-w-[210px] sm:max-w-xs">
+          Admissions Open for New IT &amp; Vocational Batch!
+        </span>
       </div>
     </div>
   </div>
 
-  <!-- Navigation Bar -->
+  <!-- Main Header & Navigation Bar -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200 no-print">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
-        <!-- Brand Logo & Name -->
-        <a href="#home" class="flex items-center gap-3 group">
-          <div class="w-12 h-12 rounded-xl bg-brand-900 flex items-center justify-center text-brand-gold shadow-md group-hover:bg-brand-700 transition">
-            <i class="fa-solid fa-graduation-cap text-2xl"></i>
+        <!-- Crest & Institution Name -->
+        <a href="#home" class="flex items-center gap-3 group shrink-0">
+          <div class="w-12 h-12 rounded-full border-2 border-brand-gold bg-brand-900 flex items-center justify-center text-brand-gold shadow-md group-hover:scale-105 transition">
+            <i class="fa-solid fa-desktop text-xl"></i>
           </div>
           <div>
-            <div class="flex items-center gap-2">
-              <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-brand-900">NBCE</span>
-              <span class="hidden md:inline-block text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Live DB</span>
+            <div class="font-display font-extrabold text-sm sm:text-base tracking-tight text-brand-950 leading-tight">
+              NATIONAL BOARD OF<br>COMPUTER EDUCATION
             </div>
-            <p class="text-[11px] sm:text-xs font-medium text-slate-600 leading-tight">National Board Of Computer Education</p>
+            <p class="text-[10px] font-semibold text-slate-600 leading-tight mt-0.5">
+              An ISO 9001:2015 Certified Autonomous Organization
+            </p>
           </div>
         </a>
 
-        <!-- Desktop Menu -->
-        <nav class="hidden xl:flex items-center gap-5 text-sm font-semibold text-slate-700">
-          <a href="#home" class="hover:text-brand-600 transition">Home</a>
-          <a href="#about" class="hover:text-brand-600 transition">About Us</a>
-          <a href="#course" class="hover:text-brand-600 transition">Course</a>
-          <a href="#study-centre" class="hover:text-brand-600 transition">Study Centre</a>
-          <a href="#online" class="hover:text-brand-600 transition">Online</a>
-          <a href="#download" class="hover:text-brand-600 transition">Download</a>
-          <a href="#gallery" class="hover:text-brand-600 transition">Gallery</a>
-          <a href="#franchise" class="hover:text-brand-600 transition">Franchise</a>
-          <a href="#contact" class="hover:text-brand-600 transition">Contact Us</a>
+        <!-- Desktop Navigation Menu -->
+        <nav class="hidden xl:flex items-center gap-5 text-[13px] font-semibold text-slate-700">
+          <a href="#home" class="text-brand-gold font-bold transition">Home</a>
+          <a href="#about" class="hover:text-brand-900 transition">About Us</a>
+          <a href="#course" class="hover:text-brand-900 transition">Course</a>
+          <a href="#study-centre" class="hover:text-brand-900 transition">Study Centre</a>
+          <a href="#online" class="hover:text-brand-900 transition">Online</a>
+          <a href="#download" class="hover:text-brand-900 transition">Download</a>
+          <a href="#gallery" class="hover:text-brand-900 transition">Gallery</a>
+          <a href="#franchise" class="hover:text-brand-900 transition">Franchise</a>
+          <a href="#contact" class="hover:text-brand-900 transition">Contact Us</a>
 
           <!-- Login Dropdown -->
           <div class="relative group">
-            <button type="button" onclick="toggleDesktopLogin()" class="flex items-center gap-2 bg-brand-900 hover:bg-brand-700 text-white px-4 py-2.5 rounded-lg shadow transition cursor-pointer">
-              <i class="fa-solid fa-right-to-bracket text-brand-gold"></i>
+            <button type="button" onclick="toggleDesktopLogin()" class="border-2 border-brand-gold text-brand-950 hover:bg-brand-gold hover:text-brand-950 font-bold px-4 py-2 rounded-md transition flex items-center gap-1.5 cursor-pointer">
               <span>Login</span>
-              <i class="fa-solid fa-chevron-down text-xs"></i>
+              <i class="fa-solid fa-chevron-down text-[10px]"></i>
             </button>
-            <div id="desktopLoginMenu" class="hidden group-hover:block absolute right-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
-              <div class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">Select Portal</div>
-              <button type="button" onclick="openLoginModal('admin')" class="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-brand-700 flex items-center gap-3">
-                <i class="fa-solid fa-user-shield text-red-600 w-4"></i> Admin Login
+            <div id="desktopLoginMenu" class="hidden group-hover:block absolute right-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50">
+              <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Portal Login</div>
+              <button type="button" onclick="openLoginModal('admin')" class="w-full text-left px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-100 flex items-center gap-3">
+                <i class="fa-solid fa-key text-brand-900 w-4"></i> Admin Login
               </button>
-              <button type="button" onclick="openLoginModal('centre')" class="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-brand-700 flex items-center gap-3">
-                <i class="fa-solid fa-building-columns text-blue-600 w-4"></i> Centre Login
+              <button type="button" onclick="openLoginModal('centre')" class="w-full text-left px-4 py-2.5 text-sm text-slate-800 hover:bg-amber-50 flex items-center gap-3">
+                <i class="fa-solid fa-key text-amber-600 w-4"></i> Centre Login
               </button>
-              <button type="button" onclick="openLoginModal('staff')" class="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-brand-700 flex items-center gap-3">
-                <i class="fa-solid fa-chalkboard-user text-emerald-600 w-4"></i> Staff Login
+              <button type="button" onclick="openLoginModal('staff')" class="w-full text-left px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-100 flex items-center gap-3">
+                <i class="fa-solid fa-id-badge text-slate-700 w-4"></i> Staff Login
               </button>
-              <button type="button" onclick="openLoginModal('student')" class="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-brand-700 flex items-center gap-3">
-                <i class="fa-solid fa-user-graduate text-amber-600 w-4"></i> Student Login
+              <button type="button" onclick="openLoginModal('student')" class="w-full text-left px-4 py-2.5 text-sm text-slate-800 hover:bg-blue-50 flex items-center gap-3">
+                <i class="fa-solid fa-graduation-cap text-blue-700 w-4"></i> Student Login
               </button>
             </div>
           </div>
         </nav>
 
-        <!-- Mobile Menu Toggle -->
+        <!-- Mobile Menu Button -->
         <button type="button" onclick="toggleMobileMenu()" class="xl:hidden p-2.5 rounded-lg text-slate-700 hover:bg-slate-100" aria-label="Toggle Menu">
           <i class="fa-solid fa-bars text-xl"></i>
         </button>
@@ -137,31 +163,31 @@
       <a href="#franchise" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Franchise</a>
       <a href="#contact" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-100">Contact Us</a>
       <div class="pt-2 border-t border-slate-200">
-        <p class="px-3 py-1 text-xs font-bold uppercase text-slate-400">Login Portals</p>
+        <p class="px-3 py-1 text-xs font-bold uppercase text-slate-400">Portal Login</p>
         <div class="grid grid-cols-2 gap-2 mt-1">
-          <button type="button" onclick="openLoginModal('admin'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-red-50 text-red-700 font-semibold text-left flex items-center gap-2">
-            <i class="fa-solid fa-user-shield"></i> Admin Login
+          <button type="button" onclick="openLoginModal('admin'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-brand-900 text-white font-semibold text-left flex items-center gap-2">
+            <i class="fa-solid fa-key text-brand-gold"></i> Admin Login
           </button>
-          <button type="button" onclick="openLoginModal('centre'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-blue-50 text-blue-700 font-semibold text-left flex items-center gap-2">
-            <i class="fa-solid fa-building-columns"></i> Centre Login
+          <button type="button" onclick="openLoginModal('centre'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-amber-100 text-amber-950 font-semibold text-left flex items-center gap-2">
+            <i class="fa-solid fa-key text-amber-700"></i> Centre Login
           </button>
-          <button type="button" onclick="openLoginModal('staff'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-emerald-50 text-emerald-700 font-semibold text-left flex items-center gap-2">
-            <i class="fa-solid fa-chalkboard-user"></i> Staff Login
+          <button type="button" onclick="openLoginModal('staff'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-slate-200 text-slate-900 font-semibold text-left flex items-center gap-2">
+            <i class="fa-solid fa-id-badge"></i> Staff Login
           </button>
-          <button type="button" onclick="openLoginModal('student'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-amber-50 text-amber-700 font-semibold text-left flex items-center gap-2">
-            <i class="fa-solid fa-user-graduate"></i> Student Login
+          <button type="button" onclick="openLoginModal('student'); toggleMobileMenu();" class="py-2 px-3 rounded-lg bg-blue-700 text-white font-semibold text-left flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap"></i> Student Login
           </button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Active Role Dashboard Banner -->
+  <!-- Active Role Dashboard Section (Visible after Login) -->
   <section id="activeDashboardSection" class="hidden bg-slate-100 border-b-4 border-brand-900 py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-brand-900 text-white p-6 rounded-2xl shadow-lg mb-6">
         <div>
-          <span id="dashRoleBadge" class="inline-block text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-brand-gold text-brand-900 mb-2">Role</span>
+          <span id="dashRoleBadge" class="inline-block text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-brand-gold text-brand-950 mb-2">Role</span>
           <h2 id="dashTitle" class="text-2xl sm:text-3xl font-display font-bold">Dashboard</h2>
           <p id="dashSubtitle" class="text-slate-300 text-sm mt-1">National Board Of Computer Education — Connected to Supabase</p>
         </div>
@@ -180,8 +206,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
             <p class="text-xs font-semibold text-slate-500 uppercase">Total Study Centres</p>
-            <p class="text-3xl font-bold text-brand-900 mt-1">148</p>
-            <span class="text-xs text-emerald-600 font-medium">Authorized network</span>
+            <p class="text-3xl font-bold text-brand-900 mt-1">150+</p>
+            <span class="text-xs text-emerald-600 font-medium">Authorized training partners</span>
           </div>
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
             <p class="text-xs font-semibold text-slate-500 uppercase">DB Students Count</p>
@@ -189,14 +215,14 @@
             <span class="text-xs text-emerald-600 font-medium">Synced with Supabase</span>
           </div>
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-            <p class="text-xs font-semibold text-slate-500 uppercase">Active Staff</p>
-            <p class="text-3xl font-bold text-brand-900 mt-1">312</p>
-            <span class="text-xs text-slate-500">Faculty &amp; examiners</span>
+            <p class="text-xs font-semibold text-slate-500 uppercase">Skill Courses</p>
+            <p class="text-3xl font-bold text-brand-900 mt-1">50+</p>
+            <span class="text-xs text-slate-500">Vocational &amp; IT programs</span>
           </div>
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
             <p class="text-xs font-semibold text-slate-500 uppercase">Pending Franchises</p>
             <p id="adminPendingCount" class="text-3xl font-bold text-amber-600 mt-1">0</p>
-            <span class="text-xs text-slate-500">From database</span>
+            <span class="text-xs text-slate-500">Awaiting board approval</span>
           </div>
         </div>
 
@@ -206,8 +232,8 @@
               <i class="fa-solid fa-bullhorn text-brand-600"></i> Publish Official Board Notice (Supabase)
             </h3>
             <form onsubmit="publishNotice(event)" class="space-y-3">
-              <input id="noticeInput" type="text" required placeholder="Enter new circular / exam / result notice..." class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
-              <button type="submit" class="bg-brand-900 hover:bg-brand-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">
+              <input id="noticeInput" type="text" required placeholder="Enter new circular / exam / admission notice..." class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+              <button type="submit" class="bg-brand-900 hover:bg-brand-800 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">
                 Publish to Database
               </button>
             </form>
@@ -233,7 +259,7 @@
             <form onsubmit="addStudentByCentre(event)" class="space-y-3 text-sm">
               <div>
                 <label class="block font-medium text-slate-700 mb-1">Student Full Name</label>
-                <input id="newStudentName" type="text" required placeholder="e.g. Riya Chatterjee" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+                <input id="newStudentName" type="text" required placeholder="e.g. Subhajit Mondal" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
               </div>
               <div>
                 <label class="block font-medium text-slate-700 mb-1">Course</label>
@@ -244,7 +270,7 @@
                   <option value="Web & Python Programming">Web &amp; Python Programming</option>
                 </select>
               </div>
-              <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-2.5 rounded-lg font-semibold transition">
+              <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white py-2.5 rounded-lg font-semibold transition">
                 Save to Database
               </button>
             </form>
@@ -302,7 +328,7 @@
               </div>
               <div class="p-3.5 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center">
                 <div>
-                  <p class="font-semibold text-slate-800">Batch B — Tally &amp; Accounting</p>
+                  <p class="font-semibold text-slate-800">Batch B — Tally &amp; Vocational Lab</p>
                   <p class="text-xs text-slate-500">Tue, Thu, Sat • 02:00 PM – 04:00 PM</p>
                 </div>
                 <span class="text-xs font-semibold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">Lab 02</span>
@@ -341,7 +367,7 @@
                   <p class="font-bold text-slate-800">Examination Admit Card</p>
                   <p class="text-xs text-slate-500 mt-1">Session 2026–27 Theory &amp; Practical</p>
                 </div>
-                <button type="button" onclick="alert('Admit Card ready for NBCE2026101!')" class="bg-brand-900 hover:bg-brand-700 text-white py-2 px-4 rounded-lg text-xs font-semibold w-fit">
+                <button type="button" onclick="alert('Admit Card ready for NBCE2026101!')" class="bg-brand-900 hover:bg-brand-800 text-white py-2 px-4 rounded-lg text-xs font-semibold w-fit">
                   <i class="fa-solid fa-download mr-1"></i> Download Admit Card
                 </button>
               </div>
@@ -350,7 +376,7 @@
                   <p class="font-bold text-slate-800">Digital ID &amp; Syllabus</p>
                   <p class="text-xs text-slate-500 mt-1">Official NBCE Student Identity &amp; Course Guide</p>
                 </div>
-                <button type="button" onclick="alert('Student ID & Syllabus downloaded!')" class="bg-brand-600 hover:bg-brand-700 text-white py-2 px-4 rounded-lg text-xs font-semibold w-fit">
+                <button type="button" onclick="alert('Student ID & Syllabus downloaded!')" class="bg-brand-700 hover:bg-brand-800 text-white py-2 px-4 rounded-lg text-xs font-semibold w-fit">
                   <i class="fa-solid fa-id-card mr-1"></i> Download ID Card
                 </button>
               </div>
@@ -361,57 +387,100 @@
     </div>
   </section>
 
-  <!-- 02. HOME / HERO SECTION -->
-  <section id="home" class="relative hero-gradient text-white py-20 lg:py-28 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div class="lg:col-span-7 space-y-6">
-          <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium text-amber-300">
-            <i class="fa-solid fa-award"></i>
-            <span>National Board Of Computer Education (NBCE)</span>
+  <!-- HERO BANNER + FLOATING PORTAL LOGIN + BOTTOM STATS BAR -->
+  <section id="home" class="relative hero-lab-bg text-white pt-14 pb-24 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <!-- Left Hero Content -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-block bg-brand-gold text-brand-950 font-extrabold text-[11px] uppercase tracking-wider px-3.5 py-1.5 rounded shadow-sm">
+            WELCOME TO NBCE INDIA
           </div>
-          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold leading-tight">
-            Empowering Digital Skills Across <span class="text-brand-gold">India</span>
+          <h1 class="text-4xl sm:text-5xl lg:text-[54px] font-display font-extrabold leading-[1.12] tracking-tight text-white">
+            Certified IT &amp;<br>
+            <span class="text-brand-gold">Vocational Excellence</span>
           </h1>
-          <p class="text-base sm:text-lg text-slate-200 max-w-2xl leading-relaxed">
-            National Board Of Computer Education is dedicated to quality computer literacy, vocational IT diplomas, standardized examinations, and authorized study centres nationwide.
+          <p class="text-base sm:text-lg text-slate-100/95 max-w-xl leading-relaxed font-normal">
+            Promoting quality computer literacy, vocational training, and skill development through a vast network of authorized centers nationwide.
           </p>
           <div class="flex flex-wrap gap-4 pt-2">
-            <a href="#course" class="bg-brand-gold hover:bg-amber-400 text-brand-900 font-bold px-6 py-3.5 rounded-xl shadow-lg transition flex items-center gap-2">
-              <i class="fa-solid fa-book-open"></i> Explore Courses
+            <a href="#course" class="bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-sm px-6 py-3.5 rounded-md shadow-lg transition flex items-center gap-2">
+              <span>Explore Courses</span>
             </a>
-            <a href="#franchise" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold px-6 py-3.5 rounded-xl transition flex items-center gap-2">
-              <i class="fa-solid fa-handshake"></i> Apply for Franchise
+            <a href="#franchise" class="bg-brand-950/65 hover:bg-brand-950/85 border border-white/50 text-white font-semibold text-sm px-6 py-3.5 rounded-md backdrop-blur-xs transition flex items-center gap-2">
+              <span>Apply for Franchise</span>
             </a>
           </div>
         </div>
 
-        <!-- Quick Portal Access Card -->
-        <div class="lg:col-span-5">
-          <div class="glass-card text-slate-800 rounded-2xl p-6 sm:p-7 shadow-2xl border border-white/40">
-            <h2 class="text-xl font-display font-bold text-brand-900 mb-1">Role-Based Portal Login</h2>
-            <p class="text-xs text-slate-500 mb-5">Select your dashboard to continue</p>
-            <div class="grid grid-cols-2 gap-3">
-              <button type="button" onclick="openLoginModal('admin')" class="p-4 rounded-xl border border-slate-200 hover:border-red-500 hover:bg-red-50/60 transition text-left group">
-                <i class="fa-solid fa-user-shield text-2xl text-red-600 mb-2 block group-hover:scale-105 transition"></i>
-                <div class="font-bold text-sm text-slate-900">Admin Login</div>
-                <div class="text-[11px] text-slate-500">Board &amp; Approvals</div>
+        <!-- Right Floating PORTAL LOGIN Card -->
+        <div class="lg:col-span-5 flex justify-center lg:justify-end">
+          <div class="portal-glass-card w-full max-w-sm rounded-2xl p-6 sm:p-7 border border-white/70 text-slate-900">
+            <h2 class="text-center font-display font-extrabold text-base tracking-wide uppercase text-brand-950 mb-5">
+              PORTAL LOGIN
+            </h2>
+            <div class="space-y-3">
+              <button type="button" onclick="openLoginModal('admin')" class="w-full py-3 px-5 rounded-lg bg-brand-900 hover:bg-brand-800 text-white font-bold text-sm shadow transition flex items-center justify-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-key text-brand-gold"></i>
+                <span>Admin Login</span>
               </button>
-              <button type="button" onclick="openLoginModal('centre')" class="p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/60 transition text-left group">
-                <i class="fa-solid fa-building-columns text-2xl text-blue-600 mb-2 block group-hover:scale-105 transition"></i>
-                <div class="font-bold text-sm text-slate-900">Centre Login</div>
-                <div class="text-[11px] text-slate-500">Admissions &amp; ERP</div>
+              <button type="button" onclick="openLoginModal('centre')" class="w-full py-3 px-5 rounded-lg bg-amber-100/95 hover:bg-amber-200 text-amber-950 border border-amber-300/80 font-bold text-sm shadow-xs transition flex items-center justify-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-key text-amber-700"></i>
+                <span>Centre Login</span>
               </button>
-              <button type="button" onclick="openLoginModal('staff')" class="p-4 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/60 transition text-left group">
-                <i class="fa-solid fa-chalkboard-user text-2xl text-emerald-600 mb-2 block group-hover:scale-105 transition"></i>
-                <div class="font-bold text-sm text-slate-900">Staff Login</div>
-                <div class="text-[11px] text-slate-500">Marks &amp; Batches</div>
+              <button type="button" onclick="openLoginModal('staff')" class="w-full py-3 px-5 rounded-lg bg-slate-200/95 hover:bg-slate-300 text-slate-900 border border-slate-300 font-bold text-sm shadow-xs transition flex items-center justify-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-id-badge text-slate-700"></i>
+                <span>Staff Login</span>
               </button>
-              <button type="button" onclick="openLoginModal('student')" class="p-4 rounded-xl border border-slate-200 hover:border-amber-500 hover:bg-amber-50/60 transition text-left group">
-                <i class="fa-solid fa-user-graduate text-2xl text-amber-600 mb-2 block group-hover:scale-105 transition"></i>
-                <div class="font-bold text-sm text-slate-900">Student Login</div>
-                <div class="text-[11px] text-slate-500">Admit Card &amp; ID</div>
+              <button type="button" onclick="openLoginModal('student')" class="w-full py-3 px-5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow transition flex items-center justify-center gap-2.5 cursor-pointer">
+                <i class="fa-solid fa-graduation-cap text-amber-300"></i>
+                <span>Student Login</span>
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom 4-Column Stats Bar -->
+      <div class="mt-12 bg-brand-950/90 border border-white/15 rounded-xl px-6 py-5 shadow-2xl">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 lg:divide-x divide-white/15">
+          <div class="flex items-center gap-4 lg:px-4 first:lg:pl-0">
+            <div class="w-11 h-11 rounded-lg bg-white/10 text-brand-gold flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-building-user"></i>
+            </div>
+            <div>
+              <div class="font-display font-extrabold text-lg text-white leading-tight">150+ Centres</div>
+              <div class="text-xs text-slate-300 mt-0.5">Authorized Training Partners</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 pt-4 sm:pt-0 lg:px-6">
+            <div class="w-11 h-11 rounded-lg bg-white/10 text-brand-gold flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <div>
+              <div class="font-display font-extrabold text-lg text-white leading-tight">20,000+ Students</div>
+              <div class="text-xs text-slate-300 mt-0.5">Certified &amp; Enrolled Nationwide</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 pt-4 lg:pt-0 lg:px-6">
+            <div class="w-11 h-11 rounded-lg bg-white/10 text-brand-gold flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <div>
+              <div class="font-display font-extrabold text-lg text-white leading-tight">50+ Skill Courses</div>
+              <div class="text-xs text-slate-300 mt-0.5">Authentic Certification</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 pt-4 lg:pt-0 lg:pl-6">
+            <div class="w-11 h-11 rounded-lg bg-white/10 text-brand-gold flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-award"></i>
+            </div>
+            <div>
+              <div class="font-display font-extrabold text-lg text-white leading-tight">Govt. Aligned</div>
+              <div class="text-xs text-slate-300 mt-0.5">Programs</div>
             </div>
           </div>
         </div>
@@ -423,10 +492,10 @@
   <section id="about" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-3xl mx-auto text-center mb-14">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-600">About Us</span>
-        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-900 mt-2">National Board Of Computer Education</h2>
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">About Us</span>
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-950 mt-2">National Board Of Computer Education</h2>
         <p class="text-slate-600 mt-4 leading-relaxed">
-          Established to bridge the digital skills gap with industry-aligned computer courses, transparent assessment, and accessible training centres in urban and rural areas.
+          Established to advance computer literacy, vocational skill training, and standardized assessment across India through authorized study centres.
         </p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -434,22 +503,22 @@
           <div class="w-11 h-11 rounded-lg bg-brand-900 text-brand-gold flex items-center justify-center mb-4">
             <i class="fa-solid fa-bullseye text-lg"></i>
           </div>
-          <h3 class="font-bold text-lg text-brand-900 mb-2">Our Mission</h3>
-          <p class="text-sm text-slate-600 leading-relaxed">Deliver practical, job-ready computer education and digital fluency to learners at affordable fees.</p>
+          <h3 class="font-bold text-lg text-brand-950 mb-2">Our Mission</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">Deliver practical IT and vocational computer training accessible to students across cities and towns.</p>
         </div>
         <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
           <div class="w-11 h-11 rounded-lg bg-brand-900 text-brand-gold flex items-center justify-center mb-4">
             <i class="fa-solid fa-eye text-lg"></i>
           </div>
-          <h3 class="font-bold text-lg text-brand-900 mb-2">Our Vision</h3>
-          <p class="text-sm text-slate-600 leading-relaxed">Build a trusted network of study centres and certified professionals powering modern workplaces.</p>
+          <h3 class="font-bold text-lg text-brand-950 mb-2">Our Vision</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">Build a trusted national network of skill centres and certified professionals for modern industry.</p>
         </div>
         <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
           <div class="w-11 h-11 rounded-lg bg-brand-900 text-brand-gold flex items-center justify-center mb-4">
-            <i class="fa-solid fa-certificate text-lg"></i>
+            <i class="fa-solid fa-shield-halved text-lg"></i>
           </div>
-          <h3 class="font-bold text-lg text-brand-900 mb-2">Quality &amp; Verification</h3>
-          <p class="text-sm text-slate-600 leading-relaxed">Structured curriculum, practical lab evaluations, and instant online certificate &amp; student verification.</p>
+          <h3 class="font-bold text-lg text-brand-950 mb-2">Authentic Certification</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">Transparent lab evaluations, standardized curriculum, and instant online student &amp; certificate verification.</p>
         </div>
       </div>
     </div>
@@ -460,47 +529,47 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
         <div>
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Academic Programs</span>
-          <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-900 mt-1">Featured Courses</h2>
+          <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Academic Programs</span>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-950 mt-1">Courses &amp; Diplomas</h2>
         </div>
-        <p class="text-sm text-slate-600 max-w-md">Certificate, diploma, accounting, and programming courses conducted through authorized NBCE centres.</p>
+        <p class="text-sm text-slate-600 max-w-md">Structured computer application, accounting, and programming courses offered via NBCE study centres.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
-            <span class="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">1 Year Diploma</span>
-            <h3 class="text-xl font-bold text-brand-900 mt-4">ADCA</h3>
-            <p class="text-sm text-slate-600 mt-2">Advanced Diploma in Computer Applications covering OS, Office Suite, Accounting, DBMS &amp; Internet.</p>
+            <span class="text-xs font-bold bg-amber-100 text-amber-900 px-3 py-1 rounded-full">1 Year Diploma</span>
+            <h3 class="text-xl font-bold text-brand-950 mt-4">ADCA</h3>
+            <p class="text-sm text-slate-600 mt-2">Advanced Diploma in Computer Applications covering OS, Office Automation, Accounting, DBMS &amp; Web.</p>
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-700">Eligibility: 10th / 12th Pass</div>
+          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-800">Eligibility: 10th / 12th Pass</div>
         </div>
 
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
-            <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">6 Months</span>
-            <h3 class="text-xl font-bold text-brand-900 mt-4">DCA</h3>
-            <p class="text-sm text-slate-600 mt-2">Diploma in Computer Applications focused on foundational computing, typing, documentation &amp; spreadsheets.</p>
+            <span class="text-xs font-bold bg-blue-100 text-blue-900 px-3 py-1 rounded-full">6 Months</span>
+            <h3 class="text-xl font-bold text-brand-950 mt-4">DCA</h3>
+            <p class="text-sm text-slate-600 mt-2">Diploma in Computer Applications focused on computing fundamentals, typing, spreadsheets &amp; presentations.</p>
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-700">Eligibility: 8th / 10th Pass</div>
+          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-800">Eligibility: 8th / 10th Pass</div>
         </div>
 
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
-            <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">3 Months</span>
-            <h3 class="text-xl font-bold text-brand-900 mt-4">Tally Prime &amp; GST</h3>
-            <p class="text-sm text-slate-600 mt-2">Practical computerized accounting, inventory management, invoicing, payroll, and GST filing workflows.</p>
+            <span class="text-xs font-bold bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full">3 Months</span>
+            <h3 class="text-xl font-bold text-brand-950 mt-4">Tally Prime &amp; GST</h3>
+            <p class="text-sm text-slate-600 mt-2">Practical financial accounting, inventory control, billing, payroll, and GST return workflows.</p>
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-700">Eligibility: 10+2 / Commerce</div>
+          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-800">Eligibility: 10+2 / Commerce</div>
         </div>
 
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
-            <span class="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1 rounded-full">6 Months</span>
-            <h3 class="text-xl font-bold text-brand-900 mt-4">Web &amp; Python</h3>
-            <p class="text-sm text-slate-600 mt-2">Modern HTML5, CSS3, JavaScript, database fundamentals, and Python programming for software careers.</p>
+            <span class="text-xs font-bold bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full">6 Months</span>
+            <h3 class="text-xl font-bold text-brand-950 mt-4">Web &amp; Python</h3>
+            <p class="text-sm text-slate-600 mt-2">HTML5, CSS3, JavaScript, SQL basics, and Python programming for software &amp; IT roles.</p>
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-700">Eligibility: 12th / Graduate</div>
+          <div class="mt-6 pt-4 border-t border-slate-100 text-xs font-semibold text-brand-800">Eligibility: 12th / Graduate</div>
         </div>
       </div>
     </div>
@@ -510,41 +579,41 @@
   <section id="study-centre" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Authorized Network</span>
-        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-900 mt-2">Study Centres</h2>
-        <p class="text-slate-600 mt-3 text-sm">Search verified NBCE training centres by city or centre code.</p>
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Authorized Network</span>
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-950 mt-2">Study Centres</h2>
+        <p class="text-slate-600 mt-3 text-sm">Find authorized NBCE training centres by city or centre code.</p>
       </div>
 
       <div class="max-w-xl mx-auto mb-8">
-        <input id="centreSearchInput" type="text" onkeyup="filterCentres()" placeholder="Search by city or centre code (e.g. Kolkata, Siliguri, WB-042)..." class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+        <input id="centreSearchInput" type="text" onkeyup="filterCentres()" placeholder="Search by city or centre code (e.g. Kolkata, Ranaghat, NBCE-WB-042)..." class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 outline-none">
       </div>
 
       <div id="centreListGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
         <div class="centre-card p-5 rounded-xl border border-slate-200 bg-slate-50">
           <div class="flex justify-between items-center mb-2">
-            <span class="font-mono text-xs font-bold text-brand-700">NBCE-WB-042</span>
+            <span class="font-mono text-xs font-bold text-brand-800">NBCE-WB-042</span>
             <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">Active</span>
           </div>
-          <h3 class="font-bold text-base text-brand-900">NBCE Central Skill Hub</h3>
+          <h3 class="font-bold text-base text-brand-950">NBCE Central Skill Hub</h3>
           <p class="text-slate-600 mt-1">Kolkata, West Bengal</p>
         </div>
 
         <div class="centre-card p-5 rounded-xl border border-slate-200 bg-slate-50">
           <div class="flex justify-between items-center mb-2">
-            <span class="font-mono text-xs font-bold text-brand-700">NBCE-WB-089</span>
+            <span class="font-mono text-xs font-bold text-brand-800">NBCE-WB-089</span>
             <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">Active</span>
           </div>
-          <h3 class="font-bold text-base text-brand-900">North Bengal IT Institute</h3>
-          <p class="text-slate-600 mt-1">Siliguri, West Bengal</p>
+          <h3 class="font-bold text-base text-brand-950">Nadia Digital Training Centre</h3>
+          <p class="text-slate-600 mt-1">Ranaghat, West Bengal</p>
         </div>
 
         <div class="centre-card p-5 rounded-xl border border-slate-200 bg-slate-50">
           <div class="flex justify-between items-center mb-2">
-            <span class="font-mono text-xs font-bold text-brand-700">NBCE-WB-114</span>
+            <span class="font-mono text-xs font-bold text-brand-800">NBCE-WB-114</span>
             <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">Active</span>
           </div>
-          <h3 class="font-bold text-base text-brand-900">Durgapur Computer Academy</h3>
-          <p class="text-slate-600 mt-1">Durgapur, West Bengal</p>
+          <h3 class="font-bold text-base text-brand-950">Siliguri IT &amp; Skill Academy</h3>
+          <p class="text-slate-600 mt-1">Siliguri, West Bengal</p>
         </div>
       </div>
     </div>
@@ -555,13 +624,13 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
         <div class="text-center mb-6">
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Online Services</span>
-          <h2 class="text-3xl font-display font-bold text-brand-900 mt-1">Student &amp; Certificate Verification</h2>
+          <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Online Services</span>
+          <h2 class="text-3xl font-display font-bold text-brand-950 mt-1">Student &amp; Certificate Verification</h2>
           <p class="text-sm text-slate-500 mt-1">Live lookup from Supabase database (try <code class="bg-slate-100 px-1.5 py-0.5 rounded">NBCE2026101</code>)</p>
         </div>
         <form onsubmit="verifyRegistration(event)" class="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
           <input id="verifyRegInput" type="text" required placeholder="Enter Registration / Certificate No..." class="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-brand-500">
-          <button type="submit" class="bg-brand-900 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-xl text-sm transition">
+          <button type="submit" class="bg-brand-900 hover:bg-brand-800 text-white font-semibold px-6 py-3 rounded-xl text-sm transition">
             Verify Now
           </button>
         </form>
@@ -574,34 +643,34 @@
   <section id="download" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Resources</span>
-        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-900 mt-2">Downloads</h2>
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Resources</span>
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-950 mt-2">Downloads</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
         <div class="p-6 rounded-2xl border border-slate-200 flex items-center justify-between">
           <div>
-            <h3 class="font-bold text-brand-900">Course Syllabus (2026)</h3>
+            <h3 class="font-bold text-brand-950">Course Syllabus (2026)</h3>
             <p class="text-xs text-slate-500 mt-1">ADCA, DCA, Tally &amp; Programming</p>
           </div>
-          <button type="button" onclick="alert('Syllabus brochure download started.')" class="text-brand-600 hover:text-brand-800 font-semibold">
+          <button type="button" onclick="alert('Syllabus brochure download started.')" class="text-brand-800 hover:text-brand-950 font-semibold">
             <i class="fa-solid fa-file-arrow-down text-2xl"></i>
           </button>
         </div>
         <div class="p-6 rounded-2xl border border-slate-200 flex items-center justify-between">
           <div>
-            <h3 class="font-bold text-brand-900">Admission Form</h3>
+            <h3 class="font-bold text-brand-950">Admission Form</h3>
             <p class="text-xs text-slate-500 mt-1">Student enrollment application format</p>
           </div>
-          <button type="button" onclick="alert('Admission form download started.')" class="text-brand-600 hover:text-brand-800 font-semibold">
+          <button type="button" onclick="alert('Admission form download started.')" class="text-brand-800 hover:text-brand-950 font-semibold">
             <i class="fa-solid fa-file-arrow-down text-2xl"></i>
           </button>
         </div>
         <div class="p-6 rounded-2xl border border-slate-200 flex items-center justify-between">
           <div>
-            <h3 class="font-bold text-brand-900">Centre Prospectus</h3>
+            <h3 class="font-bold text-brand-950">Centre Prospectus</h3>
             <p class="text-xs text-slate-500 mt-1">Affiliation guidelines &amp; norms</p>
           </div>
-          <button type="button" onclick="alert('Centre prospectus download started.')" class="text-brand-600 hover:text-brand-800 font-semibold">
+          <button type="button" onclick="alert('Centre prospectus download started.')" class="text-brand-800 hover:text-brand-950 font-semibold">
             <i class="fa-solid fa-file-arrow-down text-2xl"></i>
           </button>
         </div>
@@ -613,8 +682,8 @@
   <section id="gallery" class="py-20 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Campus &amp; Events</span>
-        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-900 mt-2">Gallery</h2>
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Campus &amp; Labs</span>
+        <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-950 mt-2">Gallery</h2>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
@@ -624,19 +693,19 @@
           <div class="p-4 text-sm font-semibold text-slate-800">Computer Practical Lab</div>
         </div>
         <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-          <div class="h-44 bg-brand-700 flex items-center justify-center text-brand-gold text-4xl">
+          <div class="h-44 bg-brand-800 flex items-center justify-center text-brand-gold text-4xl">
             <i class="fa-solid fa-award"></i>
           </div>
-          <div class="p-4 text-sm font-semibold text-slate-800">Convocation &amp; Awards</div>
+          <div class="p-4 text-sm font-semibold text-slate-800">Convocation &amp; Certification</div>
         </div>
         <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-          <div class="h-44 bg-brand-800 flex items-center justify-center text-brand-gold text-4xl">
+          <div class="h-44 bg-brand-700 flex items-center justify-center text-brand-gold text-4xl">
             <i class="fa-solid fa-users"></i>
           </div>
-          <div class="p-4 text-sm font-semibold text-slate-800">Tech Seminar &amp; Workshop</div>
+          <div class="p-4 text-sm font-semibold text-slate-800">Vocational Training Batches</div>
         </div>
         <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-          <div class="h-44 bg-brand-900 flex items-center justify-center text-brand-gold text-4xl">
+          <div class="h-44 bg-brand-950 flex items-center justify-center text-brand-gold text-4xl">
             <i class="fa-solid fa-building"></i>
           </div>
           <div class="p-4 text-sm font-semibold text-slate-800">Authorized Study Centres</div>
@@ -652,15 +721,15 @@
         <div>
           <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Partner With Us</span>
           <h2 class="text-3xl font-display font-bold mt-2">Apply for NBCE Franchise</h2>
-          <p class="text-slate-300 text-sm mt-3 leading-relaxed">
-            Start an authorized National Board Of Computer Education study centre in your area with complete academic &amp; portal support.
+          <p class="text-slate-200 text-sm mt-3 leading-relaxed">
+            Open an authorized National Board Of Computer Education centre with full academic curriculum, portal login, and certification support.
           </p>
         </div>
         <form onsubmit="submitFranchise(event)" class="bg-white text-slate-800 p-6 rounded-2xl space-y-3 text-sm">
           <input id="franchiseInstitute" type="text" required placeholder="Proposed Institute Name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
           <input id="franchiseApplicant" type="text" required placeholder="Applicant Name &amp; City" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
           <input id="franchiseMobile" type="tel" required placeholder="Mobile Number" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <button type="submit" class="w-full bg-brand-900 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-lg transition">
+          <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-lg transition">
             Submit Franchise Inquiry
           </button>
           <p id="franchiseMsg" class="text-xs font-semibold text-emerald-700"></p>
@@ -674,20 +743,20 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div>
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Contact Us</span>
-          <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-900 mt-2">Get in Touch with NBCE</h2>
-          <p class="text-slate-600 text-sm mt-3">Reach out for student support, centre affiliation, examination queries, or general assistance.</p>
+          <span class="text-xs font-bold uppercase tracking-widest text-brand-700">Contact Us</span>
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-950 mt-2">Get in Touch with NBCE</h2>
+          <p class="text-slate-600 text-sm mt-3">Contact our support desk for admissions, centre affiliation, examination schedules, or verification queries.</p>
           <div class="mt-6 space-y-4 text-sm text-slate-700">
-            <div class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-brand-600 w-5"></i><span>National Board Of Computer Education, India</span></div>
-            <div class="flex items-center gap-3"><i class="fa-solid fa-phone text-brand-600 w-5"></i><span>+91 98000 00000</span></div>
-            <div class="flex items-center gap-3"><i class="fa-solid fa-envelope text-brand-600 w-5"></i><span>info@nbce-india.org</span></div>
+            <div class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-brand-800 w-5"></i><span>National Board Of Computer Education, India</span></div>
+            <div class="flex items-center gap-3"><i class="fa-solid fa-phone text-brand-800 w-5"></i><span>+91 98765 43210</span></div>
+            <div class="flex items-center gap-3"><i class="fa-solid fa-envelope text-brand-800 w-5"></i><span>info@nbceindia.org</span></div>
           </div>
         </div>
         <form onsubmit="submitContact(event)" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-sm">
           <input id="contactName" type="text" required placeholder="Your Full Name" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
           <input id="contactEmail" type="email" required placeholder="Your Email Address" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
           <textarea id="contactMessage" rows="4" required placeholder="Write your message..." class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500"></textarea>
-          <button type="submit" class="bg-brand-900 hover:bg-brand-700 text-white font-semibold px-6 py-2.5 rounded-lg transition">
+          <button type="submit" class="bg-brand-900 hover:bg-brand-800 text-white font-semibold px-6 py-2.5 rounded-lg transition">
             Send Message
           </button>
           <p id="contactMsg" class="text-xs font-semibold text-emerald-700"></p>
@@ -697,11 +766,11 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-brand-900 text-slate-300 py-10 px-4 text-sm no-print">
+  <footer class="bg-brand-950 text-slate-300 py-10 px-4 text-sm no-print">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
       <div>
         <p class="font-display font-bold text-white text-base">National Board Of Computer Education</p>
-        <p class="text-xs text-slate-400 mt-1">© 2026 NBCE. All rights reserved.</p>
+        <p class="text-xs text-slate-400 mt-1">An ISO 9001:2015 Certified Autonomous Organization • © 2026 NBCE</p>
       </div>
       <div class="flex flex-wrap gap-4 text-xs">
         <a href="#home" class="hover:text-white">Home</a>
@@ -726,7 +795,7 @@
 
       <div class="mb-5">
         <span id="modalRoleTag" class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-blue-100 text-blue-800">Portal</span>
-        <h3 id="modalTitle" class="text-2xl font-display font-bold text-brand-900 mt-2">Portal Login</h3>
+        <h3 id="modalTitle" class="text-2xl font-display font-bold text-brand-950 mt-2">Portal Login</h3>
         <p class="text-xs text-slate-500 mt-1">Sign in to access your dedicated NBCE dashboard.</p>
       </div>
 
@@ -740,7 +809,7 @@
           <label class="block font-semibold text-slate-700 mb-1">Password</label>
           <input id="loginPassword" type="password" required value="123456" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
         </div>
-        <button type="submit" class="w-full bg-brand-900 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition">
+        <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-bold py-3 rounded-xl transition">
           Login to Dashboard
         </button>
       </form>
@@ -757,29 +826,29 @@
         label: 'Admin Login',
         title: 'Head Office Admin Dashboard',
         subtitle: 'National Board Of Computer Education — Central Administration & Approvals',
-        defaultId: 'admin@nbce-india.org',
-        badgeClass: 'bg-red-100 text-red-800'
+        defaultId: 'admin@nbceindia.org',
+        badgeClass: 'bg-slate-900 text-amber-300'
       },
       centre: {
         label: 'Centre Login',
         title: 'Authorized Study Centre Dashboard',
         subtitle: 'Centre Code: NBCE-WB-042 — Student Admissions & Centre Records',
-        defaultId: 'centre.wb042@nbce-india.org',
-        badgeClass: 'bg-blue-100 text-blue-800'
+        defaultId: 'centre.wb042@nbceindia.org',
+        badgeClass: 'bg-amber-100 text-amber-950'
       },
       staff: {
         label: 'Staff Login',
         title: 'Faculty & Examiner Dashboard',
         subtitle: 'Practical Assessments, Marks Entry & Batch Schedules',
-        defaultId: 'staff.exam@nbce-india.org',
-        badgeClass: 'bg-emerald-100 text-emerald-800'
+        defaultId: 'staff.exam@nbceindia.org',
+        badgeClass: 'bg-slate-200 text-slate-900'
       },
       student: {
         label: 'Student Login',
         title: 'Student Academic Dashboard',
         subtitle: 'Student ID: NBCE2026101 — Admit Card, Attendance & Profile',
         defaultId: 'NBCE2026101',
-        badgeClass: 'bg-amber-100 text-amber-800'
+        badgeClass: 'bg-blue-700 text-white'
       }
     };
 
@@ -972,7 +1041,6 @@
       e.target.reset();
     }
 
-    // Load initial notice on page load
     (async () => {
       const { data } = await db.from('notices').select('*').order('id', { ascending: false }).limit(1);
       if (data && data.length) {
@@ -982,3 +1050,9 @@
   </script>
 </body>
 </html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_code)
+
+print("Generated index.html successfully")
