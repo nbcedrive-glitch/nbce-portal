@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -52,7 +53,7 @@
       <div class="flex items-center gap-4">
         <span class="flex items-center gap-1.5">
           <i class="fa-solid fa-bullhorn text-brand-gold"></i>
-          <strong class="text-white">Notice:</strong> Admissions &amp; Centre Affiliation Open for 2026–27 Session
+          <strong class="text-white">Notice:</strong> <span id="topNoticeText">Admissions &amp; Centre Affiliation Open for 2026–27 Session</span>
         </span>
       </div>
       <div class="flex items-center gap-4 text-slate-300">
@@ -74,7 +75,7 @@
           <div>
             <div class="flex items-center gap-2">
               <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-brand-900">NBCE</span>
-              <span class="hidden md:inline-block text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Board Portal</span>
+              <span class="hidden md:inline-block text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Live DB</span>
             </div>
             <p class="text-[11px] sm:text-xs font-medium text-slate-600 leading-tight">National Board Of Computer Education</p>
           </div>
@@ -155,14 +156,14 @@
     </div>
   </header>
 
-  <!-- Active Role Dashboard Banner (Appears when logged in) -->
+  <!-- Active Role Dashboard Banner -->
   <section id="activeDashboardSection" class="hidden bg-slate-100 border-b-4 border-brand-900 py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-brand-900 text-white p-6 rounded-2xl shadow-lg mb-6">
         <div>
           <span id="dashRoleBadge" class="inline-block text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-brand-gold text-brand-900 mb-2">Role</span>
           <h2 id="dashTitle" class="text-2xl sm:text-3xl font-display font-bold">Dashboard</h2>
-          <p id="dashSubtitle" class="text-slate-300 text-sm mt-1">National Board Of Computer Education — Integrated Management System</p>
+          <p id="dashSubtitle" class="text-slate-300 text-sm mt-1">National Board Of Computer Education — Connected to Supabase</p>
         </div>
         <div class="flex items-center gap-3 no-print">
           <button type="button" onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
@@ -180,62 +181,44 @@
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
             <p class="text-xs font-semibold text-slate-500 uppercase">Total Study Centres</p>
             <p class="text-3xl font-bold text-brand-900 mt-1">148</p>
-            <span class="text-xs text-emerald-600 font-medium">+12 this quarter</span>
+            <span class="text-xs text-emerald-600 font-medium">Authorized network</span>
           </div>
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-            <p class="text-xs font-semibold text-slate-500 uppercase">Registered Students</p>
-            <p id="adminStudentCount" class="text-3xl font-bold text-brand-900 mt-1">18,420</p>
-            <span class="text-xs text-emerald-600 font-medium">Active across all boards</span>
+            <p class="text-xs font-semibold text-slate-500 uppercase">DB Students Count</p>
+            <p id="adminStudentCount" class="text-3xl font-bold text-brand-900 mt-1">0</p>
+            <span class="text-xs text-emerald-600 font-medium">Synced with Supabase</span>
           </div>
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-            <p class="text-xs font-semibold text-slate-500 uppercase">Active Staff &amp; Examiners</p>
+            <p class="text-xs font-semibold text-slate-500 uppercase">Active Staff</p>
             <p class="text-3xl font-bold text-brand-900 mt-1">312</p>
-            <span class="text-xs text-slate-500">Verified faculty</span>
+            <span class="text-xs text-slate-500">Faculty &amp; examiners</span>
           </div>
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-            <p class="text-xs font-semibold text-slate-500 uppercase">Pending Franchise Requests</p>
-            <p id="adminPendingCount" class="text-3xl font-bold text-amber-600 mt-1">2</p>
-            <span class="text-xs text-slate-500">Awaiting board review</span>
+            <p class="text-xs font-semibold text-slate-500 uppercase">Pending Franchises</p>
+            <p id="adminPendingCount" class="text-3xl font-bold text-amber-600 mt-1">0</p>
+            <span class="text-xs text-slate-500">From database</span>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <h3 class="font-bold text-lg text-brand-900 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-bullhorn text-brand-600"></i> Publish Official Board Notice
+              <i class="fa-solid fa-bullhorn text-brand-600"></i> Publish Official Board Notice (Supabase)
             </h3>
             <form onsubmit="publishNotice(event)" class="space-y-3">
               <input id="noticeInput" type="text" required placeholder="Enter new circular / exam / result notice..." class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
               <button type="submit" class="bg-brand-900 hover:bg-brand-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">
-                Publish to Board Feed
+                Publish to Database
               </button>
             </form>
-            <ul id="adminNoticeList" class="mt-4 space-y-2 text-sm text-slate-700">
-              <li class="p-2.5 bg-slate-50 rounded-lg border border-slate-100">• Annual Diploma Practical Examination Schedule Published (2026)</li>
-              <li class="p-2.5 bg-slate-50 rounded-lg border border-slate-100">• New Authorized Study Centre Kit Dispatch Started</li>
-            </ul>
+            <ul id="adminNoticeList" class="mt-4 space-y-2 text-sm text-slate-700"></ul>
           </div>
 
           <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <h3 class="font-bold text-lg text-brand-900 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-check-double text-emerald-600"></i> Franchise Approval Queue
+              <i class="fa-solid fa-check-double text-emerald-600"></i> Franchise Inquiries (Supabase)
             </h3>
-            <div id="franchiseQueue" class="space-y-3 text-sm">
-              <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <div>
-                  <p class="font-semibold text-slate-800">Apex Computer Academy (Kolkata)</p>
-                  <p class="text-xs text-slate-500">Applied for Authorized Study Centre</p>
-                </div>
-                <button type="button" onclick="approveFranchise(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold">Approve</button>
-              </div>
-              <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <div>
-                  <p class="font-semibold text-slate-800">Sunrise Digital Institute (Siliguri)</p>
-                  <p class="text-xs text-slate-500">Applied for Authorized Study Centre</p>
-                </div>
-                <button type="button" onclick="approveFranchise(this)" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold">Approve</button>
-              </div>
-            </div>
+            <div id="franchiseQueue" class="space-y-3 text-sm"></div>
           </div>
         </div>
       </div>
@@ -245,7 +228,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <h3 class="font-bold text-lg text-brand-900 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-user-plus text-brand-600"></i> Register New Student
+              <i class="fa-solid fa-user-plus text-brand-600"></i> Register New Student (Supabase)
             </h3>
             <form onsubmit="addStudentByCentre(event)" class="space-y-3 text-sm">
               <div>
@@ -262,15 +245,15 @@
                 </select>
               </div>
               <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-2.5 rounded-lg font-semibold transition">
-                Enroll Student
+                Save to Database
               </button>
             </form>
           </div>
 
           <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="font-bold text-lg text-brand-900">Centre Enrolled Students (Code: NBCE-WB-042)</h3>
-              <span class="text-xs bg-blue-50 text-blue-700 font-semibold px-3 py-1 rounded-full">Active Centre</span>
+              <h3 class="font-bold text-lg text-brand-900">Enrolled Students (Live Database)</h3>
+              <span class="text-xs bg-blue-50 text-blue-700 font-semibold px-3 py-1 rounded-full">NBCE-WB-042</span>
             </div>
             <table class="w-full text-left border-collapse text-sm">
               <thead>
@@ -278,23 +261,11 @@
                   <th class="py-2.5 px-3">Reg. No</th>
                   <th class="py-2.5 px-3">Student Name</th>
                   <th class="py-2.5 px-3">Course</th>
+                  <th class="py-2.5 px-3">Marks</th>
                   <th class="py-2.5 px-3">Status</th>
                 </tr>
               </thead>
-              <tbody id="centreStudentTable" class="divide-y divide-slate-100">
-                <tr>
-                  <td class="py-2.5 px-3 font-mono text-xs">NBCE2026101</td>
-                  <td class="py-2.5 px-3 font-medium">Arijit Sen</td>
-                  <td class="py-2.5 px-3">ADCA (1 Year Diploma)</td>
-                  <td class="py-2.5 px-3"><span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">Verified</span></td>
-                </tr>
-                <tr>
-                  <td class="py-2.5 px-3 font-mono text-xs">NBCE2026102</td>
-                  <td class="py-2.5 px-3 font-medium">Moumita Roy</td>
-                  <td class="py-2.5 px-3">Tally Prime &amp; GST</td>
-                  <td class="py-2.5 px-3"><span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">Verified</span></td>
-                </tr>
-              </tbody>
+              <tbody id="centreStudentTable" class="divide-y divide-slate-100"></tbody>
             </table>
           </div>
         </div>
@@ -305,13 +276,13 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <h3 class="font-bold text-lg text-brand-900 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-pen-to-square text-emerald-600"></i> Submit Practical / Internal Marks
+              <i class="fa-solid fa-pen-to-square text-emerald-600"></i> Update Student Marks (Supabase)
             </h3>
             <form onsubmit="submitStaffMarks(event)" class="space-y-3 text-sm">
-              <input id="staffRegInput" type="text" required placeholder="Student Registration No (e.g. NBCE2026101)" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500">
+              <input id="staffRegInput" type="text" required placeholder="Registration No (e.g. NBCE2026101)" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500">
               <input id="staffMarksInput" type="number" min="0" max="100" required placeholder="Marks out of 100" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500">
               <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold transition">
-                Save Marks Entry
+                Update Marks in DB
               </button>
             </form>
             <p id="staffMarksFeedback" class="mt-3 text-sm font-medium text-emerald-700"></p>
@@ -370,7 +341,7 @@
                   <p class="font-bold text-slate-800">Examination Admit Card</p>
                   <p class="text-xs text-slate-500 mt-1">Session 2026–27 Theory &amp; Practical</p>
                 </div>
-                <button type="button" onclick="alert('Admit Card PDF ready for NBCE2026101!')" class="bg-brand-900 hover:bg-brand-700 text-white py-2 px-4 rounded-lg text-xs font-semibold w-fit">
+                <button type="button" onclick="alert('Admit Card ready for NBCE2026101!')" class="bg-brand-900 hover:bg-brand-700 text-white py-2 px-4 rounded-lg text-xs font-semibold w-fit">
                   <i class="fa-solid fa-download mr-1"></i> Download Admit Card
                 </button>
               </div>
@@ -586,7 +557,7 @@
         <div class="text-center mb-6">
           <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Online Services</span>
           <h2 class="text-3xl font-display font-bold text-brand-900 mt-1">Student &amp; Certificate Verification</h2>
-          <p class="text-sm text-slate-500 mt-1">Try sample registration number <code class="bg-slate-100 px-1.5 py-0.5 rounded">NBCE2026101</code></p>
+          <p class="text-sm text-slate-500 mt-1">Live lookup from Supabase database (try <code class="bg-slate-100 px-1.5 py-0.5 rounded">NBCE2026101</code>)</p>
         </div>
         <form onsubmit="verifyRegistration(event)" class="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
           <input id="verifyRegInput" type="text" required placeholder="Enter Registration / Certificate No..." class="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-brand-500">
@@ -686,9 +657,9 @@
           </p>
         </div>
         <form onsubmit="submitFranchise(event)" class="bg-white text-slate-800 p-6 rounded-2xl space-y-3 text-sm">
-          <input type="text" required placeholder="Proposed Institute Name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <input type="text" required placeholder="Applicant Name &amp; City" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <input type="tel" required placeholder="Mobile Number" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          <input id="franchiseInstitute" type="text" required placeholder="Proposed Institute Name" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          <input id="franchiseApplicant" type="text" required placeholder="Applicant Name &amp; City" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          <input id="franchiseMobile" type="tel" required placeholder="Mobile Number" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
           <button type="submit" class="w-full bg-brand-900 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-lg transition">
             Submit Franchise Inquiry
           </button>
@@ -713,9 +684,9 @@
           </div>
         </div>
         <form onsubmit="submitContact(event)" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-sm">
-          <input type="text" required placeholder="Your Full Name" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <input type="email" required placeholder="Your Email Address" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
-          <textarea rows="4" required placeholder="Write your message..." class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+          <input id="contactName" type="text" required placeholder="Your Full Name" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          <input id="contactEmail" type="email" required placeholder="Your Email Address" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          <textarea id="contactMessage" rows="4" required placeholder="Write your message..." class="w-full px-4 py-2.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500"></textarea>
           <button type="submit" class="bg-brand-900 hover:bg-brand-700 text-white font-semibold px-6 py-2.5 rounded-lg transition">
             Send Message
           </button>
@@ -777,6 +748,10 @@
   </div>
 
   <script>
+    const SUPABASE_URL = 'https://msnzmcpxvvtkxodxxcec.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_BqA6u0D_l2XotfQnu-CZ5w_-WZcl...'; // Replace with full copied publishable key from Supabase API Keys
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const roleMeta = {
       admin: {
         label: 'Admin Login',
@@ -830,7 +805,7 @@
       document.getElementById('loginModal').classList.add('hidden');
     }
 
-    function handleRoleLogin(e) {
+    async function handleRoleLogin(e) {
       e.preventDefault();
       const role = document.getElementById('loginRoleInput').value;
       const meta = roleMeta[role] || roleMeta.student;
@@ -845,6 +820,7 @@
         document.getElementById(id).classList.add('hidden');
       });
       document.getElementById(`${role}Dashboard`).classList.remove('hidden');
+      await refreshDashboardData();
       document.getElementById('activeDashboardSection').scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -856,52 +832,90 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function publishNotice(e) {
+    async function refreshDashboardData() {
+      const { data: students } = await db.from('students').select('*').order('id', { ascending: false });
+      const { data: notices } = await db.from('notices').select('*').order('id', { ascending: false });
+      const { data: franchises } = await db.from('franchises').select('*').order('id', { ascending: false });
+
+      if (students) {
+        document.getElementById('adminStudentCount').textContent = students.length;
+        document.getElementById('centreStudentTable').innerHTML = students.map(s => `
+          <tr>
+            <td class="py-2.5 px-3 font-mono text-xs">${s.reg_no}</td>
+            <td class="py-2.5 px-3 font-medium">${s.name}</td>
+            <td class="py-2.5 px-3">${s.course}</td>
+            <td class="py-2.5 px-3">${s.marks ?? '-'}</td>
+            <td class="py-2.5 px-3"><span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">${s.status}</span></td>
+          </tr>
+        `).join('');
+      }
+
+      if (notices && notices.length) {
+        document.getElementById('topNoticeText').textContent = notices[0].title;
+        document.getElementById('adminNoticeList').innerHTML = notices.map(n => `
+          <li class="p-2.5 bg-slate-50 rounded-lg border border-slate-100">• ${n.title}</li>
+        `).join('');
+      }
+
+      if (franchises) {
+        const pending = franchises.filter(f => f.status !== 'Approved').length;
+        document.getElementById('adminPendingCount').textContent = pending;
+        document.getElementById('franchiseQueue').innerHTML = franchises.length ? franchises.map(f => `
+          <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <div>
+              <p class="font-semibold text-slate-800">${f.institute_name}</p>
+              <p class="text-xs text-slate-500">${f.applicant_info} • ${f.mobile}</p>
+            </div>
+            ${f.status === 'Approved'
+              ? '<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Approved</span>'
+              : `<button type="button" onclick="approveFranchise(${f.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold">Approve</button>`}
+          </div>
+        `).join('') : '<p class="text-slate-500 text-xs">No franchise inquiries in database yet.</p>';
+      }
+    }
+
+    async function publishNotice(e) {
       e.preventDefault();
       const input = document.getElementById('noticeInput');
-      const val = input.value.trim();
-      if (!val) return;
-      const li = document.createElement('li');
-      li.className = 'p-2.5 bg-blue-50 rounded-lg border border-blue-100 font-medium';
-      li.textContent = `• ${val}`;
-      document.getElementById('adminNoticeList').prepend(li);
+      const title = input.value.trim();
+      if (!title) return;
+      const { error } = await db.from('notices').insert([{ title }]);
+      if (error) return alert('Error saving notice: ' + error.message);
       input.value = '';
+      await refreshDashboardData();
     }
 
-    function approveFranchise(btn) {
-      const row = btn.parentElement;
-      btn.remove();
-      const badge = document.createElement('span');
-      badge.className = 'bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full';
-      badge.textContent = 'Approved';
-      row.appendChild(badge);
-      const countEl = document.getElementById('adminPendingCount');
-      const current = parseInt(countEl.textContent, 10) || 0;
-      if (current > 0) countEl.textContent = current - 1;
+    async function approveFranchise(id) {
+      const { error } = await db.from('franchises').update({ status: 'Approved' }).eq('id', id);
+      if (error) return alert('Error approving: ' + error.message);
+      await refreshDashboardData();
     }
 
-    function addStudentByCentre(e) {
+    async function addStudentByCentre(e) {
       e.preventDefault();
       const name = document.getElementById('newStudentName').value.trim();
       const course = document.getElementById('newStudentCourse').value;
       if (!name) return;
-      const regNo = 'NBCE2026' + Math.floor(200 + Math.random() * 799);
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="py-2.5 px-3 font-mono text-xs">${regNo}</td>
-        <td class="py-2.5 px-3 font-medium">${name}</td>
-        <td class="py-2.5 px-3">${course}</td>
-        <td class="py-2.5 px-3"><span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">Enrolled</span></td>
-      `;
-      document.getElementById('centreStudentTable').prepend(tr);
+      const reg_no = 'NBCE2026' + Math.floor(200 + Math.random() * 799);
+      const { error } = await db.from('students').insert([{ reg_no, name, course, status: 'Enrolled' }]);
+      if (error) return alert('Error adding student: ' + error.message);
       document.getElementById('newStudentName').value = '';
+      await refreshDashboardData();
+      alert(`Student enrolled! Reg No: ${reg_no}`);
     }
 
-    function submitStaffMarks(e) {
+    async function submitStaffMarks(e) {
       e.preventDefault();
-      const reg = document.getElementById('staffRegInput').value.trim();
-      const marks = document.getElementById('staffMarksInput').value.trim();
-      document.getElementById('staffMarksFeedback').textContent = `Marks (${marks}/100) recorded for ${reg}.`;
+      const reg = document.getElementById('staffRegInput').value.trim().toUpperCase();
+      const marks = parseInt(document.getElementById('staffMarksInput').value, 10);
+      const { data, error } = await db.from('students').update({ marks, status: 'Evaluated' }).eq('reg_no', reg).select();
+      if (error) return alert('Error updating marks: ' + error.message);
+      const fb = document.getElementById('staffMarksFeedback');
+      if (!data || !data.length) {
+        fb.textContent = `Registration No ${reg} not found in database.`;
+      } else {
+        fb.textContent = `Marks (${marks}/100) saved to database for ${reg}.`;
+      }
       e.target.reset();
     }
 
@@ -912,36 +926,59 @@
       });
     }
 
-    function verifyRegistration(e) {
+    async function verifyRegistration(e) {
       e.preventDefault();
       const reg = document.getElementById('verifyRegInput').value.trim().toUpperCase();
       const box = document.getElementById('verifyResultBox');
-      if (reg === 'NBCE2026101') {
+      const { data, error } = await db.from('students').select('*').eq('reg_no', reg).maybeSingle();
+      if (error) {
+        box.innerHTML = `<div class="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800">${error.message}</div>`;
+        return;
+      }
+      if (data) {
         box.innerHTML = `
           <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900">
-            <p class="font-bold">Valid Record Found — NBCE2026101</p>
-            <p class="text-xs mt-1">Name: Arijit Sen | Course: ADCA (1 Year Diploma) | Status: Active &amp; Verified</p>
+            <p class="font-bold">Verified Record — ${data.reg_no}</p>
+            <p class="text-xs mt-1">Name: ${data.name} | Course: ${data.course} | Marks: ${data.marks ?? 'Pending'} | Status: ${data.status}</p>
           </div>`;
       } else {
         box.innerHTML = `
           <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
-            <p class="font-bold">Sample Demo Lookup</p>
-            <p class="text-xs mt-1">Enter <strong>NBCE2026101</strong> to test verification, or connect Supabase for live database records.</p>
+            <p class="font-bold">No Record Found for ${reg}</p>
+            <p class="text-xs mt-1">Check the registration number or enroll via Centre Login first.</p>
           </div>`;
       }
     }
 
-    function submitFranchise(e) {
+    async function submitFranchise(e) {
       e.preventDefault();
-      document.getElementById('franchiseMsg').textContent = 'Franchise application submitted successfully!';
+      const institute_name = document.getElementById('franchiseInstitute').value.trim();
+      const applicant_info = document.getElementById('franchiseApplicant').value.trim();
+      const mobile = document.getElementById('franchiseMobile').value.trim();
+      const { error } = await db.from('franchises').insert([{ institute_name, applicant_info, mobile }]);
+      if (error) return alert('Error submitting inquiry: ' + error.message);
+      document.getElementById('franchiseMsg').textContent = 'Franchise inquiry saved to database!';
       e.target.reset();
     }
 
-    function submitContact(e) {
+    async function submitContact(e) {
       e.preventDefault();
-      document.getElementById('contactMsg').textContent = 'Thank you! Your message has been received by NBCE.';
+      const full_name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
+      const { error } = await db.from('contacts').insert([{ full_name, email, message }]);
+      if (error) return alert('Error sending message: ' + error.message);
+      document.getElementById('contactMsg').textContent = 'Message saved! NBCE team will contact you soon.';
       e.target.reset();
     }
+
+    // Load initial notice on page load
+    (async () => {
+      const { data } = await db.from('notices').select('*').order('id', { ascending: false }).limit(1);
+      if (data && data.length) {
+        document.getElementById('topNoticeText').textContent = data[0].title;
+      }
+    })();
   </script>
 </body>
 </html>
