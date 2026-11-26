@@ -2762,9 +2762,11 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     }
 
     async function setStudentStatus(regNo, newStatus) {
-      const { error } = await db.from('students').update({ status: newStatus }).eq('reg_no', regNo);
-      if (error) return alert('Error updating student status: ' + error.message);
-      await refreshDashboardData();
+      if (newStatus === 'Rejected') {
+        await rejectStudentApplication(regNo);
+      } else {
+        await syncStudentStatusLive(regNo, newStatus);
+      }
     }
 
     function generateHallTicketPreview() {
@@ -3434,31 +3436,131 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       doc.save(`Student_Application_${appNo}.pdf`);
     }
 
-    async function acceptStudentApplication(appNo) {
-      localCentreStudents = localCentreStudents.map(s =>
-        String(s.app_no || s.reg_no) === String(appNo) ? { ...s, status: 'Accepted' } : s
-      );
-      localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
-      try {
-        await db.from('students').update({ status: 'Accepted' }).eq('reg_no', String(appNo));
-      } catch (err) {
-        console.warn('Supabase accept sync:', err);
+    const nbceStudentBroadcast = (typeof BroadcastChannel !== 'undefined')
+      ? new BroadcastChannel('nbce_student_sync')
+      : null;
+
+    function applyLiveStudentViewsImmediately() {
+      const merged = getMergedStudents(cachedStudents);
+      cachedStudents = merged;
+
+      const appliedCnt = merged.filter(s => ['applied', 'pending', 'enrolled', 'accepted', 'verified', 'evaluated', 'registered', 'certified'].includes((s.status || 'applied').toLowerCase())).length;
+      const accepted = merged.filter(s => ['accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
+      const registered = merged.filter(s => ['registered', 'enrolled', 'accepted', 'verified', 'evaluated'].includes((s.status || '').toLowerCase())).length;
+      const pending = merged.filter(s => ['applied', 'pending', 'enrolled'].includes((s.status || '').toLowerCase())).length;
+      const rejected = 0;
+
+      if (document.getElementById('cntApplied')) {
+        document.getElementById('cntApplied').textContent = appliedCnt;
+        document.getElementById('cntAccepted').textContent = accepted;
+        document.getElementById('cntRegistered').textContent = registered;
+        document.getElementById('cntPending').textContent = pending;
+        document.getElementById('cntRejected').textContent = rejected;
       }
-      await refreshDashboardData();
+      if (document.getElementById('sideCntApplied')) {
+        document.getElementById('sideCntApplied').textContent = appliedCnt;
+        document.getElementById('sideCntAccepted').textContent = accepted;
+        document.getElementById('sideCntRegistered').textContent = registered;
+        document.getElementById('sideCntPending').textContent = pending;
+        document.getElementById('sideCntRejected').textContent = rejected;
+      }
+      if (document.getElementById('cpAppliedCount')) {
+        document.getElementById('cpAppliedCount').textContent = appliedCnt;
+        document.getElementById('cpRegCount').textContent = registered;
+        document.getElementById('cpCertCount').textContent = merged.filter(s => (s.status || '').toLowerCase() === 'certified').length;
+      }
+
+      renderAdminStudentStatusTable();
       renderCentreCategoryStudentTable();
+
+      if (document.getElementById('centreStudentTable')) {
+        document.getElementById('centreStudentTable').innerHTML = merged.map(s => `
+          <tr>
+            <td class="py-2.5 px-3 font-mono text-xs">${s.app_no || s.reg_no}</td>
+            <td class="py-2.5 px-3 font-medium">${s.name}</td>
+            <td class="py-2.5 px-3">${s.course}</td>
+            <td class="py-2.5 px-3">${s.marks ?? '-'}</td>
+            <td class="py-2.5 px-3"><span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">${s.status || 'Applied'}</span></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    async function syncStudentStatusLive(appNo, nextStatus) {
+      const targetKey = String(appNo);
+      let foundInLocal = false;
+      localCentreStudents = localCentreStudents.map(s => {
+        if (String(s.app_no || s.reg_no) === targetKey) {
+          foundInLocal = true;
+          return { ...s, status: nextStatus };
+        }
+        return s;
+      });
+      if (!foundInLocal) {
+        const fromCache = cachedStudents.find(s => String(s.app_no || s.reg_no) === targetKey);
+        if (fromCache) {
+          localCentreStudents.unshift({ ...fromCache, app_no: targetKey, reg_no: targetKey, status: nextStatus });
+        }
+      }
+      localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
+      applyLiveStudentViewsImmediately();
+
+      if (nbceStudentBroadcast) {
+        nbceStudentBroadcast.postMessage({ type: 'STUDENT_STATUS_CHANGED', appNo: targetKey, status: nextStatus, ts: Date.now() });
+      }
+
+      try {
+        await db.from('students').update({ status: nextStatus }).eq('reg_no', targetKey);
+      } catch (err) {
+        console.warn('Supabase live status update note:', err);
+      }
+    }
+
+    async function acceptStudentApplication(appNo) {
+      await syncStudentStatusLive(appNo, 'Accepted');
     }
 
     async function rejectStudentApplication(appNo) {
-      // Remove rejected student from list
-      localCentreStudents = localCentreStudents.filter(s => String(s.app_no || s.reg_no) !== String(appNo));
+      const targetKey = String(appNo);
+      localCentreStudents = localCentreStudents.filter(s => String(s.app_no || s.reg_no) !== targetKey);
       localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
+      cachedStudents = cachedStudents.filter(s => String(s.app_no || s.reg_no) !== targetKey);
+      applyLiveStudentViewsImmediately();
+
+      if (nbceStudentBroadcast) {
+        nbceStudentBroadcast.postMessage({ type: 'STUDENT_REJECTED', appNo: targetKey, status: 'Rejected', ts: Date.now() });
+      }
+
       try {
-        await db.from('students').delete().eq('reg_no', String(appNo));
+        await db.from('students').delete().eq('reg_no', targetKey);
       } catch (err) {
         console.warn('Supabase reject remove sync:', err);
       }
-      await refreshDashboardData();
-      renderCentreCategoryStudentTable();
+    }
+
+    // Cross-tab & same-page real-time listeners so Centre & Admin stay live all the time
+    if (nbceStudentBroadcast) {
+      nbceStudentBroadcast.onmessage = () => {
+        localCentreStudents = JSON.parse(localStorage.getItem('nbce_local_students') || '[]');
+        applyLiveStudentViewsImmediately();
+      };
+    }
+
+    window.addEventListener('storage', (ev) => {
+      if (ev.key === 'nbce_local_students') {
+        localCentreStudents = JSON.parse(ev.newValue || '[]');
+        applyLiveStudentViewsImmediately();
+      }
+    });
+
+    try {
+      db.channel('nbce-students-realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, async () => {
+          await refreshDashboardData();
+        })
+        .subscribe();
+    } catch (rtErr) {
+      console.warn('Supabase realtime subscription fallback:', rtErr);
     }
 
     function renderCentreCategoryStudentTable() {
