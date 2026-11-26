@@ -627,6 +627,12 @@
 
             <!-- WORKSPACE 4A: Franchise Application (Application No, View Icon, Approved/Pending/Reject with Confirm Warning) -->
             <div id="ws-franchise-application" class="admin-ws-panel hidden space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100">
+                <p class="text-xs text-slate-600 font-medium">All submitted franchise affiliation applications (Local + Supabase <code class="bg-slate-100 px-1 py-0.5 rounded">franchises</code>).</p>
+                <button type="button" onclick="openAffiliationFormModal()" class="bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-xs px-3.5 py-1.5 rounded-lg cursor-pointer">
+                  <i class="fa-solid fa-plus mr-1"></i> New Application Form
+                </button>
+              </div>
               <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                   <p class="text-xs text-slate-500 font-semibold">Total Applications</p>
@@ -2699,6 +2705,17 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
       if (key === 'franchise-application' || key === 'franchise-enquiry') {
         markFranchiseNotificationsRead();
+        if (!cachedFranchises.length && localFranchiseRecords.length) {
+          cachedFranchises = getMergedFranchises([]);
+        }
+        renderFranchiseApplicationTable();
+        renderFranchiseEnquiryList();
+      }
+      if (key === 'centre-our-franchise') {
+        if (!cachedFranchises.length && localFranchiseRecords.length) {
+          cachedFranchises = getMergedFranchises([]);
+        }
+        renderOurFranchiseTable();
       }
       const meta = workspaceMeta[key] || ['Admin Panel', key];
       document.getElementById('adminWorkspaceBreadcrumb').textContent = meta[0];
@@ -3710,9 +3727,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
           ? `<button type="button" disabled class="bg-emerald-600/40 text-white/80 text-xs px-2.5 py-1 rounded font-semibold cursor-not-allowed opacity-60">Approved</button>
              <button type="button" disabled class="bg-amber-500/40 text-white/80 text-xs px-2.5 py-1 rounded font-semibold cursor-not-allowed opacity-60">Pending</button>
              <button type="button" disabled class="bg-red-600/40 text-white/80 text-xs px-2.5 py-1 rounded font-semibold cursor-not-allowed opacity-60">Reject</button>`
-          : `<button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Approved</button>
-             <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Pending')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Pending</button>
-             <button type="button" onclick="confirmApplicationStatusChange(${f.id}, 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Reject</button>`;
+          : `<button type="button" onclick="confirmApplicationStatusChange('${f.id}', 'Approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Approved</button>
+             <button type="button" onclick="confirmApplicationStatusChange('${f.id}', 'Pending')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Pending</button>
+             <button type="button" onclick="confirmApplicationStatusChange('${f.id}', 'Rejected')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Reject</button>`;
 
         return `
           <tr>
@@ -3722,7 +3739,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
             <td class="py-2.5 px-3 font-mono text-xs">${f.mobile}</td>
             <td class="py-2.5 px-3">${statusBadge}</td>
             <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
-              <button type="button" onclick="openViewApplicationModal(${f.id})" title="View Full Application" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">
+              <button type="button" onclick="openViewApplicationModal('${f.id}')" title="View Full Application" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">
                 <i class="fa-solid fa-eye mr-1"></i>View
               </button>
               ${actionButtonsHtml}
@@ -3752,7 +3769,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
             <p class="text-xs text-slate-600 mt-1"><i class="fa-solid fa-user mr-1 text-slate-400"></i>${meta.headName} (${meta.city}, ${meta.district}) &nbsp;•&nbsp; <i class="fa-solid fa-phone mr-1 text-slate-400"></i>${f.mobile}</p>
           </div>
           <div class="flex items-center gap-2">
-            <button type="button" onclick="openViewApplicationModal(${f.id})" class="bg-slate-800 text-white text-xs px-2.5 py-1 rounded-lg font-semibold cursor-pointer"><i class="fa-solid fa-eye mr-1"></i>View</button>
+            <button type="button" onclick="openViewApplicationModal('${f.id}')" class="bg-slate-800 text-white text-xs px-2.5 py-1 rounded-lg font-semibold cursor-pointer"><i class="fa-solid fa-eye mr-1"></i>View</button>
             <span class="text-xs font-bold px-3 py-1 rounded-full w-fit ${f.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : f.status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-900'}">${f.status || 'Pending'}</span>
           </div>
         </div>
@@ -3989,21 +4006,21 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         }
       }
 
-      if (franchises || localFranchiseRecords.length) {
+      if (franchises || localFranchiseRecords.length || cachedFranchises.length) {
         cachedFranchises = getMergedFranchises(franchises);
-        const pendingF = franchises.filter(f => (f.status || 'Pending') === 'Pending').length;
-        const approvedF = franchises.filter(f => f.status === 'Approved').length;
-        const rejectedF = franchises.filter(f => f.status === 'Rejected').length;
+        const pendingF = cachedFranchises.filter(f => (f.status || 'Pending') === 'Pending').length;
+        const approvedF = cachedFranchises.filter(f => f.status === 'Approved').length;
+        const rejectedF = cachedFranchises.filter(f => f.status === 'Rejected').length;
 
         if (document.getElementById('faTotalCount')) {
-          document.getElementById('faTotalCount').textContent = franchises.length;
+          document.getElementById('faTotalCount').textContent = cachedFranchises.length;
           document.getElementById('faApprovedCount').textContent = approvedF;
           document.getElementById('faPendingCount').textContent = pendingF;
           if (document.getElementById('faRejectedCount')) {
             document.getElementById('faRejectedCount').textContent = rejectedF;
           }
         }
-        updateFranchiseNotificationBadges(franchises.length);
+        updateFranchiseNotificationBadges(cachedFranchises.length);
         renderOurFranchiseTable();
         renderFranchiseApplicationTable();
         renderFranchiseEnquiryList();
@@ -4246,6 +4263,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       };
       localFranchiseRecords.unshift(newLocalFranchiseRow);
       localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
+      cachedFranchises = getMergedFranchises(cachedFranchises);
+      renderFranchiseApplicationTable();
+      renderFranchiseEnquiryList();
 
       try {
         const { data: insertedRow, error } = await db.from('franchises').insert([{
@@ -4307,6 +4327,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
       const trackInput = document.getElementById('trackFranchiseInput');
       if (trackInput) trackInput.value = appNo;
+      if (typeof refreshDashboardData === 'function') {
+        await refreshDashboardData();
+      }
     }
 
     async function submitFranchiseApplication(e) {
@@ -4384,6 +4407,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       };
       localFranchiseRecords.unshift(localEnqRow);
       localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
+      cachedFranchises = getMergedFranchises(cachedFranchises);
+      renderFranchiseApplicationTable();
+      renderFranchiseEnquiryList();
       try {
         await db.from('franchises').insert([{ institute_name, applicant_info, mobile, status: 'Pending' }]);
       } catch (enqErr) {
@@ -4391,6 +4417,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       }
       document.getElementById('franchiseMsg').textContent = `Enquiry submitted! Application No: ${appNo}`;
       e.target.reset();
+      if (typeof refreshDashboardData === 'function') {
+        await refreshDashboardData();
+      }
     }
 
     async function submitContact(e) {
