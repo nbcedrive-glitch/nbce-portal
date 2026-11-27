@@ -955,11 +955,28 @@
 
             <!-- DEFAULT VIEW: Dashboard -->
             <div id="cp-view-dashboard" class="cp-workspace-panel space-y-4">
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <p class="font-bold text-sm text-brand-950">Centre Overview</p>
                   <p class="text-xs text-slate-500 mt-0.5">Select any menu option from the left sidebar to manage students, classes, exams, or finance.</p>
                 </div>
+                <button type="button" onclick="toggleAddStudentSearchBox()" class="bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs cursor-pointer inline-flex items-center gap-2 shrink-0">
+                  <i class="fa-solid fa-user-plus"></i> Add Student
+                </button>
+              </div>
+
+              <!-- Search Student by WhatsApp Number Box (Revealed on clicking Add Student) -->
+              <div id="cpAddStudentSearchPanel" class="hidden p-4 rounded-xl bg-amber-50/70 border border-amber-300 space-y-2.5 text-xs">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                  <div class="relative flex-1">
+                    <input id="cpStudentWhatsappSearchInput" type="tel" placeholder="Student WhatsApp Number (e.g. 9876543210)" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-brand-500">
+                  </div>
+                  <button type="button" onclick="searchAndProceedNewStudentByWhatsapp()" class="bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold px-5 py-2.5 rounded-xl text-xs cursor-pointer shrink-0">
+                    Submit
+                  </button>
+                </div>
+                <p id="cpWhatsappSearchFeedback" class="text-[11px] font-semibold text-slate-600">Enter student WhatsApp number to check if student is new.</p>
+                <div id="cpMatchedStudentsResultBox" class="hidden pt-2 space-y-2"></div>
               </div>
             </div>
 
@@ -967,9 +984,6 @@
             <div id="cp-view-students-category" class="cp-workspace-panel hidden space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                 <p id="cpStudentCatSubtitle" class="text-xs font-semibold text-slate-700">Showing Applied Student records</p>
-                <button type="button" id="cpApplyNewStudentBtn" onclick="openStudentApplicationModal()" class="hidden bg-brand-gold hover:bg-amber-400 text-brand-950 font-bold text-xs px-4 py-2 rounded-lg shadow-xs cursor-pointer">
-                  <i class="fa-solid fa-user-plus mr-1.5"></i> Apply New Student
-                </button>
               </div>
 
               <div class="overflow-x-auto border border-slate-200 rounded-xl">
@@ -2262,10 +2276,14 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       </div>
 
       <form id="newStudentApplicationForm" onsubmit="submitStudentApplicationForm(event)" class="p-6 space-y-7 text-sm text-slate-800">
-        <!-- Choose course -->
+        <!-- Choose course & Fixed Centre Name -->
         <div class="space-y-4">
-          <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Choose course</h4>
+          <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Centre &amp; Course Selection</h4>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Centre Name (Fixed)</label>
+              <input id="stFixedCentreNameInput" type="text" readonly class="w-full px-3.5 py-2.5 border border-slate-200 bg-slate-100 text-slate-700 font-bold rounded-xl text-xs cursor-not-allowed outline-none">
+            </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1.5">Course Category <span class="text-red-500">*</span></label>
               <select id="stCourseCategory" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
@@ -2353,6 +2371,10 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
                 <option value="ST">ST</option>
               </select>
             </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Qualification (Editable)</label>
+              <input id="stQualificationInput" type="text" placeholder="e.g. 12th Pass / Graduate / BCA" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-400">
+            </div>
           </div>
         </div>
 
@@ -2416,8 +2438,13 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         <div class="space-y-3">
           <h4 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-200">Photo</h4>
           <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div class="flex-1">
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Student Photo (Supabase Storage)</label>
+            <div class="flex-1 space-y-2">
+              <div class="flex items-center justify-between max-w-md">
+                <label class="block text-xs font-bold text-slate-700">Student Photo (Supabase Storage)</label>
+                <button type="button" id="stEditPhotoBtn" onclick="triggerStudentPhotoChange()" class="hidden bg-slate-800 hover:bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg cursor-pointer">
+                  <i class="fa-solid fa-pen-to-square mr-1"></i>Edit Photo
+                </button>
+              </div>
               <input id="stPhotoFile" type="file" accept="image/*" onchange="previewStudentPhotoFile(this)" class="block w-full max-w-md text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-lg file:border file:border-slate-300 file:text-xs file:font-semibold file:bg-slate-50 file:text-slate-800 hover:file:bg-slate-100">
             </div>
             <img id="stPhotoPreviewImg" src="" alt="Student Photo Preview" class="hidden w-20 h-24 object-cover rounded-lg border border-slate-300 bg-slate-50 shrink-0">
@@ -3835,11 +3862,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       document.getElementById('cpActiveHeading').textContent = heading;
       document.getElementById('cpStudentCatSubtitle').textContent = `Showing ${heading} records`;
 
-      const applyBtn = document.getElementById('cpApplyNewStudentBtn');
-      if (applyBtn) {
-        if (catKey === 'applied') applyBtn.classList.remove('hidden');
-        else applyBtn.classList.add('hidden');
-      }
+
 
       document.querySelectorAll('.cp-workspace-panel').forEach(p => p.classList.add('hidden'));
       document.getElementById('cp-view-students-category').classList.remove('hidden');
@@ -4251,14 +4274,241 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       }).join('') : '<tr><td colspan="6" class="py-5 px-3 text-slate-500 text-xs text-center">No students found in this category.</td></tr>';
     }
 
-    function openStudentApplicationModal() {
-      document.getElementById('studentApplicationModal').classList.remove('hidden');
+    function toggleAddStudentSearchBox() {
+      const panel = document.getElementById('cpAddStudentSearchPanel');
+      if (!panel) return;
+      panel.classList.toggle('hidden');
+      if (!panel.classList.contains('hidden')) {
+        document.getElementById('cpStudentWhatsappSearchInput')?.focus();
+      }
+    }
+
+    function getActiveCentreFixedName() {
+      const titleEl = document.getElementById('dashTitle');
+      const rawTitle = titleEl ? titleEl.textContent.trim() : '';
+      if (rawTitle && !rawTitle.toLowerCase().includes('dashboard')) {
+        return rawTitle.replace(/\s*\(NBCE\d+\)\s*$/i, '').trim();
+      }
+      const infoEl = document.getElementById('cpActiveCentreInfo');
+      if (infoEl && infoEl.textContent.trim()) {
+        return infoEl.textContent.split('•')[0].trim();
+      }
+      return 'NBCE Authorized Study Centre';
+    }
+
+    let isExistingStudentReapplyMode = false;
+    let reapplyBaseStudentRecord = null;
+
+    function setFixedStudentModalFields(locked) {
+      const fixedIds = [
+        'stFullName',
+        'stFatherName',
+        'stMotherName',
+        'stDOB',
+        'stReligion',
+        'stGender',
+        'stMaritalStatus',
+        'stCategory',
+        'stWhatsapp',
+        'stEnquirySource',
+        'stIdCardType',
+        'stIdCardNumber'
+      ];
+      fixedIds.forEach(fid => {
+        const el = document.getElementById(fid);
+        if (!el) return;
+        if (locked) {
+          el.setAttribute('readonly', 'readonly');
+          if (el.tagName === 'SELECT') el.classList.add('pointer-events-none', 'bg-slate-100');
+          else el.classList.add('bg-slate-100', 'text-slate-700');
+        } else {
+          el.removeAttribute('readonly');
+          el.classList.remove('pointer-events-none', 'bg-slate-100', 'text-slate-700');
+        }
+      });
+    }
+
+    function triggerStudentPhotoChange() {
+      const fileEl = document.getElementById('stPhotoFile');
+      if (fileEl) fileEl.click();
+    }
+
+    function searchAndProceedNewStudentByWhatsapp() {
+      const inputEl = document.getElementById('cpStudentWhatsappSearchInput');
+      const fbEl = document.getElementById('cpWhatsappSearchFeedback');
+      const resBox = document.getElementById('cpMatchedStudentsResultBox');
+      const waRaw = (inputEl?.value || '').trim();
+      const digitsOnly = waRaw.replace(/[^0-9]/g, '');
+
+      if (digitsOnly.length < 10) {
+        if (fbEl) {
+          fbEl.className = 'text-[11px] font-semibold text-red-600';
+          fbEl.textContent = 'Please enter a valid 10-digit Student WhatsApp Number.';
+        }
+        if (resBox) { resBox.innerHTML = ''; resBox.classList.add('hidden'); }
+        return;
+      }
+
+      const matches = (cachedStudents || []).filter(s =>
+        String(s.whatsapp || '').replace(/[^0-9]/g, '') === digitsOnly ||
+        String(s.mobile || '').replace(/[^0-9]/g, '') === digitsOnly
+      );
+
+      if (matches.length > 0) {
+        if (fbEl) {
+          fbEl.className = 'text-xs sm:text-sm font-bold text-emerald-700';
+          fbEl.textContent = `${matches.length} matching student record(s) found for WhatsApp ${digitsOnly}:`;
+        }
+        if (resBox) {
+          resBox.classList.remove('hidden');
+          resBox.innerHTML = matches.map(m => {
+            const appNo = m.app_no || m.reg_no || '';
+            const regNo = m.registration_no || '';
+            const cCode = m.centre_code || document.getElementById('centrePanelCodePill')?.textContent?.trim() || 'NBCE0001';
+            const cName = m.centre_name || findCentreInfoForStudent(cCode).centreName;
+            const admDate = formatReadableDateText(m.admission_date || new Date().toISOString().slice(0, 10));
+            const waNum = m.whatsapp || m.mobile || digitsOnly;
+            const thumb = m.photo_url
+              ? `<img src="${m.photo_url}" alt="${m.name}" class="w-14 h-16 object-cover rounded-xl border border-slate-300 shrink-0">`
+              : `<div class="w-14 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0">Photo</div>`;
+
+            return `
+              <div class="p-4 rounded-xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
+                <div class="flex items-center gap-4">
+                  ${thumb}
+                  <div class="space-y-1 text-sm">
+                    <p class="font-bold text-slate-900 text-sm sm:text-base">
+                      App No: <span class="font-mono text-brand-950">${appNo}</span>
+                      &nbsp;|&nbsp; Reg No: <span class="font-mono text-emerald-700">${regNo}</span>
+                    </p>
+                    <p class="text-slate-700 text-xs sm:text-sm">
+                      <strong>Centre:</strong> ${cName} &nbsp;|&nbsp; <strong>Course:</strong> ${m.course || '-'}
+                    </p>
+                    <p class="text-slate-600 text-xs sm:text-sm">
+                      <strong>Admission:</strong> ${admDate} &nbsp;|&nbsp; <strong>WhatsApp:</strong> <span class="font-mono">${waNum}</span>
+                    </p>
+                  </div>
+                </div>
+                <button type="button" onclick="openExistingStudentReapplyModal('${appNo}')" class="bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold text-sm px-5 py-2.5 rounded-xl cursor-pointer shrink-0">
+                  Add
+                </button>
+              </div>
+            `;
+          }).join('');
+        }
+        return;
+      }
+
+      if (resBox) { resBox.innerHTML = ''; resBox.classList.add('hidden'); }
+      if (fbEl) {
+        fbEl.className = 'text-[11px] font-semibold text-emerald-700';
+        fbEl.textContent = `New student WhatsApp (${digitsOnly}) verified. Opening Student Application Form...`;
+      }
+
+      openStudentApplicationModal(digitsOnly);
+    }
+
+    function openExistingStudentReapplyModal(appNo) {
+      const st = (cachedStudents || []).find(s => String(s.app_no || s.reg_no) === String(appNo));
+      if (!st) return;
+
+      isExistingStudentReapplyMode = true;
+      reapplyBaseStudentRecord = st;
+
+      const modal = document.getElementById('studentApplicationModal');
+      modal.classList.remove('hidden');
       document.body.classList.add('overflow-hidden');
+
+      const centreNameInput = document.getElementById('stFixedCentreNameInput');
+      if (centreNameInput) {
+        centreNameInput.value = st.centre_name || getActiveCentreFixedName();
+      }
+
+      document.getElementById('stCourseCategory').value = st.course_category || '1 Year Course';
+      document.getElementById('stCourseName').value = '';
+      document.getElementById('stStudyMode').value = st.study_mode || 'Offline';
+      document.getElementById('stFullName').value = st.name || '';
+      document.getElementById('stFatherName').value = st.father_name || '';
+      document.getElementById('stMotherName').value = st.mother_name || '';
+      document.getElementById('stDOB').value = st.dob || '';
+      updateLiveStudentAge();
+      document.getElementById('stReligion').value = st.religion || '';
+      document.getElementById('stGender').value = st.gender || '';
+      document.getElementById('stMaritalStatus').value = st.marital_status || '';
+      document.getElementById('stCategory').value = st.category || '';
+      document.getElementById('stQualificationInput').value = st.qualification || '';
+      document.getElementById('stMobile').value = st.mobile || '';
+      document.getElementById('stWhatsapp').value = st.whatsapp || '';
+      document.getElementById('stEnquirySource').value = st.enquiry_source || 'Walk-in';
+      document.getElementById('stIdCardType').value = st.id_card_type || '';
+      document.getElementById('stIdCardNumber').value = st.id_card_number || '';
+      document.getElementById('stPostalAddress').value = st.address || '';
+      document.getElementById('stPinCode').value = st.pin_code || '';
+
+      currentPickedPhotoDataUrl = st.photo_url || '';
+      const imgEl = document.getElementById('stPhotoPreviewImg');
+      const editPhotoBtn = document.getElementById('stEditPhotoBtn');
+      if (imgEl) {
+        if (st.photo_url) {
+          imgEl.src = st.photo_url;
+          imgEl.classList.remove('hidden');
+        } else {
+          imgEl.src = '';
+          imgEl.classList.add('hidden');
+        }
+      }
+      if (editPhotoBtn) editPhotoBtn.classList.remove('hidden');
+
+      setFixedStudentModalFields(true);
+    }
+
+    function openStudentApplicationModal(prefillWhatsapp = '') {
+      isExistingStudentReapplyMode = false;
+      reapplyBaseStudentRecord = null;
+      setFixedStudentModalFields(false);
+
+      const editPhotoBtn = document.getElementById('stEditPhotoBtn');
+      if (editPhotoBtn) editPhotoBtn.classList.add('hidden');
+
+      const modal = document.getElementById('studentApplicationModal');
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      const centreNameInput = document.getElementById('stFixedCentreNameInput');
+      if (centreNameInput) {
+        centreNameInput.value = getActiveCentreFixedName();
+      }
+      if (prefillWhatsapp) {
+        const waField = document.getElementById('stWhatsapp');
+        const mobField = document.getElementById('stMobile');
+        if (waField) waField.value = prefillWhatsapp;
+        if (mobField && !mobField.value) mobField.value = prefillWhatsapp;
+      }
     }
 
     function closeStudentApplicationModal() {
+      isExistingStudentReapplyMode = false;
+      reapplyBaseStudentRecord = null;
+      setFixedStudentModalFields(false);
       document.getElementById('studentApplicationModal').classList.add('hidden');
       document.body.classList.remove('overflow-hidden');
+    }
+
+    function generateLifetimeStudentCredentials(studentName = '', whatsappNo = '') {
+      const cleanWa = String(whatsappNo || '').replace(/[^0-9]/g, '');
+      const userId = cleanWa || String(whatsappNo || '').trim();
+
+      const lettersOnly = String(studentName || '').replace(/[^a-zA-Z]/g, '');
+      const baseLetters = (lettersOnly || 'User').padEnd(4, 'x').slice(0, 4);
+      const prefix = baseLetters.charAt(0).toUpperCase() + baseLetters.slice(1).toLowerCase();
+
+      const fiveDigits = String(Math.floor(10000 + Math.random() * 90000));
+      const alphaPool = 'abcdefghijklmnopqrstuvwxyz';
+      const c1 = alphaPool.charAt(Math.floor(Math.random() * alphaPool.length));
+      const c2 = alphaPool.charAt(Math.floor(Math.random() * alphaPool.length));
+
+      const password = `${prefix}${fiveDigits}@${c1}${c2}`;
+      return { userId, password };
     }
 
     async function submitStudentApplicationForm(e) {
@@ -4277,6 +4527,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const gender = document.getElementById('stGender').value || '';
       const maritalStatus = document.getElementById('stMaritalStatus').value || '';
       const category = document.getElementById('stCategory').value || '';
+      const qualification = (document.getElementById('stQualificationInput')?.value || '').trim();
       const enquirySource = document.getElementById('stEnquirySource').value || '';
       const idCardType = document.getElementById('stIdCardType').value || '';
       const idCardNumber = (document.getElementById('stIdCardNumber').value || '').trim();
@@ -4286,18 +4537,25 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
       if (!name || !whatsapp) return;
 
+      const isReapply = Boolean(isExistingStudentReapplyMode && reapplyBaseStudentRecord);
       const app_no = generate6DigitAppNo();
-      const centreCode = document.getElementById('centrePanelCodePill')?.textContent?.trim() || 'NBCE0001';
-      const photoUrl = await uploadStudentPhotoToSupabase(app_no, photoFile);
+      const centreCode = reapplyBaseStudentRecord?.centre_code || document.getElementById('centrePanelCodePill')?.textContent?.trim() || 'NBCE0001';
+      const centreName = document.getElementById('stFixedCentreNameInput')?.value?.trim() || getActiveCentreFixedName();
+      const creds = isReapply ? null : generateLifetimeStudentCredentials(name, whatsapp);
+      const photoUrl = photoFile
+        ? await uploadStudentPhotoToSupabase(app_no, photoFile)
+        : (currentPickedPhotoDataUrl || reapplyBaseStudentRecord?.photo_url || '');
 
       const studentRecord = {
         app_no,
         reg_no: app_no,
+        student_user_id: isReapply ? (reapplyBaseStudentRecord.student_user_id || '') : creds.userId,
+        student_password: isReapply ? (reapplyBaseStudentRecord.student_password || '') : creds.password,
         name,
         course_category: courseCategory,
         course,
         study_mode: studyMode,
-        mobile: mobile || '-',
+        mobile: mobile || whatsapp,
         whatsapp,
         father_name: fatherName,
         mother_name: motherName,
@@ -4307,6 +4565,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         gender,
         marital_status: maritalStatus,
         category,
+        qualification,
         enquiry_source: enquirySource,
         id_card_type: idCardType,
         id_card_number: idCardNumber,
@@ -4314,6 +4573,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         pin_code: pinCode,
         photo_url: photoUrl,
         centre_code: centreCode,
+        centre_name: centreName,
         status: 'Applied'
       };
 
@@ -4338,11 +4598,50 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         document.getElementById('stCurrentAgeText').textContent = 'Current Age: -';
       }
 
+      const cleanWa = whatsapp.replace(/[^0-9]/g, '');
+      const waTarget = cleanWa.length === 10 ? `91${cleanWa}` : cleanWa;
+
+      const messageText = isReapply
+        ? (
+            `🎉 NBCE APPLICATION GENERATED! 🎉\n\n` +
+            `Dear ${name},\n\n` +
+            `Your new course application has been submitted to the National Board of Computer Education (NBCE).\n\n` +
+            `📝 Application No.: ${app_no}\n` +
+            `📚 Course: ${course}`
+          )
+        : (
+            `🎉 WELCOME TO NBCE! 🎉\n\n` +
+            `Dear ${name},\n\n` +
+            `Congratulations! 🎓\n` +
+            `Your student application has been successfully submitted to the National Board of Computer Education (NBCE).\n\n` +
+            `📝 Application No.: ${app_no}\n` +
+            `🆔 Lifetime Student User ID: ${creds.userId}\n` +
+            `🔐 Password: ${creds.password}\n\n` +
+            `✨ Your NBCE journey begins here!\n\n` +
+            `Please keep your User ID & Password safe for future login, study, examination and certificate-related activities.`
+          );
+
+      window.latestStudentWelcomeMessage = messageText;
+      const waMsg = encodeURIComponent(messageText);
+      if (waTarget) {
+        window.open(`https://wa.me/${waTarget}?text=${waMsg}`, '_blank', 'noopener');
+      }
+
       e.target.reset();
+      const searchBox = document.getElementById('cpStudentWhatsappSearchInput');
+      if (searchBox) searchBox.value = '';
+      const resBox = document.getElementById('cpMatchedStudentsResultBox');
+      if (resBox) { resBox.innerHTML = ''; resBox.classList.add('hidden'); }
+      document.getElementById('cpAddStudentSearchPanel')?.classList.add('hidden');
+
       closeStudentApplicationModal();
       await refreshDashboardData();
       renderCentreCategoryStudentTable();
-      alert(`Student application submitted! 6-Digit Application No: ${app_no}`);
+      alert(
+        isReapply
+          ? `Application Submitted!\nApplication No: ${app_no}\nWhatsApp message sent to ${whatsapp}.`
+          : `Student Application Created!\nApplication No: ${app_no}\nLifetime User ID: ${creds.userId}\nPassword: ${creds.password}\nWhatsApp message sent to ${whatsapp}.`
+      );
     }
 
     function switchCentrePanelView(viewKey, btnEl) {
