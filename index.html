@@ -527,11 +527,21 @@
                 <div class="p-3 rounded-xl bg-amber-50 border border-amber-200"><span class="text-amber-700 font-semibold block">All Pending Student</span><strong id="cntPending" class="text-lg text-amber-900">0</strong></div>
                 <div class="p-3 rounded-xl bg-sky-50 border border-sky-200"><span class="text-sky-700 font-semibold block">All Student Application</span><strong id="cntAllApp" class="text-lg text-sky-900">0</strong></div>
               </div>
+
+              <!-- Search Bar -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs no-print">
+                <div class="flex items-center gap-2 text-slate-700 font-bold">
+                  <i class="fa-solid fa-magnifying-glass text-brand-700"></i>
+                  <span>Search Student Records:</span>
+                </div>
+                <input id="adminStudentSearchInput" type="text" onkeyup="renderAdminStudentStatusTable()" placeholder="Search by Reg. No, Name, Centre, Code, Area, Course or Phone..." class="px-3.5 py-2 bg-white border border-slate-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500 w-full sm:w-80">
+              </div>
+
               <div class="overflow-x-auto border border-slate-200 rounded-xl">
-                <table class="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase">
-                      <th class="py-2.5 px-3">Application No</th>
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                  <thead id="adminStudentTableHead">
+                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
+                      <th id="adminStudentFirstColHeader" class="py-2.5 px-3">Application No</th>
                       <th class="py-2.5 px-3">Student Name</th>
                       <th class="py-2.5 px-3">Course</th>
                       <th class="py-2.5 px-3">Centre</th>
@@ -1076,6 +1086,7 @@
     </div>
   </section>
 
+  <div id="publicHomepageWrapper">
   <!-- HERO BANNER + BOTTOM STATS BAR -->
   <section id="home" class="relative hero-lab-bg text-white pt-14 pb-24 lg:py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1562,6 +1573,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       </div>
     </div>
   </footer>
+  </div>
 
   <!-- APPLICATION FORM FOR AFFILIATION MODAL -->
   <div id="affiliationFormModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs overflow-y-auto p-3 sm:p-6 no-print">
@@ -2474,6 +2486,183 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
     </div>
   </div>
 
+  <!-- ADMIN EDIT STUDENT MODAL -->
+  <div id="editStudentModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs overflow-y-auto flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 my-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-brand-700">Admin Student Section</span>
+          <h3 class="font-display font-extrabold text-lg text-brand-950">Edit Student Details</h3>
+        </div>
+        <button type="button" onclick="closeEditStudentModal()" class="text-slate-400 hover:text-slate-700 text-xl cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="editStudentForm" onsubmit="saveEditedStudentDetails(event)" class="space-y-3.5 text-xs text-slate-800">
+        <input id="editStudentAppNoHidden" type="hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Application / Reg. No</label>
+            <input id="editStudentAppNoDisplay" type="text" readonly disabled class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-600 rounded-lg font-mono font-bold cursor-not-allowed outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Student Name *</label>
+            <input id="editStudentNameInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Course *</label>
+            <input id="editStudentCourseInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mobile No. *</label>
+            <input id="editStudentMobileInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">WhatsApp No.</label>
+            <input id="editStudentWhatsappInput" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Status *</label>
+            <select id="editStudentStatusSelect" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-bold outline-none focus:ring-2 focus:ring-brand-500">
+              <option value="Applied">Applied</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Registered">Registered</option>
+              <option value="Certified">Certified</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Father's Name</label>
+            <input id="editStudentFatherInput" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mother's Name</label>
+            <input id="editStudentMotherInput" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Date of Birth</label>
+            <input id="editStudentDobInput" type="date" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-700 mb-1">Postal Address</label>
+            <input id="editStudentAddressInput" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Pin Code</label>
+            <input id="editStudentPinInput" type="text" maxlength="6" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-200">
+          <button type="button" onclick="closeEditStudentModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100 cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold cursor-pointer">
+            Save Student
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT CREATED CENTRE DETAILS MODAL -->
+  <div id="editCentreModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs overflow-y-auto flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 my-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-brand-700">Study Centre Credentials &amp; Details</span>
+          <h3 class="font-display font-extrabold text-lg text-brand-950">Edit Centre Details</h3>
+        </div>
+        <button type="button" onclick="closeEditCentreModal()" class="text-slate-400 hover:text-slate-700 text-xl cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="editCentreForm" onsubmit="saveEditedCentreDetails(event)" class="space-y-3.5 text-xs text-slate-800">
+        <input id="editCentreRowId" type="hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">User ID (Centre Code) — Non-Editable</label>
+            <input id="editCentreCodeInput" type="text" readonly disabled class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-600 rounded-lg font-mono font-bold uppercase cursor-not-allowed outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Password *</label>
+            <input id="editCentrePasswordInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono font-bold outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Centre Name *</label>
+            <input id="editCentreNameInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Person Name (Centre Head) *</label>
+            <input id="editCentrePersonInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Contact No. *</label>
+            <input id="editCentreContactInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">WhatsApp No. *</label>
+            <input id="editCentreWhatsappInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Date of Registration *</label>
+            <input id="editCentreRegDateInput" type="date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Aadhaar No. *</label>
+            <input id="editCentreAadhaarInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">PAN Number *</label>
+            <input id="editCentrePanInput" type="text" required maxlength="10" class="w-full px-3 py-2 border border-slate-300 rounded-lg uppercase font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">GST No.</label>
+            <input id="editCentreGstInput" type="text" maxlength="15" placeholder="Optional" class="w-full px-3 py-2 border border-slate-300 rounded-lg uppercase font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">State *</label>
+            <input id="editCentreStateInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">District *</label>
+            <input id="editCentreDistrictInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Area / City *</label>
+            <input id="editCentreAreaInput" type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Pin Code *</label>
+            <input id="editCentrePinInput" type="text" required maxlength="6" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-200">
+          <button type="button" onclick="closeEditCentreModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100 cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-brand-900 hover:bg-brand-800 text-brand-gold font-bold cursor-pointer">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- WARNING CONFIRMATION DIALOG (Yes / No) -->
   <div id="adminConfirmModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
@@ -2592,6 +2781,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
       closeLoginModal();
       document.getElementById('activeDashboardSection').classList.remove('hidden');
+      if (document.getElementById('publicHomepageWrapper')) {
+        document.getElementById('publicHomepageWrapper').classList.add('hidden');
+      }
       document.getElementById('dashRoleBadge').textContent = meta.label;
       document.getElementById('dashTitle').textContent = meta.title;
       document.getElementById('dashSubtitle').textContent = meta.subtitle;
@@ -2606,6 +2798,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
     function logoutUser() {
       document.getElementById('activeDashboardSection').classList.add('hidden');
+      if (document.getElementById('publicHomepageWrapper')) {
+        document.getElementById('publicHomepageWrapper').classList.remove('hidden');
+      }
       ['adminDashboard', 'centreDashboard', 'staffDashboard', 'studentDashboard'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
@@ -2700,23 +2895,134 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       }
     }
 
+    function generateStudentRegistrationNumber(centreCodeRaw) {
+      const cleaned = String(centreCodeRaw || 'NBCE0001').trim().toUpperCase();
+      const corePart = cleaned.startsWith('NBCE') ? cleaned.slice(4) : cleaned;
+      const safeCore = corePart || '0001';
+      const sixDigits = String(Math.floor(100000 + Math.random() * 900000));
+      return `NBCE${safeCore}${sixDigits}`;
+    }
+
+    function ensureStudentRegistrationNo(studentObj) {
+      if (!studentObj) return '';
+      if (studentObj.registration_no && /^NBCE.+\d{6}$/i.test(studentObj.registration_no)) {
+        return studentObj.registration_no;
+      }
+      const cCode = studentObj.centre_code || document.getElementById('centrePanelCodePill')?.textContent?.trim() || 'NBCE0001';
+      const newReg = generateStudentRegistrationNumber(cCode);
+      studentObj.registration_no = newReg;
+      return newReg;
+    }
+
+    function ensureStudentExamPassword(studentObj) {
+      if (!studentObj) return '';
+      if (studentObj.exam_password && /^\d{8}$/.test(String(studentObj.exam_password))) {
+        return String(studentObj.exam_password);
+      }
+      const pw = String(Math.floor(10000000 + Math.random() * 90000000));
+      studentObj.exam_password = pw;
+      return pw;
+    }
+
+    function formatReadableDateText(rawDate) {
+      if (!rawDate) return '-';
+      const dt = new Date(rawDate);
+      if (isNaN(dt.getTime())) return String(rawDate);
+      return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function deriveCourseDurationText(courseStr) {
+      const c = String(courseStr || '').toLowerCase();
+      if (c.includes('1 year') || c.includes('adca')) return '1 Year';
+      if (c.includes('3 month') || c.includes('tally')) return '3 Months';
+      return '6 Months';
+    }
+
+    function findCentreInfoForStudent(centreCodeStr) {
+      const codeNorm = String(centreCodeStr || 'NBCE0001').trim().toLowerCase();
+      const matchedRow = (cachedFranchises || []).find(f => {
+        const m = parseFranchiseRecord(f);
+        const c1 = String(m.centreCode || '').toLowerCase();
+        return c1 && c1 === codeNorm;
+      });
+      if (matchedRow) {
+        const m = parseFranchiseRecord(matchedRow);
+        return {
+          centreName: matchedRow.institute_name || 'NBCE Study Centre',
+          area: m.city || m.district || 'Ranaghat'
+        };
+      }
+      return {
+        centreName: 'NBCE Authorized Study Centre',
+        area: 'Ranaghat'
+      };
+    }
+
     function renderAdminStudentStatusTable() {
       const tbody = document.getElementById('adminStudentStatusTable');
+      const thead = document.getElementById('adminStudentTableHead');
       if (!tbody) return;
+
+      const isApprovedTab = currentStudentFilterTab === 'approved';
+      const searchQ = (document.getElementById('adminStudentSearchInput')?.value || '').trim().toLowerCase();
+
+      if (thead) {
+        if (isApprovedTab) {
+          thead.innerHTML = `
+            <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
+              <th class="py-2.5 px-2.5">Sl No.</th>
+              <th class="py-2.5 px-2.5">Centre</th>
+              <th class="py-2.5 px-2.5">Code</th>
+              <th class="py-2.5 px-2.5">Area</th>
+              <th class="py-2.5 px-2.5">Student</th>
+              <th class="py-2.5 px-2.5">Admission</th>
+              <th class="py-2.5 px-2.5">Registration No.</th>
+              <th class="py-2.5 px-2.5">Exam Password</th>
+              <th class="py-2.5 px-2.5">Course</th>
+              <th class="py-2.5 px-2.5">Duration</th>
+              <th class="py-2.5 px-2.5">Fund_Used</th>
+              <th class="py-2.5 px-2.5">Phone</th>
+              <th class="py-2.5 px-2.5">Approve</th>
+              <th class="py-2.5 px-2.5">Date of Birth</th>
+              <th class="py-2.5 px-2.5">Photo</th>
+              <th class="py-2.5 px-2.5">Status</th>
+              <th class="py-2.5 px-2.5 no-print">Action</th>
+            </tr>
+          `;
+        } else {
+          thead.innerHTML = `
+            <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-[11px] uppercase">
+              <th id="adminStudentFirstColHeader" class="py-2.5 px-3">Application No</th>
+              <th class="py-2.5 px-3">Student Name</th>
+              <th class="py-2.5 px-3">Course</th>
+              <th class="py-2.5 px-3">Centre</th>
+              <th class="py-2.5 px-3">Status</th>
+              <th class="py-2.5 px-3 no-print">Action</th>
+            </tr>
+          `;
+        }
+      }
+
       const filtered = cachedStudents.filter(s => {
         const st = (s.status || 'Applied').toLowerCase();
         if (st === 'rejected') return false;
+        let tabMatch = true;
         if (currentStudentFilterTab === 'approved') {
-          return st === 'registered' || st === 'certified' || st === 'approved';
+          tabMatch = st === 'registered' || st === 'certified' || st === 'approved';
+        } else if (currentStudentFilterTab === 'pending') {
+          tabMatch = st === 'applied' || st === 'accepted' || st === 'pending';
         }
-        if (currentStudentFilterTab === 'pending') {
-          return st === 'applied' || st === 'accepted' || st === 'pending';
-        }
-        // 'all-application'
-        return true;
+        if (!tabMatch) return false;
+        if (!searchQ) return true;
+        const cInfo = findCentreInfoForStudent(s.centre_code || 'NBCE0001');
+        const haystack = `${s.registration_no || ''} ${s.app_no || ''} ${s.reg_no || ''} ${s.name || ''} ${s.course || ''} ${s.centre_code || ''} ${cInfo.centreName} ${cInfo.area} ${s.mobile || ''} ${s.whatsapp || ''}`.toLowerCase();
+        return haystack.includes(searchQ);
       });
 
-      tbody.innerHTML = filtered.length ? filtered.map(s => {
+      let didMutateStudent = false;
+      const todayIso = new Date().toISOString().slice(0, 10);
+
+      const rowsHtml = filtered.map((s, idx) => {
         const appNo = s.app_no || s.reg_no;
         const st = s.status || 'Applied';
         const isReg = ['registered', 'certified', 'approved'].includes(st.toLowerCase());
@@ -2725,6 +3031,73 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
           : st.toLowerCase() === 'accepted'
           ? 'bg-sky-100 text-sky-800'
           : 'bg-amber-100 text-amber-800';
+
+        if (isApprovedTab) {
+          const prevReg = s.registration_no;
+          const prevPw = s.exam_password;
+          const prevAdm = s.admission_date;
+          const prevApp = s.approved_date;
+
+          const regNoVal = ensureStudentRegistrationNo(s);
+          const examPwVal = ensureStudentExamPassword(s);
+          if (!s.admission_date) s.admission_date = todayIso;
+          if (!s.approved_date) s.approved_date = todayIso;
+
+          if (
+            s.registration_no !== prevReg ||
+            s.exam_password !== prevPw ||
+            s.admission_date !== prevAdm ||
+            s.approved_date !== prevApp
+          ) {
+            didMutateStudent = true;
+            localCentreStudents = localCentreStudents.map(item =>
+              String(item.app_no || item.reg_no) === String(appNo)
+                ? {
+                    ...item,
+                    registration_no: s.registration_no,
+                    exam_password: s.exam_password,
+                    admission_date: s.admission_date,
+                    approved_date: s.approved_date
+                  }
+                : item
+            );
+          }
+
+          const cCode = s.centre_code || 'NBCE0001';
+          const cInfo = findCentreInfoForStudent(cCode);
+          const waVal = s.whatsapp || s.mobile || '-';
+          const photoHtml = s.photo_url
+            ? `<img src="${s.photo_url}" alt="${s.name}" class="w-10 h-12 object-cover rounded border border-slate-300 mx-auto">`
+            : `<div class="w-10 h-12 rounded bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 mx-auto">N/A</div>`;
+
+          return `
+            <tr class="text-xs align-middle">
+              <td class="py-2.5 px-2.5 font-bold text-slate-700">${idx + 1}</td>
+              <td class="py-2.5 px-2.5 font-semibold text-slate-900">${cInfo.centreName}</td>
+              <td class="py-2.5 px-2.5 font-mono font-bold text-brand-950">${cCode}</td>
+              <td class="py-2.5 px-2.5 text-slate-700">${s.address || cInfo.area}</td>
+              <td class="py-2.5 px-2.5 font-bold text-slate-900">${s.name}</td>
+              <td class="py-2.5 px-2.5 whitespace-nowrap">${formatReadableDateText(s.admission_date)}</td>
+              <td class="py-2.5 px-2.5 font-mono font-bold text-brand-950 whitespace-nowrap">${regNoVal}</td>
+              <td class="py-2.5 px-2.5 font-mono font-semibold text-slate-800">${examPwVal}</td>
+              <td class="py-2.5 px-2.5 font-semibold text-slate-900">${s.course}</td>
+              <td class="py-2.5 px-2.5 whitespace-nowrap">${deriveCourseDurationText(s.course)}</td>
+              <td class="py-2.5 px-2.5">${s.fund_used || 'Main'}</td>
+              <td class="py-2.5 px-2.5 font-mono">
+                <div>${s.mobile || '-'}</div>
+                <div class="text-[11px] text-slate-500">Whatsapp:${waVal}</div>
+              </td>
+              <td class="py-2.5 px-2.5 whitespace-nowrap">${formatReadableDateText(s.approved_date)}</td>
+              <td class="py-2.5 px-2.5 whitespace-nowrap">${s.dob ? formatReadableDateText(s.dob) : '-'}</td>
+              <td class="py-2.5 px-2.5 text-center">${photoHtml}</td>
+              <td class="py-2.5 px-2.5"><span class="text-emerald-600 font-extrabold">Approved</span></td>
+              <td class="py-2.5 px-2.5 no-print whitespace-nowrap space-x-1">
+                <button type="button" onclick="openEditStudentModal('${appNo}')" title="Edit Student" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2 py-1 rounded font-semibold cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button type="button" onclick="openStudentViewModal('${appNo}', 'view')" title="View Student" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2 py-1 rounded font-semibold cursor-pointer"><i class="fa-solid fa-magnifying-glass"></i></button>
+              </td>
+            </tr>
+          `;
+        }
 
         return `
           <tr>
@@ -2735,11 +3108,109 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
             <td class="py-2.5 px-3"><span class="${badgeCls} text-xs px-2.5 py-0.5 rounded-full font-semibold">${st}</span></td>
             <td class="py-2.5 px-3 no-print whitespace-nowrap space-x-1">
               <button type="button" onclick="openStudentViewModal('${appNo}', 'view')" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer"><i class="fa-solid fa-eye mr-1"></i>View</button>
+              <button type="button" onclick="openEditStudentModal('${appNo}')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer"><i class="fa-solid fa-pen-to-square mr-1"></i>Edit</button>
               ${!isReg ? `<button type="button" onclick="setStudentStatus('${appNo}', 'Registered')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-semibold cursor-pointer">Approve / Register</button>` : ''}
             </td>
           </tr>
         `;
-      }).join('') : '<tr><td colspan="6" class="py-5 px-3 text-slate-500 text-xs text-center">No student records found in this section.</td></tr>';
+      }).join('');
+
+      if (didMutateStudent) {
+        localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
+      }
+
+      const colSpanCount = isApprovedTab ? 17 : 6;
+      tbody.innerHTML = filtered.length
+        ? rowsHtml
+        : `<tr><td colspan="${colSpanCount}" class="py-5 px-3 text-slate-500 text-xs text-center">No student records found in this section.</td></tr>`;
+    }
+
+
+    function openEditStudentModal(appNo) {
+      const st = cachedStudents.find(s => String(s.app_no || s.reg_no) === String(appNo));
+      if (!st) return;
+      const key = String(st.app_no || st.reg_no);
+      document.getElementById('editStudentAppNoHidden').value = key;
+      document.getElementById('editStudentAppNoDisplay').value = key;
+      document.getElementById('editStudentNameInput').value = st.name || '';
+      document.getElementById('editStudentCourseInput').value = st.course || '';
+      document.getElementById('editStudentMobileInput').value = st.mobile || '';
+      document.getElementById('editStudentWhatsappInput').value = st.whatsapp || st.mobile || '';
+      document.getElementById('editStudentStatusSelect').value = st.status || 'Applied';
+      document.getElementById('editStudentFatherInput').value = st.father_name || '';
+      document.getElementById('editStudentMotherInput').value = st.mother_name || '';
+      document.getElementById('editStudentDobInput').value = st.dob || '';
+      document.getElementById('editStudentAddressInput').value = st.address || '';
+      document.getElementById('editStudentPinInput').value = st.pin_code || '';
+      document.getElementById('editStudentModal').classList.remove('hidden');
+    }
+
+    function closeEditStudentModal() {
+      document.getElementById('editStudentModal').classList.add('hidden');
+    }
+
+    async function saveEditedStudentDetails(e) {
+      e.preventDefault();
+      const key = String(document.getElementById('editStudentAppNoHidden').value || '');
+      if (!key) return;
+      const existing = cachedStudents.find(s => String(s.app_no || s.reg_no) === key) || {};
+      const nextName = (document.getElementById('editStudentNameInput').value || '').trim();
+      const nextCourse = (document.getElementById('editStudentCourseInput').value || '').trim();
+      const nextMobile = (document.getElementById('editStudentMobileInput').value || '').trim();
+      const nextWhatsapp = (document.getElementById('editStudentWhatsappInput').value || '').trim();
+      const nextStatus = document.getElementById('editStudentStatusSelect').value || 'Applied';
+      const nextFather = (document.getElementById('editStudentFatherInput').value || '').trim();
+      const nextMother = (document.getElementById('editStudentMotherInput').value || '').trim();
+      const nextDob = (document.getElementById('editStudentDobInput').value || '').trim();
+      const nextAddress = (document.getElementById('editStudentAddressInput').value || '').trim();
+      const nextPin = (document.getElementById('editStudentPinInput').value || '').trim();
+
+      const updatedStudent = {
+        ...existing,
+        app_no: key,
+        reg_no: key,
+        name: nextName,
+        course: nextCourse,
+        mobile: nextMobile,
+        whatsapp: nextWhatsapp,
+        status: nextStatus,
+        father_name: nextFather,
+        mother_name: nextMother,
+        dob: nextDob,
+        age: nextDob ? calculateAgeFromDOB(nextDob) : (existing.age || '-'),
+        address: nextAddress,
+        pin_code: nextPin
+      };
+
+      let found = false;
+      localCentreStudents = localCentreStudents.map(s => {
+        if (String(s.app_no || s.reg_no) === key) {
+          found = true;
+          return updatedStudent;
+        }
+        return s;
+      });
+      if (!found) {
+        localCentreStudents.unshift(updatedStudent);
+      }
+      localStorage.setItem('nbce_local_students', JSON.stringify(localCentreStudents));
+      applyLiveStudentViewsImmediately();
+
+      if (nbceStudentBroadcast) {
+        nbceStudentBroadcast.postMessage({ type: 'STUDENT_STATUS_CHANGED', appNo: key, status: nextStatus, ts: Date.now() });
+      }
+
+      try {
+        await db.from('students').update({
+          name: nextName,
+          course: nextCourse,
+          status: nextStatus
+        }).eq('reg_no', key);
+      } catch (err) {
+        console.warn('Supabase student edit note:', err);
+      }
+
+      closeEditStudentModal();
     }
 
     async function setStudentStatus(regNo, newStatus) {
@@ -2884,6 +3355,8 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
         phone: row.mobile || '-',
         whatsapp: row.mobile || '-',
         centreCode: '',
+        password: '',
+        registrationDate: '',
         centreState: 'Active',
         rawText: row.applicant_info || ''
       };
@@ -2905,16 +3378,116 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       return `${summaryText} ::META::${JSON.stringify(metaObj)}`;
     }
 
-    function getNextCentreCode() {
-      let maxNum = 0;
-      cachedFranchises.forEach(r => {
-        const m = parseFranchiseRecord(r);
-        if (m.centreCode && /^NBCE\d+$/i.test(m.centreCode)) {
-          const num = parseInt(m.centreCode.replace(/[^0-9]/g, ''), 10);
-          if (num > maxNum) maxNum = num;
+    let isApprovingCentreLock = false;
+    function ensureUniqueCentreCodesForRows(rows) {
+      const list = Array.isArray(rows) ? rows : [];
+      const approved = list.filter(f => f && f.status === 'Approved');
+      const seenNums = new Set();
+      let highest = 0;
+
+      // First pass: keep valid unique existing codes if not duplicated
+      const assignedMap = new Map();
+      approved.forEach(f => {
+        const meta = parseFranchiseRecord(f);
+        const ov = localFranchiseOverrides[String(f.id)] || {};
+        const candCode = ov.centreCode || meta.centreCode || '';
+        const num = extractNbceCodeNumber(candCode);
+        if (num > 0 && !seenNums.has(num)) {
+          seenNums.add(num);
+          if (num > highest) highest = num;
+          assignedMap.set(String(f.id), 'NBCE' + String(num).padStart(4, '0'));
         }
       });
-      return 'NBCE' + String(maxNum + 1).padStart(4, '0');
+
+      // Second pass: any row without a code or with a duplicate code gets the next unused sequential code
+      let nextSeq = 1;
+      approved.forEach(f => {
+        const key = String(f.id);
+        if (!assignedMap.has(key)) {
+          while (seenNums.has(nextSeq)) nextSeq++;
+          seenNums.add(nextSeq);
+          if (nextSeq > highest) highest = nextSeq;
+          assignedMap.set(key, 'NBCE' + String(nextSeq).padStart(4, '0'));
+          nextSeq++;
+        }
+
+        const uniqueCode = assignedMap.get(key);
+        const meta = parseFranchiseRecord(f);
+        const ov = localFranchiseOverrides[key] || {};
+        const digits = uniqueCode.replace(/[^0-9]/g, '').padStart(4, '0');
+        const passStr = ov.password || meta.password || `NBCE@${digits}`;
+        const regDate = ov.registrationDate || meta.registrationDate || new Date().toISOString().slice(0, 10);
+
+        if (meta.centreCode !== uniqueCode || ov.centreCode !== uniqueCode || !meta.password) {
+          const updatedMeta = {
+            ...meta,
+            centreCode: uniqueCode,
+            password: passStr,
+            registrationDate: regDate
+          };
+          localFranchiseOverrides[key] = {
+            ...ov,
+            status: f.status || 'Approved',
+            centreCode: uniqueCode,
+            password: passStr,
+            registrationDate: regDate,
+            centreState: ov.centreState || meta.centreState || 'Active'
+          };
+          f.applicant_info = buildApplicantInfoWithMeta(
+            updatedMeta.rawText || `${updatedMeta.headName} (${updatedMeta.city})`,
+            updatedMeta
+          );
+        }
+      });
+
+      if (highest > 0) {
+        const prevMax = parseInt(localStorage.getItem('nbce_last_centre_code_num') || '0', 10) || 0;
+        if (highest > prevMax) {
+          localStorage.setItem('nbce_last_centre_code_num', String(highest));
+        }
+      }
+      saveFranchiseOverrides();
+      return assignedMap;
+    }
+
+    function extractNbceCodeNumber(codeStr) {
+      if (!codeStr) return 0;
+      const match = String(codeStr).trim().match(/^NBCE(\d+)$/i);
+      if (!match) return 0;
+      const num = parseInt(match[1], 10);
+      return Number.isFinite(num) && num > 0 ? num : 0;
+    }
+
+    function getHighestIssuedCentreCodeNum(extraRows = []) {
+      let maxNum = parseInt(localStorage.getItem('nbce_last_centre_code_num') || '0', 10) || 0;
+      const allSources = [
+        ...(Array.isArray(cachedFranchises) ? cachedFranchises : []),
+        ...(Array.isArray(localFranchiseRecords) ? localFranchiseRecords : []),
+        ...(Array.isArray(extraRows) ? extraRows : [])
+      ];
+
+      allSources.forEach(r => {
+        if (!r) return;
+        const m = parseFranchiseRecord(r);
+        const ov = localFranchiseOverrides[String(r.id)];
+        const n1 = extractNbceCodeNumber(m.centreCode);
+        const n2 = extractNbceCodeNumber(ov && ov.centreCode);
+        if (n1 > maxNum) maxNum = n1;
+        if (n2 > maxNum) maxNum = n2;
+      });
+
+      Object.values(localFranchiseOverrides || {}).forEach(ov => {
+        const nOv = extractNbceCodeNumber(ov && ov.centreCode);
+        if (nOv > maxNum) maxNum = nOv;
+      });
+
+      return maxNum;
+    }
+
+    function getNextCentreCode(extraRows = []) {
+      const nextNum = getHighestIssuedCentreCodeNum(extraRows) + 1;
+      localStorage.setItem('nbce_last_centre_code_num', String(nextNum));
+      return 'NBCE' + String(nextNum).padStart(4, '0');
     }
 
     function generateAffiliationPDF(appData) {
@@ -3059,11 +3632,24 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const mergedMeta = {
         ...baseMeta,
         centreCode: ov.centreCode || baseMeta.centreCode || '',
+        password: ov.password || baseMeta.password || '',
+        registrationDate: ov.registrationDate || baseMeta.registrationDate || '',
+        whatsapp: ov.whatsapp || baseMeta.whatsapp || '',
+        aadharNo: ov.aadharNo || baseMeta.aadharNo || '',
+        panNo: ov.panNo || baseMeta.panNo || '',
+        gstNo: ov.gstNo !== undefined ? ov.gstNo : (baseMeta.gstNo || ''),
+        pin: ov.pin || baseMeta.pin || '',
+        headName: ov.headName || baseMeta.headName || '',
+        state: ov.state || baseMeta.state || '',
+        district: ov.district || baseMeta.district || '',
+        city: ov.city || baseMeta.city || '',
         centreState: ov.centreState || baseMeta.centreState || 'Active'
       };
       const nextStatus = ov.status || row.status || 'Pending';
       return {
         ...row,
+        institute_name: ov.instituteName || row.institute_name,
+        mobile: ov.mobile || row.mobile,
         status: nextStatus,
         applicant_info: buildApplicantInfoWithMeta(mergedMeta.rawText || `${mergedMeta.headName} (${mergedMeta.city})`, mergedMeta)
       };
@@ -3074,37 +3660,73 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       if (existingRow && existingRow.status === 'Approved') return;
       const actionWord = newStatus === 'Approved' ? 'approve' : newStatus === 'Rejected' ? 'reject' : 'mark as pending';
       askAdminConfirm(`Are you sure you want to ${actionWord} this franchise application?`, async () => {
-        const row = cachedFranchises.find(f => String(f.id) === String(id));
-        if (!row || row.status === 'Approved') return;
-        const meta = parseFranchiseRecord(row);
-        let assignedCode = meta.centreCode || '';
-        let assignedState = meta.centreState || 'Active';
-        if (newStatus === 'Approved') {
-          if (!assignedCode) assignedCode = getNextCentreCode();
-          assignedState = 'Active';
-          meta.centreCode = assignedCode;
-          meta.centreState = assignedState;
-        }
-
-        // Persist locally immediately so data & centre code never vanish on refresh
-        localFranchiseOverrides[String(id)] = {
-          status: newStatus,
-          centreCode: assignedCode,
-          centreState: assignedState
-        };
-        saveFranchiseOverrides();
-        localFranchiseRecords = localFranchiseRecords.map(r =>
-          String(r.id) === String(id) ? { ...r, status: newStatus, applicant_info: buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta) } : r
-        );
-        localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
-
-        const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+        if (isApprovingCentreLock) return;
+        isApprovingCentreLock = true;
         try {
-          await db.from('franchises').update({ status: newStatus, applicant_info: updatedInfo }).eq('id', id);
-        } catch (err) {
-          console.warn('Supabase franchise status update note:', err);
+          let latestDbFranchises = [];
+          try {
+            const { data: dbRows } = await db.from('franchises').select('*');
+            if (Array.isArray(dbRows)) latestDbFranchises = dbRows;
+          } catch (fetchErr) {
+            console.warn('Latest franchises fetch before code assignment:', fetchErr);
+          }
+
+          cachedFranchises = getMergedFranchises(latestDbFranchises);
+          const row = cachedFranchises.find(f => String(f.id) === String(id));
+          if (!row || row.status === 'Approved') return;
+
+          const meta = parseFranchiseRecord(row);
+          let assignedCode = meta.centreCode || '';
+          let assignedState = meta.centreState || 'Active';
+          let assignedPassword = meta.password || '';
+
+          if (newStatus === 'Approved') {
+            if (!extractNbceCodeNumber(assignedCode)) {
+              assignedCode = getNextCentreCode(latestDbFranchises);
+            } else {
+              const existingNum = extractNbceCodeNumber(assignedCode);
+              const prevMax = parseInt(localStorage.getItem('nbce_last_centre_code_num') || '0', 10) || 0;
+              if (existingNum > prevMax) {
+                localStorage.setItem('nbce_last_centre_code_num', String(existingNum));
+              }
+            }
+            if (!assignedPassword) {
+              const digits = assignedCode.replace(/[^0-9]/g, '').padStart(4, '0');
+              assignedPassword = `NBCE@${digits}`;
+            }
+            if (!meta.registrationDate) {
+              meta.registrationDate = new Date().toISOString().slice(0, 10);
+            }
+            assignedState = 'Active';
+            meta.centreCode = assignedCode;
+            meta.password = assignedPassword;
+            meta.centreState = assignedState;
+          }
+
+          // Persist locally immediately so data & centre code never vanish on refresh
+          localFranchiseOverrides[String(id)] = {
+            status: newStatus,
+            centreCode: assignedCode,
+            password: assignedPassword,
+            registrationDate: meta.registrationDate || '',
+            centreState: assignedState
+          };
+          saveFranchiseOverrides();
+          localFranchiseRecords = localFranchiseRecords.map(r =>
+            String(r.id) === String(id) ? { ...r, status: newStatus, applicant_info: buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta) } : r
+          );
+          localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
+
+          const updatedInfo = buildApplicantInfoWithMeta(meta.rawText || `${meta.headName} (${meta.city})`, meta);
+          try {
+            await db.from('franchises').update({ status: newStatus, applicant_info: updatedInfo }).eq('id', id);
+          } catch (err) {
+            console.warn('Supabase franchise status update note:', err);
+          }
+          await refreshDashboardData();
+        } finally {
+          isApprovingCentreLock = false;
         }
-        await refreshDashboardData();
       });
     }
 
@@ -3164,6 +3786,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const instName = row ? row.institute_name : 'Authorized Study Centre';
 
       document.getElementById('activeDashboardSection').classList.remove('hidden');
+      if (document.getElementById('publicHomepageWrapper')) {
+        document.getElementById('publicHomepageWrapper').classList.add('hidden');
+      }
       document.getElementById('adminDashboard').classList.add('hidden');
       document.getElementById('staffDashboard').classList.add('hidden');
       document.getElementById('studentDashboard').classList.add('hidden');
@@ -3750,6 +4375,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const tbody = document.getElementById('ourFranchiseTableBody');
       if (!tbody) return;
       const approvedRows = cachedFranchises.filter(f => f.status === 'Approved');
+      const uniqueCodeMap = ensureUniqueCentreCodesForRows(approvedRows);
 
       let activeCnt = 0, inactiveCnt = 0, cancelCnt = 0;
       approvedRows.forEach(f => {
@@ -3769,7 +4395,7 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
       const searchQ = (document.getElementById('ourFranchiseSearchInput')?.value || '').toLowerCase();
       const filteredRows = approvedRows.filter((f, idx) => {
         const meta = parseFranchiseRecord(f);
-        const code = (meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'))).toLowerCase();
+        const code = (uniqueCodeMap.get(String(f.id)) || meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'))).toLowerCase();
         const cState = meta.centreState || 'Active';
         const statusMatches = ourFranchiseFilterState === 'All' || cState === ourFranchiseFilterState;
         const textMatches = !searchQ || `${code} ${f.institute_name} ${meta.headName} ${f.mobile} ${meta.state} ${meta.district} ${meta.city}`.toLowerCase().includes(searchQ);
@@ -3778,7 +4404,9 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
       tbody.innerHTML = filteredRows.length ? filteredRows.map((f, idx) => {
         const meta = parseFranchiseRecord(f);
-        const code = meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'));
+        const code = uniqueCodeMap.get(String(f.id)) || meta.centreCode || ('NBCE' + String(idx + 1).padStart(4, '0'));
+        const digits = code.replace(/[^0-9]/g, '').padStart(4, '0');
+        const passStr = meta.password || `NBCE@${digits}`;
         const cState = meta.centreState || 'Active';
 
         let rowBg = '';
@@ -3796,10 +4424,16 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
         return `
           <tr class="${rowBg} transition">
-            <td class="py-2.5 px-3 font-mono font-bold text-xs">
-              <button type="button" onclick="openAdminFranchiseCentrePanel(${f.id})" title="Open Centre Panel in New Tab" class="text-brand-700 hover:text-brand-950 underline decoration-brand-gold underline-offset-2 font-extrabold cursor-pointer">
-                ${code}
-              </button>
+            <td class="py-2.5 px-3 font-mono text-xs space-y-0.5">
+              <div>
+                <span class="text-[10px] text-red-600 font-sans font-bold mr-1">ID:</span>
+                <button type="button" onclick="openAdminFranchiseCentrePanel('${f.id}')" title="Open Centre Panel in New Tab" class="text-red-600 hover:text-red-800 underline decoration-red-400 underline-offset-2 font-extrabold cursor-pointer">
+                  ${code}
+                </button>
+              </div>
+              <div class="text-[11px] text-slate-700 font-bold">
+                <span class="text-[10px] text-slate-500 font-sans font-semibold mr-1">Pass:</span>${passStr}
+              </div>
             </td>
             <td class="py-2.5 px-3 font-semibold text-slate-900">${f.institute_name}</td>
             <td class="py-2.5 px-3 text-slate-700">${meta.headName}</td>
@@ -3808,12 +4442,17 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
             <td class="py-2.5 px-3 text-xs">${meta.district}</td>
             <td class="py-2.5 px-3 text-xs">${meta.city}</td>
             <td class="py-2.5 px-3">${badgeHtml}</td>
-            <td class="py-2.5 px-3 no-print">
-              <select aria-label="Change Centre Status" onchange="onCentreDropdownChange(${f.id}, this)" class="px-2.5 py-1.5 rounded-lg border text-xs font-bold outline-none cursor-pointer ${selectStyle}">
-                <option value="Active" ${cState === 'Active' ? 'selected' : ''}>Active</option>
-                <option value="Inactive" ${cState === 'Inactive' ? 'selected' : ''}>Inactive</option>
-                <option value="Cancel" ${cState === 'Cancel' ? 'selected' : ''}>Cancel</option>
-              </select>
+            <td class="py-2.5 px-3 no-print whitespace-nowrap">
+              <div class="inline-flex items-center gap-1.5">
+                <select aria-label="Change Centre Status" onchange="onCentreDropdownChange('${f.id}', this)" class="px-2.5 py-1.5 rounded-lg border text-xs font-bold outline-none cursor-pointer ${selectStyle}">
+                  <option value="Active" ${cState === 'Active' ? 'selected' : ''}>Active</option>
+                  <option value="Inactive" ${cState === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                  <option value="Cancel" ${cState === 'Cancel' ? 'selected' : ''}>Cancel</option>
+                </select>
+                <button type="button" onclick="openEditCentreModal('${f.id}')" title="Edit Centre Details" class="bg-slate-100 hover:bg-brand-gold hover:text-brand-950 text-slate-800 border border-slate-300 px-2.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -3822,11 +4461,129 @@ Courses & Fee Structure Brochure')" class="bg-brand-gold text-brand-950 font-bol
 
     function onCentreDropdownChange(id, selectEl) {
       const nextState = selectEl.value;
-      const row = cachedFranchises.find(f => f.id === id);
+      const row = cachedFranchises.find(f => String(f.id) === String(id));
       const prevState = row ? (parseFranchiseRecord(row).centreState || 'Active') : 'Active';
       selectEl.value = prevState;
       confirmCentreOperationalState(id, nextState);
     }
+
+    function openEditCentreModal(id) {
+      const row = cachedFranchises.find(f => String(f.id) === String(id));
+      if (!row) return;
+      const meta = parseFranchiseRecord(row);
+      const code = meta.centreCode || 'NBCE0001';
+      const digits = code.replace(/[^0-9]/g, '').padStart(4, '0');
+      const passStr = meta.password || `NBCE@${digits}`;
+      const regDateStr = meta.registrationDate || new Date().toISOString().slice(0, 10);
+
+      document.getElementById('editCentreRowId').value = String(row.id);
+      document.getElementById('editCentreCodeInput').value = code;
+      document.getElementById('editCentrePasswordInput').value = passStr;
+      document.getElementById('editCentreNameInput').value = row.institute_name || '';
+      document.getElementById('editCentrePersonInput').value = meta.headName || '';
+      document.getElementById('editCentreContactInput').value = row.mobile || '';
+      document.getElementById('editCentreWhatsappInput').value = meta.whatsapp || row.mobile || '';
+      document.getElementById('editCentreRegDateInput').value = regDateStr;
+      document.getElementById('editCentreAadhaarInput').value = meta.aadharNo || '';
+      document.getElementById('editCentrePanInput').value = meta.panNo || '';
+      document.getElementById('editCentreGstInput').value = meta.gstNo || '';
+      document.getElementById('editCentreStateInput').value = meta.state || '';
+      document.getElementById('editCentreDistrictInput').value = meta.district || '';
+      document.getElementById('editCentreAreaInput').value = meta.city || '';
+      document.getElementById('editCentrePinInput').value = meta.pin || '';
+      document.getElementById('editCentreModal').classList.remove('hidden');
+    }
+
+    function closeEditCentreModal() {
+      document.getElementById('editCentreModal').classList.add('hidden');
+    }
+
+    async function saveEditedCentreDetails(e) {
+      e.preventDefault();
+      const id = document.getElementById('editCentreRowId').value;
+      const row = cachedFranchises.find(f => String(f.id) === String(id));
+      if (!row) return;
+
+      const meta = parseFranchiseRecord(row);
+      // Centre Code / User ID stays non-editable
+      const lockedCode = meta.centreCode || (document.getElementById('editCentreCodeInput').value || '').trim().toUpperCase();
+      const nextPass = (document.getElementById('editCentrePasswordInput').value || '').trim();
+      const nextInstName = (document.getElementById('editCentreNameInput').value || '').trim();
+      const nextPerson = (document.getElementById('editCentrePersonInput').value || '').trim();
+      const nextMobile = (document.getElementById('editCentreContactInput').value || '').trim();
+      const nextWhatsapp = (document.getElementById('editCentreWhatsappInput').value || '').trim();
+      const nextRegDate = (document.getElementById('editCentreRegDateInput').value || '').trim();
+      const nextAadhaar = (document.getElementById('editCentreAadhaarInput').value || '').trim();
+      const nextPan = (document.getElementById('editCentrePanInput').value || '').trim().toUpperCase();
+      const nextGst = (document.getElementById('editCentreGstInput').value || '').trim().toUpperCase();
+      const nextState = (document.getElementById('editCentreStateInput').value || '').trim();
+      const nextDistrict = (document.getElementById('editCentreDistrictInput').value || '').trim();
+      const nextArea = (document.getElementById('editCentreAreaInput').value || '').trim();
+      const nextPin = (document.getElementById('editCentrePinInput').value || '').trim();
+
+      const updatedMeta = {
+        ...meta,
+        centreCode: lockedCode,
+        password: nextPass,
+        registrationDate: nextRegDate,
+        whatsapp: nextWhatsapp,
+        aadharNo: nextAadhaar,
+        panNo: nextPan,
+        gstNo: nextGst,
+        headName: nextPerson,
+        state: nextState,
+        district: nextDistrict,
+        city: nextArea,
+        pin: nextPin,
+        phone: nextMobile
+      };
+      const updatedInfo = buildApplicantInfoWithMeta(
+        updatedMeta.rawText || `${nextPerson} (${nextArea}, ${nextDistrict}, ${nextState})`,
+        updatedMeta
+      );
+
+      localFranchiseOverrides[String(id)] = {
+        ...(localFranchiseOverrides[String(id)] || {}),
+        status: row.status || 'Approved',
+        centreCode: lockedCode,
+        password: nextPass,
+        registrationDate: nextRegDate,
+        whatsapp: nextWhatsapp,
+        aadharNo: nextAadhaar,
+        panNo: nextPan,
+        gstNo: nextGst,
+        instituteName: nextInstName,
+        headName: nextPerson,
+        mobile: nextMobile,
+        state: nextState,
+        district: nextDistrict,
+        city: nextArea,
+        pin: nextPin,
+        centreState: updatedMeta.centreState || 'Active'
+      };
+      saveFranchiseOverrides();
+
+      localFranchiseRecords = localFranchiseRecords.map(r =>
+        String(r.id) === String(id)
+          ? { ...r, institute_name: nextInstName, mobile: nextMobile, applicant_info: updatedInfo }
+          : r
+      );
+      localStorage.setItem('nbce_local_franchises', JSON.stringify(localFranchiseRecords));
+
+      try {
+        await db.from('franchises').update({
+          institute_name: nextInstName,
+          mobile: nextMobile,
+          applicant_info: updatedInfo
+        }).eq('id', id);
+      } catch (err) {
+        console.warn('Supabase centre edit sync note:', err);
+      }
+
+      closeEditCentreModal();
+      await refreshDashboardData();
+    }
+
 
     function renderFranchiseApplicationTable() {
       const tbody = document.getElementById('franchiseApplicationTable');
